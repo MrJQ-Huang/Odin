@@ -1,0 +1,43 @@
+title: Manifold Tech Wiki
+description: Official technical documentation for Manifold Tech products.
+
+remote_theme: just-the-docs/just-the-docs
+
+search_enabled: true
+color_scheme: light
+heading_anchors: true
+
+aux_links:
+  "View on GitHub":
+    - "https://github.com/ManifoldTechLtd/wiki"
+
+baseurl: "/wiki"
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-include-cache
+
+kramdown:
+  math_engine: mathjax
+  input: GFM
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+  - scope:
+      path: ""
+    values:
+      layout: default
+      nav_enabled: true
+      search_enabled: true
+
+  - scope:
+      path: "odin_series"
+    values:
+      layout: default
+      nav_enabled: true
+      search_enabled: true

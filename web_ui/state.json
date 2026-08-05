@@ -1,0 +1,21 @@
+{
+  "odin_a": {
+    "usb_bus": "2",
+    "usb_addr": "6",
+    "serial": "952033c87532e832",
+    "config": "/home/uros/odin/odin_ros_driver-main/config/control_command_odin_a.yaml",
+    "calib_dir": "/home/uros/.ros/odin_a",
+    "command_file": "/tmp/odin_a_command.txt",
+    "frame_prefix": "odin_a"
+  },
+  "odin_b": {
+    "usb_bus": "2",
+    "usb_addr": "5",
+    "serial": "276fe96f99321c78",
+    "config": "/home/uros/odin/odin_ros_driver-main/config/control_command_odin_b.yaml",
+    "calib_dir": "/home/uros/.ros/odin_b",
+    "command_file": "/tmp/odin_b_command.txt",
+    "frame_prefix": "odin_b"
+  },
+  "use_rviz": true
+}

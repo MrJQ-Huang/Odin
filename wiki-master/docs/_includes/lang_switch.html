@@ -1,0 +1,25 @@
+{%- comment -%}
+  Bilingual switcher.
+  - Both Chinese and English share the same Jekyll site (baseurl: /wiki).
+  - English mirror lives under docs/en/, so its URLs all start with "/en/".
+  - page.url here is the path *without* baseurl, e.g. "/odin_series/odin1/Cover.html"
+    or "/en/odin_series/odin1/Cover.html".
+{%- endcomment -%}
+{%- assign u = page.url -%}
+{%- assign head4 = u | slice: 0, 4 -%}
+{%- assign is_en = false -%}
+{%- if head4 == "/en/" or u == "/en" -%}{%- assign is_en = true -%}{%- endif -%}
+<div id="lang-switch">
+  {%- if is_en -%}
+    {%- assign zh_url = u | replace_first: "/en", "" -%}
+    {%- if zh_url == "" -%}{%- assign zh_url = "/" -%}{%- endif -%}
+    <a href="{{ zh_url | relative_url }}" title="切换到中文" onclick="try{localStorage.setItem('wiki_lang','zh')}catch(e){}">中文</a>
+    <span class="sep">|</span>
+    <strong>EN</strong>
+  {%- else -%}
+    {%- assign en_url = "/en" | append: u -%}
+    <strong>中文</strong>
+    <span class="sep">|</span>
+    <a href="{{ en_url | relative_url }}" title="Switch to English" onclick="try{localStorage.setItem('wiki_lang','en')}catch(e){}">EN</a>
+  {%- endif -%}
+</div>

@@ -1,0 +1,88 @@
+<script>
+  (function () {
+    var p = location.pathname.replace(/\/+$/, '/');
+    if (p.indexOf('/wiki/en/') === 0 || p === '/wiki/en/') {
+      document.documentElement.classList.add('lang-en');
+    }
+  })();
+</script>
+<script>
+  /* Auto language redirect: non-Chinese browsers land on the English mirror.
+     A manual choice via the lang switcher (stored in localStorage) always wins. */
+  (function () {
+    try {
+      var BASE = '{{ site.baseurl }}';
+      var path = location.pathname;
+      var isEnPage = path.indexOf(BASE + '/en/') === 0 || path === BASE + '/en';
+      if (isEnPage) return;
+      var pref = localStorage.getItem('wiki_lang');
+      if (pref === 'zh') return;
+      if (pref !== 'en') {
+        var lang = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+        if (lang.indexOf('zh') === 0) return;
+      }
+      var rest = path.slice(BASE.length);
+      if (rest === '' || rest === '/') { location.replace(BASE + '/en/'); return; }
+      var target = BASE + '/en' + rest + location.search + location.hash;
+      fetch(BASE + '/en' + rest, { method: 'HEAD' }).then(function (r) {
+        location.replace(r.ok ? target : BASE + '/en/');
+      }).catch(function () { location.replace(BASE + '/en/'); });
+    } catch (e) { /* localStorage disabled etc. — stay on Chinese */ }
+  })();
+</script>
+<style>
+  #lang-switch {
+    position: fixed;
+    top: 8px;
+    right: 12px;
+    z-index: 9999;
+    font-size: 13px;
+    line-height: 1.4;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 4px 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  #lang-switch a {
+    color: #5d5dff;
+    text-decoration: none;
+  }
+  #lang-switch a:hover { text-decoration: underline; }
+  #lang-switch strong { color: #333; }
+  #lang-switch .sep { color: #ccc; margin: 0 4px; }
+  /* On English pages, hide the auto-generated Chinese nav until our JS swaps it in. */
+  html.lang-en #site-nav { visibility: hidden; }
+  html.lang-en.lang-en-ready #site-nav { visibility: visible; }
+</style>
+
+<!-- BEGIN_MATHJAX_MERMAID -->
+<style>
+  .site-wrap {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+</style>
+
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    if (window.mermaid) {
+      window.mermaid.initialize({ startOnLoad: true });
+    }
+  });
+</script>
+<!-- END_MATHJAX_MERMAID -->

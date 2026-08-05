@@ -1,0 +1,173 @@
+{% include lang_switch.html %}
+{%- assign u = page.url -%}
+{%- assign head4 = u | slice: 0, 4 -%}
+{%- if head4 == "/en/" or u == "/en" -%}
+<script>
+  (function () {
+    var nav = document.querySelector('#site-nav');
+    if (!nav) { return; }
+    var oldList = nav.querySelector('ul.nav-list');
+    var html =
+      '<ul class="nav-list">' +
+        '<li class="nav-list-item">' +
+          '<a href="{{ "/en/odin_series/" | relative_url }}" class="nav-list-link">Odin Series</a>' +
+          '<ul class="nav-list">' +
+            '<li class="nav-list-item">' +
+              '<a href="{{ "/en/odin_series/odin1/" | relative_url }}" class="nav-list-link">Odin1</a>' +
+              '<ul class="nav-list">' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/Cover.html" | relative_url }}" class="nav-list-link">Odin1 User Manual</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/Reading%20Tips.html" | relative_url }}" class="nav-list-link">Reading Tips</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/1.%20Product%20Overview_.html" | relative_url }}" class="nav-list-link">1. Product Overview</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/2.%20HW%20Description_.html" | relative_url }}" class="nav-list-link">2. Hardware Description</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/3.%20Installation%20Guide_.html" | relative_url }}" class="nav-list-link">3. Installation Guide</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/4.%20Power%20connection.html" | relative_url }}" class="nav-list-link">4. Power and Connection</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/5.%20Data%20output_.html" | relative_url }}" class="nav-list-link">5. Data Output</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/6.%20map%20and%20relocalizaiton%20api.html" | relative_url }}" class="nav-list-link">6. Mapping and Relocalization API</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/7.%20Odin1%20Quick%20start%20for%20ubuntu.html" | relative_url }}" class="nav-list-link">7. Odin1 Quick Start (Ubuntu)</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/8.%20OdinViewer%20Quick%20start%20for%20windows.html" | relative_url }}" class="nav-list-link">8. OdinViewer Quick Start (Windows)</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/9.%20Firmware%20Upgrade.html" | relative_url }}" class="nav-list-link">9. Firmware Upgrade</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/10.%20Relocalization%20Usr%20Guide.html" | relative_url }}" class="nav-list-link">10. Relocalization User Guide</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/11.%20Relocalization%20Map%20Acquisition%20Guide.html" | relative_url }}" class="nav-list-link">11. Relocalization Map Acquisition</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/12.%20Time%20Synchronization.html" | relative_url }}" class="nav-list-link">12. Time Synchronization</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/13.%20Maintenance.html" | relative_url }}" class="nav-list-link">13. Maintenance and Troubleshooting</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/14.%20Technical%20Specifications_.html" | relative_url }}" class="nav-list-link">14. Technical Specifications</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/15.%20FAQ.html" | relative_url }}" class="nav-list-link">15. FAQ</a></li>' +
+                '<li class="nav-list-item"><a href="{{ "/en/odin_series/odin1/Footer.html" | relative_url }}" class="nav-list-link">Follow Us</a></li>' +
+              '</ul>' +
+            '</li>' +
+          '</ul>' +
+        '</li>' +
+        '<li class="nav-list-item"><a href="{{ "/en/" | relative_url }}" class="nav-list-link">Home</a></li>' +
+      '</ul>';
+    if (oldList) {
+      oldList.outerHTML = html;
+    } else {
+      nav.insertAdjacentHTML('beforeend', html);
+    }
+    /* Mark active link. */
+    var path = location.pathname.replace(/\/+$/, '/');
+    var rawPath = location.pathname;
+    document.querySelectorAll('#site-nav .nav-list-link').forEach(function (a) {
+      var href = a.getAttribute('href') || '';
+      if (href === rawPath || href.replace(/\/+$/, '/') === path) {
+        a.classList.add('active');
+        a.style.fontWeight = '600';
+      }
+    });
+    document.documentElement.classList.add('lang-en-ready');
+  })();
+</script>
+{%- endif -%}
+<!-- BEGIN_MATHJAX_MERMAID -->
+<style>
+  .site-wrap {
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .side-bar {
+    left: 0 !important;
+  }
+
+  .site-header {
+    left: 0 !important;
+  }
+
+  body {
+    margin-left: 0 !important;
+  }
+</style>
+
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+
+<script>
+  (function () {
+    function loadScript(urls, onDone) {
+      var i = 0;
+      function tryNext() {
+        if (i >= urls.length) {
+          return;
+        }
+        var url = urls[i++];
+        var s = document.createElement('script');
+        s.src = url;
+        s.async = true;
+        s.onload = function () { onDone && onDone(); };
+        s.onerror = function () { tryNext(); };
+        document.head.appendChild(s);
+      }
+      tryNext();
+    }
+
+    function typesetMath() {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetClear && window.MathJax.typesetClear();
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    loadScript([
+      'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js',
+      'https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js'
+    ], function () {
+      typesetMath();
+      setTimeout(typesetMath, 500);
+      setTimeout(typesetMath, 1500);
+    });
+
+    loadScript([
+      'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js',
+      'https://unpkg.com/mermaid@10/dist/mermaid.min.js'
+    ], function () {
+      if (window.mermaid) {
+        window.mermaid.initialize({ startOnLoad: false });
+      }
+    });
+
+    // If translate.js mutates DOM after load, re-typeset once more.
+    window.addEventListener('load', function () {
+      setTimeout(typesetMath, 2500);
+    });
+  })();
+</script>
+
+<script>
+  function renderMermaidFromCodeFences() {
+    var blocks = document.querySelectorAll('pre > code.language-mermaid');
+    blocks.forEach(function (code) {
+      var pre = code.parentElement;
+      var container = document.createElement('div');
+      container.className = 'mermaid';
+      container.textContent = code.textContent;
+      pre.parentElement.replaceChild(container, pre);
+    });
+
+    if (window.mermaid) {
+      window.mermaid.initialize({ startOnLoad: false });
+      window.mermaid.run({ querySelector: '.mermaid' });
+    }
+  }
+
+  window.addEventListener('load', function () {
+    renderMermaidFromCodeFences();
+  });
+</script>
+<!-- END_MATHJAX_MERMAID -->

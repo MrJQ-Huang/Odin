@@ -1,0 +1,38 @@
+# ROS/colcon build products
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+ros2_ws/build.before-*/
+ros2_ws/install.before-*/
+ros2_ws/log.before-*/
+ros2_ws/.colcon/
+
+# Generated wiki site
+wiki-master/_site/
+.jekyll-cache/
+.sass-cache/
+
+# Runtime output
+web_ui/odin_web_launch.log
+odin_ros_driver-main/log/
+odin_ros_driver-main/recorddata/
+odin_ros_driver-main/map/
+ros2_ws/image/
+*.bag
+*.db3
+
+# Local caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+
+# Download archives duplicated by extracted folders
+/wiki-master.zip
+/odin_ros_driver-main.zip
+
+# Editor/system files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
