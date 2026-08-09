@@ -79,7 +79,10 @@ enum class OdometryType {
 
 
 extern int g_log_level;
+extern int g_sendrgb;
 extern int g_sendcloudrender;
+extern int g_sendrgb_compressed;
+extern int g_sendrgb_undistort;
 extern int g_use_host_ros_time;
 extern std::string g_frame_prefix;
 double get_ptp_smoothed_delay();
@@ -877,33 +880,39 @@ void publishRgb(capture_Image_List_t *stream) {
 
         #ifdef ROS2
         {
-            rgb_pub_->publish(*cv_image.toImageMsg());
-            if (m_undistort_map_init_success) {
+            if (g_sendrgb) {
+                rgb_pub_->publish(*cv_image.toImageMsg());
+            }
+            if (g_sendrgb_undistort && m_undistort_map_init_success) {
                 undistort_rgb_pub_->publish(*cv_undistorted_image.toImageMsg());
             }
 
-            // original jpeg - always publish as it's small
-            sensor_msgs::msg::CompressedImage jpeg_msg;
-            jpeg_msg.header.stamp = make_aligned_stamp(stream->imageList[0].timestamp, node_);
-            jpeg_msg.format = "jpeg";
-            jpeg_msg.data = jpeg_data;
+            if (g_sendrgb_compressed) {
+                sensor_msgs::msg::CompressedImage jpeg_msg;
+                jpeg_msg.header.stamp = make_aligned_stamp(stream->imageList[0].timestamp, node_);
+                jpeg_msg.format = "jpeg";
+                jpeg_msg.data = jpeg_data;
 
-            compressed_rgb_pub_->publish(jpeg_msg);
+                compressed_rgb_pub_->publish(jpeg_msg);
+            }
         }
         #else
         {
-            rgb_pub_.publish(cv_image.toImageMsg());
-            if (m_undistort_map_init_success) {
+            if (g_sendrgb) {
+                rgb_pub_.publish(cv_image.toImageMsg());
+            }
+            if (g_sendrgb_undistort && m_undistort_map_init_success) {
                 undistort_rgb_pub_.publish(cv_undistorted_image.toImageMsg());
             }
 
-            // original jpeg
-            sensor_msgs::CompressedImagePtr jpeg_msg(new sensor_msgs::CompressedImage());
-            jpeg_msg->header.stamp = make_aligned_stamp(stream->imageList[0].timestamp);
-            jpeg_msg->format = "jpeg";
-            jpeg_msg->data = jpeg_data;
+            if (g_sendrgb_compressed) {
+                sensor_msgs::CompressedImagePtr jpeg_msg(new sensor_msgs::CompressedImage());
+                jpeg_msg->header.stamp = make_aligned_stamp(stream->imageList[0].timestamp);
+                jpeg_msg->format = "jpeg";
+                jpeg_msg->data = jpeg_data;
 
-            compressed_rgb_pub_.publish(jpeg_msg);
+                compressed_rgb_pub_.publish(jpeg_msg);
+            }
         }
         #endif
     }

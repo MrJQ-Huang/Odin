@@ -17,6 +17,7 @@ web_ui/odin_web_launch.log
 odin_ros_driver-main/log/
 odin_ros_driver-main/recorddata/
 odin_ros_driver-main/map/
+odin_ros_driver-main/config/*.yaml.bak-*
 ros2_ws/image/
 *.bag
 *.db3

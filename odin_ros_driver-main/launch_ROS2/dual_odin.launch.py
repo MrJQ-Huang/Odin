@@ -21,6 +21,8 @@ def generate_launch_description():
     odin_b_usb_bus = LaunchConfiguration('odin_b_usb_bus')
     odin_b_usb_addr = LaunchConfiguration('odin_b_usb_addr')
     use_rviz = LaunchConfiguration('use_rviz')
+    enable_odin_a = LaunchConfiguration('enable_odin_a')
+    enable_odin_b = LaunchConfiguration('enable_odin_b')
 
     odin_a_config = LaunchConfiguration('odin_a_config')
     odin_b_config = LaunchConfiguration('odin_b_config')
@@ -45,6 +47,7 @@ def generate_launch_description():
             'ODIN_USB_ADDR': odin_a_usb_addr,
             'LD_PRELOAD': libusb_filter,
         },
+        condition=IfCondition(enable_odin_a),
     )
 
     odin_b_node = Node(
@@ -65,6 +68,7 @@ def generate_launch_description():
             'ODIN_USB_ADDR': odin_b_usb_addr,
             'LD_PRELOAD': libusb_filter,
         },
+        condition=IfCondition(enable_odin_b),
     )
 
     world_to_odin_a = Node(
@@ -72,6 +76,7 @@ def generate_launch_description():
         executable='static_transform_publisher',
         name='world_to_odin_a_odom',
         arguments=['0', '0', '0', '0', '0', '0', 'world', 'odin_a/odom'],
+        condition=IfCondition(enable_odin_a),
     )
 
     world_to_odin_b = Node(
@@ -79,12 +84,14 @@ def generate_launch_description():
         executable='static_transform_publisher',
         name='world_to_odin_b_odom',
         arguments=['0', '0', '0', '0', '0', '0', 'world', 'odin_b/odom'],
+        condition=IfCondition(enable_odin_b),
     )
 
     rviz_node = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
+        arguments=['-d', os.path.join(package_dir, 'config', 'dual_odin_ros2.rviz')],
         output='screen',
         condition=IfCondition(use_rviz),
     )
@@ -107,6 +114,8 @@ def generate_launch_description():
         DeclareLaunchArgument('odin_a_calib_dir', default_value='/home/uros/.ros/odin_a'),
         DeclareLaunchArgument('odin_b_calib_dir', default_value='/home/uros/.ros/odin_b'),
         DeclareLaunchArgument('use_rviz', default_value='true'),
+        DeclareLaunchArgument('enable_odin_a', default_value='true'),
+        DeclareLaunchArgument('enable_odin_b', default_value='true'),
         world_to_odin_a,
         world_to_odin_b,
         odin_a_node,

@@ -46,7 +46,7 @@ register_keys:
   # Useful for ROS2 Jazzy where tf2 has strict timestamp lookup
   tf_extra_publish_rate: 0  # 0: off; >0: rate in Hz
 
-  # raw dtof data
+  # DTOF data source required by RGB rendered point cloud
   senddtof: 1             # 0: off; 1: on
   cloud_raw_confidence_threshold: 35 # please refer to readme for more details
   
@@ -54,8 +54,8 @@ register_keys:
   # Higher frame rate provides smoother point cloud data but may increase data bandwidth
   # Note: value is multiplied by 10 (e.g., 145 means 14.5fps)
   dtof_fps: 100           # 100: 10fps; 145: 14.5fps 290: dtof 10hz + camera 29hz(not support)
-  # slam cloud data
-  sendcloudslam: 1        # 0: off; 1: on
+  # slam cloud data. Keep off for normal RGB rendered cloud viewing.
+  sendcloudslam: 0        # 0: off; 1: on
 
   # processed with raw point cloud, rgb image, and calib.yaml from device
   # Processed on host device

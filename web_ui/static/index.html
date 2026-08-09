@@ -3,115 +3,170 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Odin1 双机控制台</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <title>Odin1 操作台</title>
+    <link rel="stylesheet" href="/styles.css?v=20260809-workbench-8" />
   </head>
   <body>
     <header class="appbar">
       <div class="brand">
-        <h1>Odin1 双机控制台</h1>
-        <p>USB 绑定 · ROS2 Humble · RViz</p>
+        <h1>Odin1 操作台</h1>
+        <p id="nextAction">正在检查设备</p>
       </div>
       <div class="runtime">
-        <span id="runState" class="badge neutral">读取中</span>
-        <span id="topicState" class="badge neutral">topic CLI</span>
+        <span id="aTopState" class="badge neutral">A 检查中</span>
+        <span id="bTopState" class="badge neutral">B 检查中</span>
+        <span id="runState" class="badge neutral">ROS 状态</span>
         <button id="refreshBtn" class="ghost">刷新</button>
       </div>
     </header>
 
     <main class="shell">
-      <aside class="sidebar">
-        <section class="panel">
+      <section class="control-column">
+        <section class="panel readiness-panel">
           <div class="panel-head">
-            <h2>设备</h2>
-            <button id="autoBindBtn" class="ghost">自动绑定</button>
+            <div>
+              <h2>设备就绪</h2>
+              <p id="readinessText" class="hint">等待扫描</p>
+            </div>
+            <div class="button-row">
+              <button id="refreshDevicesBtn" class="ghost">扫描设备</button>
+              <button id="saveStateBtn" class="primary">记住设备</button>
+            </div>
+          </div>
+
+          <div class="identity-grid">
+            <article class="identity-card active" data-slot-card="odin_a">
+              <div class="identity-head">
+                <div>
+                  <span class="eyebrow">Odin A</span>
+                  <strong id="aTitle">未绑定</strong>
+                </div>
+                <span id="aBindBadge" class="badge neutral">检查中</span>
+              </div>
+              <div id="aBindLine" class="identity-line">等待设备</div>
+              <div class="identity-meta">
+                <span id="aSerialView">Serial --</span>
+                <span id="aUsbView">USB --</span>
+              </div>
+              <div class="button-row">
+                <button class="slot-switch" data-slot="odin_a">编辑 A 参数</button>
+                <button id="swapABBtn" class="ghost">交换 A/B</button>
+              </div>
+            </article>
+
+            <article class="identity-card" data-slot-card="odin_b">
+              <div class="identity-head">
+                <div>
+                  <span class="eyebrow">Odin B</span>
+                  <strong id="bTitle">未绑定</strong>
+                </div>
+                <span id="bBindBadge" class="badge neutral">检查中</span>
+              </div>
+              <div id="bBindLine" class="identity-line">等待设备</div>
+              <div class="identity-meta">
+                <span id="bSerialView">Serial --</span>
+                <span id="bUsbView">USB --</span>
+              </div>
+              <div class="button-row">
+                <button class="slot-switch" data-slot="odin_b">编辑 B 参数</button>
+              </div>
+            </article>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="panel-head compact">
+            <h3>发现的设备</h3>
+            <button id="autoBindBtn" class="ghost">按 USB 顺序填充 A/B</button>
           </div>
           <div id="deviceList" class="device-list"></div>
         </section>
 
-        <section class="panel">
-          <div class="panel-head">
-            <h2>绑定</h2>
-            <button id="saveStateBtn" class="ghost">保存</button>
-          </div>
-
-          <div class="slot-card active" data-slot-card="odin_a">
-            <div class="slot-top">
-              <strong>Odin A</strong>
-              <button class="slot-switch" data-slot="odin_a">编辑 A</button>
-            </div>
-            <div class="compact-grid">
-              <label>Bus<input id="aBus" /></label>
-              <label>Addr<input id="aAddr" /></label>
-            </div>
-            <label>Serial<input id="aSerial" placeholder="可选，用于重插后自动匹配" /></label>
-          </div>
-
-          <div class="slot-card" data-slot-card="odin_b">
-            <div class="slot-top">
-              <strong>Odin B</strong>
-              <button class="slot-switch" data-slot="odin_b">编辑 B</button>
-            </div>
-            <div class="compact-grid">
-              <label>Bus<input id="bBus" /></label>
-              <label>Addr<input id="bAddr" /></label>
-            </div>
-            <label>Serial<input id="bSerial" placeholder="可选，用于重插后自动匹配" /></label>
-          </div>
-
-          <details class="paths">
-            <summary>参数文件路径</summary>
-            <label>Odin A config<input id="aConfig" /></label>
-            <label>Odin A calib dir<input id="aCalib" /></label>
-            <label>Odin B config<input id="bConfig" /></label>
-            <label>Odin B calib dir<input id="bCalib" /></label>
-          </details>
-        </section>
-
         <section class="panel launch-panel">
           <div class="panel-head">
-            <h2>启动</h2>
-            <label class="inline-check"><input id="useRviz" type="checkbox" /> RViz</label>
+            <div>
+              <h2>启动控制</h2>
+              <p id="launchHint" class="hint">等待设备就绪</p>
+            </div>
+            <div class="launch-options">
+              <label>
+                启动目标
+                <select id="launchTarget">
+                  <option value="auto">自动匹配</option>
+                  <option value="odin_a">只启动 A</option>
+                  <option value="odin_b">只启动 B</option>
+                  <option value="dual">启动 A+B</option>
+                </select>
+              </label>
+              <label class="inline-check"><input id="useRviz" type="checkbox" /> RViz</label>
+            </div>
           </div>
-          <div class="button-row">
-            <button id="startBtn" class="primary">启动</button>
+          <div class="launch-actions">
+            <button id="startBtn" class="primary big-action">启动双 Odin</button>
+            <button id="fixUsbBtn">修复 USB 权限</button>
             <button id="stopBtn" class="danger">停止</button>
             <button id="restartBtn">重启</button>
           </div>
-          <pre id="launchLine" class="cmd"></pre>
+          <details class="advanced">
+            <summary>启动命令</summary>
+            <pre id="launchLine" class="cmd"></pre>
+          </details>
         </section>
-      </aside>
+      </section>
 
       <section class="workspace">
-        <nav class="tabs">
-          <button class="tab active" data-slot="odin_a">Odin A 参数</button>
-          <button class="tab" data-slot="odin_b">Odin B 参数</button>
-        </nav>
-
-        <section class="panel">
+        <section class="panel monitor-card">
           <div class="panel-head">
-            <h2>常用参数</h2>
-            <button id="saveQuickBtn" class="primary">保存参数</button>
-          </div>
-          <div id="quickFields" class="quick-grid"></div>
-        </section>
-
-        <section class="panel editor-shell">
-          <div class="panel-head">
-            <div class="editor-tabs">
-              <button class="mini-tab active" data-editor="config">运行 YAML</button>
-              <button class="mini-tab" data-editor="calib">Calib YAML</button>
+            <div>
+              <h2>运行状态</h2>
+              <p id="runtimeText" class="hint">启动后这里显示日志和话题</p>
             </div>
-            <button id="saveRawBtn">保存当前文件</button>
+            <div class="button-row">
+              <span id="topicState" class="badge neutral">topic CLI</span>
+              <button id="logBtn">刷新日志</button>
+              <button id="topicsBtn">刷新话题</button>
+            </div>
           </div>
-          <div id="filePath" class="pathline"></div>
-          <textarea id="rawEditor" spellcheck="false"></textarea>
+          <div class="monitor-tabs">
+            <button class="mini-tab active" data-monitor="log">日志</button>
+            <button class="mini-tab" data-monitor="topics">Odin 话题</button>
+          </div>
+          <pre id="logBox" class="output"></pre>
+          <pre id="topicsBox" class="output hidden"></pre>
         </section>
 
-        <section class="panel">
+        <section class="panel params-card">
           <div class="panel-head">
-            <h2>运行时命令</h2>
-            <button id="sendCommandBtn">发送到当前设备</button>
+            <div>
+              <h2>常用参数</h2>
+              <p id="paramTarget" class="hint">当前编辑 Odin A</p>
+            </div>
+            <div class="tabs">
+              <button class="tab active" data-slot="odin_a">Odin A</button>
+              <button class="tab" data-slot="odin_b">Odin B</button>
+            </div>
+          </div>
+          <div id="quickGroups" class="quick-groups"></div>
+          <div class="panel-footer">
+            <label class="param-scope">
+              参数作用范围
+              <select id="paramScope">
+                <option value="launch">将要启动/正在运行的设备</option>
+                <option value="selected">当前编辑设备</option>
+                <option value="both">同步到 A+B</option>
+              </select>
+            </label>
+            <button id="saveQuickBtn" class="primary">保存当前设备参数</button>
+          </div>
+        </section>
+
+        <section class="panel command-card">
+          <div class="panel-head">
+            <div>
+              <h2>运行时命令</h2>
+              <p class="hint">发送到当前选中的 Odin</p>
+            </div>
+            <button id="sendCommandBtn">发送命令</button>
           </div>
           <div class="command-form">
             <input id="cmdKey" placeholder="save_map" />
@@ -119,24 +174,38 @@
           </div>
         </section>
 
-        <section class="panel monitor">
-          <div class="panel-head">
-            <div class="editor-tabs">
-              <button class="mini-tab active" data-monitor="log">日志</button>
-              <button class="mini-tab" data-monitor="topics">话题</button>
+        <section class="panel advanced-card">
+          <details>
+            <summary>高级设置与原始文件</summary>
+            <div class="advanced-grid">
+              <label class="hidden-field">A Bus<input id="aBus" /></label>
+              <label class="hidden-field">A Addr<input id="aAddr" /></label>
+              <label>Odin A Serial<input id="aSerial" /></label>
+              <label class="hidden-field">B Bus<input id="bBus" /></label>
+              <label class="hidden-field">B Addr<input id="bAddr" /></label>
+              <label>Odin B Serial<input id="bSerial" /></label>
+              <label>Odin A config<input id="aConfig" /></label>
+              <label>Odin A calib dir<input id="aCalib" /></label>
+              <label>Odin B config<input id="bConfig" /></label>
+              <label>Odin B calib dir<input id="bCalib" /></label>
             </div>
-            <div class="button-row">
-              <button id="logBtn">刷新日志</button>
-              <button id="topicsBtn">刷新话题</button>
+            <div class="editor-shell">
+              <div class="panel-head">
+                <div class="editor-tabs">
+                  <button class="mini-tab active" data-editor="config">运行 YAML</button>
+                  <button class="mini-tab" data-editor="calib">Calib YAML</button>
+                </div>
+                <button id="saveRawBtn">保存当前文件</button>
+              </div>
+              <div id="filePath" class="pathline"></div>
+              <textarea id="rawEditor" spellcheck="false"></textarea>
             </div>
-          </div>
-          <pre id="logBox" class="output"></pre>
-          <pre id="topicsBox" class="output hidden"></pre>
+          </details>
         </section>
       </section>
     </main>
 
     <div id="toast"></div>
-    <script src="/app.js"></script>
+    <script src="/app.js?v=20260809-workbench-8"></script>
   </body>
 </html>

@@ -40,13 +40,17 @@ DEFAULT_STATE = {
         "frame_prefix": "odin_b",
     },
     "use_rviz": True,
+    "launch_target": "auto",
 }
+
+SLOTS = ("odin_a", "odin_b")
+LAUNCH_TARGETS = {"auto", "odin_a", "odin_b", "dual"}
 
 QUICK_FIELDS = [
     {"key": "streamctrl", "type": "bool", "label": "数据流"},
+    {"key": "sendcloudrender", "type": "bool", "label": "RGB 着色点云"},
+    {"key": "senddtof", "type": "bool", "label": "DTOF 数据源"},
     {"key": "sendcloudslam", "type": "bool", "label": "SLAM 点云"},
-    {"key": "sendcloudrender", "type": "bool", "label": "彩色点云"},
-    {"key": "senddtof", "type": "bool", "label": "Raw DTOF"},
     {"key": "sendimu", "type": "bool", "label": "IMU"},
     {"key": "sendodom", "type": "bool", "label": "Odometry"},
     {"key": "sendrgb", "type": "bool", "label": "RGB"},
@@ -77,8 +81,86 @@ QUICK_FIELDS = [
     {"key": "image_mask_abs_path", "type": "text", "label": "Mask 图片路径"},
 ]
 
+RUNTIME_COMMAND_KEYS = {
+    "sendrgb",
+    "sendrgbcompressed",
+    "sendrgbundistort",
+    "sendimu",
+    "sendodom",
+    "senddtof",
+    "sendcloudslam",
+    "sendcloudrender",
+    "pubintensitygray",
+    "showpath",
+    "showcamerapose",
+    "devstatuslog",
+}
+
 launch_process = None
 launch_log_handle = None
+launch_target_requested = None
+launch_effective_slots = []
+
+
+def odin_runtime_processes():
+    proc = subprocess.run(
+        ["ps", "-eo", "pid=,pgid=,args="],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    current = os.getpid()
+    matches = []
+    for line in proc.stdout.splitlines():
+        parts = line.strip().split(None, 2)
+        if len(parts) < 3:
+            continue
+        pid, pgid, cmd = int(parts[0]), int(parts[1]), parts[2]
+        if pid == current:
+            continue
+        is_odin_driver = "host_sdk_sample" in cmd and "odin_ros_driver" in cmd
+        is_dual_launch = "ros2 launch odin_ros_driver dual_odin.launch.py" in cmd
+        is_dual_rviz = "rviz2" in cmd and "dual_odin_ros2.rviz" in cmd
+        is_dual_tf = "static_transform_publisher" in cmd and ("odin_a/odom" in cmd or "odin_b/odom" in cmd)
+        if is_odin_driver or is_dual_launch or is_dual_rviz or is_dual_tf:
+            matches.append({"pid": pid, "pgid": pgid, "cmd": cmd})
+    return matches
+
+
+def wait_for_odin_processes_to_exit(timeout=8):
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        if not odin_runtime_processes():
+            return True
+        time.sleep(0.2)
+    return not odin_runtime_processes()
+
+
+def stop_external_odin_processes():
+    processes = odin_runtime_processes()
+    if not processes:
+        return
+    pgids = sorted({proc["pgid"] for proc in processes if proc["pgid"] != os.getpgrp()})
+    for pgid in pgids:
+        try:
+            os.killpg(pgid, signal.SIGINT)
+        except ProcessLookupError:
+            pass
+    if wait_for_odin_processes_to_exit(timeout=8):
+        return
+    for pgid in pgids:
+        try:
+            os.killpg(pgid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+    if wait_for_odin_processes_to_exit(timeout=4):
+        return
+    for pgid in pgids:
+        try:
+            os.killpg(pgid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    wait_for_odin_processes_to_exit(timeout=2)
 
 
 def load_state():
@@ -172,6 +254,11 @@ def scan_odin_devices():
                 "product": safe_read(dev / "product"),
                 "manufacturer": safe_read(dev / "manufacturer"),
             }
+            if item["bus"] and item["addr"]:
+                devnode = Path("/dev/bus/usb") / f"{int(item['bus']):03d}" / f"{int(item['addr']):03d}"
+                item["devnode"] = str(devnode)
+                item["can_read"] = os.access(devnode, os.R_OK)
+                item["can_write"] = os.access(devnode, os.W_OK)
             devices.append(item)
         except OSError:
             continue
@@ -238,6 +325,68 @@ def update_config_fields(text, updates):
     return "\n".join(lines) + "\n"
 
 
+def config_bool(values, key):
+    return str(values.get(key, "0")).strip().lower() in ("1", "true", "yes", "on")
+
+
+def set_rviz_display(group, display_name, enabled):
+    for display in group.get("Displays", []):
+        if display.get("Name") == display_name:
+            display["Enabled"] = bool(enabled)
+            display["Value"] = bool(enabled)
+            return
+
+
+def sync_dual_rviz_config(active_slots=None):
+    rviz_path = DRIVER_DIR / "config" / "dual_odin_ros2.rviz"
+    if not rviz_path.exists():
+        return
+    import yaml
+
+    active = set(active_slots or SLOTS)
+    state = load_state()
+    cfg = yaml.safe_load(rviz_path.read_text(encoding="utf-8"))
+    displays = cfg.get("Visualization Manager", {}).get("Displays", [])
+    slot_config = {
+        "Odin A": parse_config_values(read_text_file(state["odin_a"]["config"])),
+        "Odin B": parse_config_values(read_text_file(state["odin_b"]["config"])),
+    }
+
+    for group in displays:
+        name = group.get("Name")
+        if name not in slot_config:
+            continue
+        values = slot_config[name]
+        slot = "odin_a" if name == "Odin A" else "odin_b"
+        slot_active = slot in active
+        render_on = config_bool(values, "sendcloudrender")
+        dtof_on = config_bool(values, "senddtof")
+        slam_on = config_bool(values, "sendcloudslam")
+
+        prefix = "A" if name == "Odin A" else "B"
+        group["Enabled"] = bool(slot_active)
+        group["Value"] = bool(slot_active)
+        set_rviz_display(group, f"{prefix} render", slot_active and render_on)
+        set_rviz_display(group, f"{prefix} raw", slot_active and dtof_on and not render_on)
+        set_rviz_display(group, f"{prefix} slam", slot_active and slam_on)
+
+    rviz_path.write_text(yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+
+def write_runtime_commands(slot, updates):
+    state = load_state()
+    commands = []
+    field_types = {field["key"]: field["type"] for field in QUICK_FIELDS}
+    for key, value in updates.items():
+        if key in RUNTIME_COMMAND_KEYS:
+            commands.append(f"set {key} {format_value(value, field_types.get(key, 'text'))}")
+    if not commands:
+        return []
+    command_file = Path(state[slot]["command_file"])
+    command_file.write_text("\n".join(commands) + "\n", encoding="utf-8")
+    return commands
+
+
 def ros2_command_available(command):
     probe = (
         "source /opt/ros/humble/setup.bash >/dev/null 2>&1 && "
@@ -248,28 +397,24 @@ def ros2_command_available(command):
 
 def launch_status():
     global launch_process
-    running = launch_process is not None and launch_process.poll() is None
-    external = ""
-    if not running:
-        proc = subprocess.run(
-            ["pgrep", "-af", "ros2 launch odin_ros_driver dual_odin.launch.py|host_sdk_sample"],
-            text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-        )
-        external = proc.stdout.strip()
+    owned_running = launch_process is not None and launch_process.poll() is None
+    external_processes = odin_runtime_processes()
+    running = owned_running or bool(external_processes)
+    external = "\n".join(f"{proc['pid']} {proc['cmd']}" for proc in external_processes)
     return {
         "running": running,
-        "pid": launch_process.pid if running else None,
+        "pid": launch_process.pid if owned_running else (external_processes[0]["pid"] if external_processes else None),
         "returncode": None if launch_process is None else launch_process.poll(),
         "external": external,
         "log_file": str(LOG_FILE),
+        "target": launch_target_requested,
+        "effective_slots": launch_effective_slots,
     }
 
 
 def resolve_usb_bindings(state):
     devices = scan_odin_devices()
-    for slot in ("odin_a", "odin_b"):
+    for slot in SLOTS:
         serial = str(state[slot].get("serial", "")).strip()
         if not serial:
             continue
@@ -280,19 +425,208 @@ def resolve_usb_bindings(state):
     return state
 
 
-def start_launch():
-    global launch_process, launch_log_handle
-    if launch_process is not None and launch_process.poll() is None:
-        raise RuntimeError("dual Odin launch is already running")
+def match_device_for_slot(state, devices, slot):
+    slot_state = state.get(slot, {})
+    serial = str(slot_state.get("serial", "")).strip()
+    bus = str(slot_state.get("usb_bus", "")).strip()
+    addr = str(slot_state.get("usb_addr", "")).strip()
+    if serial:
+        match = next((dev for dev in devices if dev.get("serial") == serial), None)
+        if match:
+            return match
+    if bus and addr:
+        return next((dev for dev in devices if dev.get("bus") == bus and dev.get("addr") == addr), None)
+    return None
+
+
+def slot_label(slot):
+    return "Odin A" if slot == "odin_a" else "Odin B"
+
+
+def launch_plan(state, devices, target=None):
+    requested = str(target or state.get("launch_target") or "auto").strip()
+    if requested not in LAUNCH_TARGETS:
+        requested = "auto"
+
+    matches = {slot: match_device_for_slot(state, devices, slot) for slot in SLOTS}
+    duplicate_serial = (
+        str(state.get("odin_a", {}).get("serial", "")).strip()
+        and str(state.get("odin_a", {}).get("serial", "")).strip()
+        == str(state.get("odin_b", {}).get("serial", "")).strip()
+    )
+
+    temporary_slot = None
+    temporary_device = None
+    if len(devices) == 1 and not matches["odin_a"] and not matches["odin_b"]:
+        temporary_device = devices[0]
+        temporary_slot = "odin_b" if requested == "odin_b" else "odin_a"
+        matches[temporary_slot] = temporary_device
+
+    if requested == "dual":
+        slots = ["odin_a", "odin_b"]
+    elif requested in SLOTS:
+        slots = [requested]
+    else:
+        online_slots = [slot for slot in SLOTS if matches[slot]]
+        if len(online_slots) >= 2 and not duplicate_serial:
+            slots = ["odin_a", "odin_b"]
+        elif len(online_slots) == 1:
+            slots = online_slots
+        else:
+            slots = []
+
+    missing_slots = [slot for slot in slots if not matches[slot]]
+    selected_devices = [matches[slot] for slot in slots if matches[slot]]
+    permission_slots = [
+        slot
+        for slot in slots
+        if matches[slot] and not (matches[slot].get("can_read") and matches[slot].get("can_write"))
+    ]
+    ready = bool(slots) and not missing_slots and not permission_slots and not duplicate_serial
+
+    if requested == "auto" and len(slots) == 2:
+        label = "自动匹配：双机"
+    elif requested == "auto" and len(slots) == 1:
+        label = f"自动匹配：{slot_label(slots[0])} 单机"
+    elif requested == "dual":
+        label = "手动选择：双机"
+    elif slots:
+        label = f"手动选择：{slot_label(slots[0])} 单机"
+    else:
+        label = "自动匹配：等待设备"
+
+    if duplicate_serial:
+        reason = "A/B 绑定到了同一个 serial"
+    elif not devices:
+        reason = "还没有看到 Odin"
+    elif missing_slots:
+        reason = "、".join(slot_label(slot) for slot in missing_slots) + " 未在线"
+    elif permission_slots:
+        reason = "、".join(slot_label(slot) for slot in permission_slots) + " USB 权限不足"
+    elif not slots:
+        reason = "请选择设备身份或切换启动目标"
+    else:
+        reason = f"{label} 已就绪"
+
+    return {
+        "requested": requested,
+        "effective_slots": slots,
+        "ready": ready,
+        "label": label,
+        "reason": reason,
+        "temporary_slot": temporary_slot,
+        "temporary_serial": temporary_device.get("serial") if temporary_device else "",
+        "permission_slots": permission_slots,
+        "missing_slots": missing_slots,
+        "matches": matches,
+    }
+
+
+def apply_plan_usb_addresses(state, plan):
+    for slot in plan["effective_slots"]:
+        dev = plan["matches"].get(slot)
+        if not dev:
+            continue
+        state[slot]["usb_bus"] = dev["bus"]
+        state[slot]["usb_addr"] = dev["addr"]
+    return state
+
+
+def summarize_state(state, devices, launch):
+    matches = {}
+    for slot in SLOTS:
+        match = match_device_for_slot(state, devices, slot)
+        matches[slot] = match
+
+    serials = [
+        str(state.get(slot, {}).get("serial", "")).strip()
+        for slot in SLOTS
+        if str(state.get(slot, {}).get("serial", "")).strip()
+    ]
+    duplicate_serial = len(serials) == 2 and serials[0] == serials[1]
+    a_online = matches["odin_a"] is not None
+    b_online = matches["odin_b"] is not None
+    plan = launch_plan(state, devices, state.get("launch_target"))
+    binding_ready = bool(plan["effective_slots"]) and not plan["missing_slots"] and not duplicate_serial
+    usb_access_ready = all(bool(dev.get("can_read")) and bool(dev.get("can_write")) for dev in plan["matches"].values() if dev)
+    launch_usb_access_ready = not plan["permission_slots"]
+    running = bool(launch.get("running"))
+
+    if running:
+        status = "running"
+        action = "monitor"
+        running_slots = launch.get("effective_slots") or plan["effective_slots"]
+        running_label = "双 Odin" if len(running_slots) == 2 else slot_label(running_slots[0]) if running_slots else "Odin"
+        message = f"{running_label} 正在运行"
+    elif len(devices) == 0:
+        status = "no_device"
+        action = "scan"
+        message = "还没有看到 Odin"
+    elif duplicate_serial:
+        status = "duplicate_binding"
+        action = "bind"
+        message = "A/B 绑定到了同一个 serial"
+    elif binding_ready and not launch_usb_access_ready:
+        status = "permission_blocked"
+        action = "fix_usb_permissions"
+        message = plan["reason"]
+    elif binding_ready:
+        status = "ready"
+        action = "start"
+        message = plan["reason"]
+    elif a_online or b_online:
+        status = "partial_bound"
+        action = "bind"
+        message = plan["reason"]
+    else:
+        status = "unbound"
+        action = "bind"
+        message = plan["reason"]
+
+    return {
+        "status": status,
+        "message": message,
+        "recommended_action": action,
+        "device_count": len(devices),
+        "a_online": a_online,
+        "b_online": b_online,
+        "binding_ready": binding_ready,
+        "usb_access_ready": usb_access_ready,
+        "launch_usb_access_ready": launch_usb_access_ready,
+        "launch_ready": plan["ready"] and not running,
+        "duplicate_serial": duplicate_serial,
+        "launch_plan": {k: v for k, v in plan.items() if k != "matches"},
+        "matches": {
+            "odin_a": matches["odin_a"],
+            "odin_b": matches["odin_b"],
+        },
+    }
+
+
+def start_launch(target=None):
+    global launch_process, launch_log_handle, launch_target_requested, launch_effective_slots
+    if launch_status().get("running"):
+        raise RuntimeError("Odin launch is already running")
 
     state = resolve_usb_bindings(load_state())
+    devices = scan_odin_devices()
+    plan = launch_plan(state, devices, target or state.get("launch_target"))
+    if not plan["ready"]:
+        raise RuntimeError(plan["reason"])
+    state["launch_target"] = plan["requested"]
+    state = apply_plan_usb_addresses(state, plan)
     save_state(state)
+    sync_dual_rviz_config(plan["effective_slots"])
+    enable_a = "odin_a" in plan["effective_slots"]
+    enable_b = "odin_b" in plan["effective_slots"]
     args = [
         "ros2",
         "launch",
         "odin_ros_driver",
         "dual_odin.launch.py",
         f"use_rviz:={'true' if state.get('use_rviz') else 'false'}",
+        f"enable_odin_a:={'true' if enable_a else 'false'}",
+        f"enable_odin_b:={'true' if enable_b else 'false'}",
         f"odin_a_usb_bus:={state['odin_a']['usb_bus']}",
         f"odin_a_usb_addr:={state['odin_a']['usb_addr']}",
         f"odin_b_usb_bus:={state['odin_b']['usb_bus']}",
@@ -307,9 +641,26 @@ def start_launch():
         f"source {shlex.quote(str(ROS_WS / 'install' / 'setup.bash'))} && "
         f"exec {shlex.join(args)}"
     )
+    clean_env = os.environ.copy()
+    for key in list(clean_env):
+        if key.startswith("SNAP") or key in {
+            "GTK_EXE_PREFIX",
+            "GTK_PATH",
+            "GTK_IM_MODULE_FILE",
+            "GIO_MODULE_DIR",
+            "GIO_EXTRA_MODULES",
+            "LD_LIBRARY_PATH",
+        }:
+            clean_env.pop(key, None)
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     launch_log_handle = LOG_FILE.open("a", encoding="utf-8")
-    launch_log_handle.write("\n\n==== Odin launch started " + time.strftime("%Y-%m-%d %H:%M:%S") + " ====\n")
+    launch_target_requested = plan["requested"]
+    launch_effective_slots = plan["effective_slots"]
+    launch_log_handle.write(
+        "\n\n==== Odin launch started "
+        + time.strftime("%Y-%m-%d %H:%M:%S")
+        + f" target={plan['requested']} slots={','.join(plan['effective_slots'])} ====\n"
+    )
     launch_log_handle.flush()
     launch_process = subprocess.Popen(
         ["bash", "-lc", shell_cmd],
@@ -318,28 +669,31 @@ def start_launch():
         stderr=subprocess.STDOUT,
         preexec_fn=os.setsid,
         text=True,
+        env=clean_env,
     )
     return launch_status()
 
 
 def stop_launch():
-    global launch_process, launch_log_handle
-    if launch_process is None or launch_process.poll() is not None:
-        return launch_status()
-    os.killpg(os.getpgid(launch_process.pid), signal.SIGINT)
-    try:
-        launch_process.wait(timeout=10)
-    except subprocess.TimeoutExpired:
-        os.killpg(os.getpgid(launch_process.pid), signal.SIGTERM)
+    global launch_process, launch_log_handle, launch_target_requested, launch_effective_slots
+    if launch_process is not None and launch_process.poll() is None:
+        os.killpg(os.getpgid(launch_process.pid), signal.SIGINT)
         try:
-            launch_process.wait(timeout=5)
+            launch_process.wait(timeout=10)
         except subprocess.TimeoutExpired:
-            os.killpg(os.getpgid(launch_process.pid), signal.SIGKILL)
-            launch_process.wait(timeout=5)
+            os.killpg(os.getpgid(launch_process.pid), signal.SIGTERM)
+            try:
+                launch_process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                os.killpg(os.getpgid(launch_process.pid), signal.SIGKILL)
+                launch_process.wait(timeout=5)
+    stop_external_odin_processes()
     if launch_log_handle:
         launch_log_handle.flush()
         launch_log_handle.close()
         launch_log_handle = None
+    launch_target_requested = None
+    launch_effective_slots = []
     return launch_status()
 
 
@@ -363,6 +717,33 @@ def list_topics():
     return {"available": True, "topics": topics, "error": proc.stderr.strip()}
 
 
+def odin_usb_devnodes():
+    devnodes = []
+    for dev in scan_odin_devices():
+        node = dev.get("devnode")
+        if node and Path(node).exists():
+            devnodes.append(node)
+    return sorted(set(devnodes))
+
+
+def fix_usb_permissions():
+    devnodes = odin_usb_devnodes()
+    if not devnodes:
+        raise RuntimeError("没有找到 Odin USB 设备")
+    cmd = ["pkexec", "/bin/chmod", "a+rw", *devnodes]
+    proc = subprocess.run(
+        cmd,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=120,
+    )
+    if proc.returncode != 0:
+        detail = proc.stderr.strip() or proc.stdout.strip() or f"pkexec exited with {proc.returncode}"
+        raise RuntimeError(detail)
+    return {"ok": True, "devnodes": devnodes}
+
+
 class OdinHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(STATIC_DIR), **kwargs)
@@ -370,16 +751,23 @@ class OdinHandler(SimpleHTTPRequestHandler):
     def log_message(self, fmt, *args):
         print(f"[web] {self.address_string()} - {fmt % args}")
 
+    def end_headers(self):
+        self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
         try:
             if path == "/api/status":
                 state = load_state()
+                devices = scan_odin_devices()
+                launch = launch_status()
                 json_response(self, {
                     "state": state,
-                    "devices": scan_odin_devices(),
-                    "launch": launch_status(),
+                    "devices": devices,
+                    "launch": launch,
+                    "summary": summarize_state(state, devices, launch),
                     "ros2topic_available": ros2_command_available("topic"),
                     "quick_fields": QUICK_FIELDS,
                 })
@@ -387,7 +775,7 @@ class OdinHandler(SimpleHTTPRequestHandler):
             if path == "/api/configs":
                 state = load_state()
                 payload = {}
-                for slot in ("odin_a", "odin_b"):
+                for slot in SLOTS:
                     cfg = state[slot]["config"]
                     calib = calib_path(state[slot])
                     cfg_text = read_text_file(cfg)
@@ -419,24 +807,50 @@ class OdinHandler(SimpleHTTPRequestHandler):
             body = read_json(self)
             if path == "/api/state":
                 state = load_state()
-                for slot in ("odin_a", "odin_b"):
+                for slot in SLOTS:
                     if slot in body:
                         state[slot].update({k: str(v) for k, v in body[slot].items() if k in state[slot]})
                 state = resolve_usb_bindings(state)
                 if "use_rviz" in body:
                     state["use_rviz"] = bool(body["use_rviz"])
+                if body.get("launch_target") in LAUNCH_TARGETS:
+                    state["launch_target"] = body["launch_target"]
                 save_state(state)
                 json_response(self, {"ok": True, "state": state})
                 return
             if path == "/api/config-fields":
-                slot = body.get("slot")
-                if slot not in ("odin_a", "odin_b"):
+                slots = body.get("slots") or [body.get("slot")]
+                slots = [slot for slot in slots if slot in SLOTS]
+                if not slots:
                     raise ValueError("slot must be odin_a or odin_b")
                 state = load_state()
-                cfg = state[slot]["config"]
-                text = read_text_file(cfg)
-                backup_and_write(cfg, update_config_fields(text, body.get("updates", {})))
-                json_response(self, {"ok": True})
+                updates = body.get("updates", {})
+                for slot in slots:
+                    cfg = state[slot]["config"]
+                    text = read_text_file(cfg)
+                    backup_and_write(cfg, update_config_fields(text, updates))
+                plan = launch_plan(state, scan_odin_devices(), state.get("launch_target"))
+                sync_dual_rviz_config(plan["effective_slots"] or SLOTS)
+                runtime_commands = []
+                launch_action = "none"
+                if body.get("apply_running", False):
+                    status_before = launch_status()
+                    if status_before.get("running"):
+                        restart_target = status_before.get("target") or state.get("launch_target") or "auto"
+                        stop_launch()
+                        status_after = start_launch(restart_target)
+                        launch_action = "restarted"
+                    else:
+                        status_after = launch_status()
+                else:
+                    status_after = launch_status()
+                json_response(self, {
+                    "ok": True,
+                    "slots": slots,
+                    "runtime_commands": runtime_commands,
+                    "launch_action": launch_action,
+                    "launch": status_after,
+                })
                 return
             if path == "/api/file":
                 target = body.get("path")
@@ -446,7 +860,7 @@ class OdinHandler(SimpleHTTPRequestHandler):
                 return
             if path == "/api/command":
                 slot = body.get("slot")
-                if slot not in ("odin_a", "odin_b"):
+                if slot not in SLOTS:
                     raise ValueError("slot must be odin_a or odin_b")
                 key = str(body.get("key", "")).strip()
                 value = str(body.get("value", "")).strip()
@@ -456,15 +870,22 @@ class OdinHandler(SimpleHTTPRequestHandler):
                 command_file.write_text(f"set {key} {value}\n", encoding="utf-8")
                 json_response(self, {"ok": True, "written": str(command_file), "command": f"set {key} {value}"})
                 return
+            if path == "/api/usb-permissions/fix":
+                json_response(self, fix_usb_permissions())
+                return
             if path == "/api/launch/start":
-                json_response(self, start_launch())
+                json_response(self, start_launch(body.get("target")))
                 return
             if path == "/api/launch/stop":
                 json_response(self, stop_launch())
                 return
             if path == "/api/launch/restart":
+                target = body.get("target")
+                if not target:
+                    status_before = launch_status()
+                    target = status_before.get("target") or load_state().get("launch_target") or "auto"
                 stop_launch()
-                json_response(self, start_launch())
+                json_response(self, start_launch(target))
                 return
             json_response(self, {"error": "not found"}, status=404)
         except Exception as exc:
