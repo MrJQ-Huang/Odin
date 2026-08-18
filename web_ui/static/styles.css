@@ -82,6 +82,31 @@ button.attention {
   box-shadow: 0 0 0 3px rgba(35, 116, 93, 0.16);
 }
 
+a.link-button {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #b9c8ce;
+  border-radius: 6px;
+  padding: 7px 11px;
+  background: #fff;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+a.link-button:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+a.link-button.disabled {
+  pointer-events: none;
+  opacity: 0.48;
+}
+
 h1,
 h2,
 h3,
@@ -152,6 +177,19 @@ h3 {
 .panel-head > div {
   display: grid;
   gap: 3px;
+}
+
+.panel.collapsed .panel-head {
+  margin-bottom: 0;
+}
+
+.panel.collapsed .collapsible-body {
+  display: none;
+}
+
+.collapse-toggle {
+  min-width: 58px;
+  background: var(--surface-soft);
 }
 
 .hint {
@@ -364,6 +402,30 @@ h3 {
   grid-template-columns: minmax(150px, 1.4fr) repeat(3, minmax(108px, 1fr));
 }
 
+.rtk-controls {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.capture-controls {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.rtk-actions {
+  grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+  margin-bottom: 8px;
+}
+
+.capture-actions {
+  grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+  margin-bottom: 8px;
+}
+
 .big-action {
   min-height: 44px;
   font-size: 15px;
@@ -444,6 +506,275 @@ input[type="checkbox"] {
 .monitor-card .output {
   min-height: 260px;
   max-height: 420px;
+}
+
+.rtk-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.rtk-startup-tips {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #d7c07c;
+  border-radius: 6px;
+  background: #fffaf0;
+}
+
+.rtk-startup-tips.hidden {
+  display: none;
+}
+
+.startup-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #5e4a13;
+  font-size: 13px;
+}
+
+.startup-line span {
+  flex: 0 0 auto;
+  color: var(--amber);
+  font-weight: 800;
+}
+
+.startup-guide {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.startup-tip {
+  min-height: 46px;
+  padding: 8px;
+  border: 1px solid rgba(157, 119, 24, 0.22);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.startup-tip span {
+  display: block;
+  margin-bottom: 3px;
+  color: #6b5517;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.startup-tip strong {
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.metric {
+  min-height: 58px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-soft);
+}
+
+.metric span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.metric strong {
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.metric.warn {
+  border-color: #e6c467;
+  background: #fffaf0;
+}
+
+.metric.bad {
+  border-color: #e0a1a1;
+  background: var(--red-soft);
+}
+
+.rtk-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.detail-card {
+  display: grid;
+  gap: 7px;
+  align-content: start;
+  padding: 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-soft);
+}
+
+.detail-card.wide {
+  grid-column: 1 / -1;
+}
+
+.detail-card h3 {
+  color: #263942;
+}
+
+.detail-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 8px;
+}
+
+.detail-list span,
+.satellite-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.detail-list span:nth-child(odd) {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.detail-list span:nth-child(even) {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.satellite-table {
+  display: grid;
+  gap: 4px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.satellite-row {
+  display: grid;
+  grid-template-columns: 70px 70px 70px 70px 1fr;
+  gap: 6px;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 7px;
+  border: 1px solid #dfe7ea;
+  border-radius: 5px;
+  background: #fff;
+  font-family: "JetBrains Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+}
+
+.satellite-row.header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #edf3f4;
+  color: var(--muted);
+  font-family: inherit;
+  font-weight: 850;
+}
+
+.rtk-output-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.capture-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.rtk-output-grid section {
+  display: grid;
+  gap: 6px;
+}
+
+.capture-grid section {
+  display: grid;
+  gap: 6px;
+}
+
+.rtk-output {
+  min-height: 240px;
+  max-height: 360px;
+}
+
+.capture-output {
+  min-height: 160px;
+  max-height: 260px;
+}
+
+.map-shell {
+  position: relative;
+  min-height: 360px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #dfe7e6;
+}
+
+.rtk-map-canvas {
+  width: 100%;
+  height: 360px;
+  display: block;
+}
+
+.rtk-map-canvas .leaflet-control-attribution {
+  font-size: 10px;
+}
+
+.rtk-position-marker {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ffffff;
+  border-radius: 999px;
+  background: #1f8f68;
+  box-shadow: 0 0 0 3px rgba(31, 143, 104, 0.24), 0 2px 8px rgba(0, 0, 0, 0.28);
+}
+
+.map-placeholder {
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+    #dfe7e6;
+  background-size: 28px 28px;
+  font-size: 13px;
+}
+
+.map-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-family: "JetBrains Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.map-meta span {
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-soft);
+  overflow-wrap: anywhere;
 }
 
 .monitor-tabs {
@@ -666,7 +997,24 @@ textarea {
 
   .identity-grid,
   .quick-grid,
+  .rtk-controls,
+  .capture-controls,
+  .rtk-actions,
+  .capture-actions,
+  .rtk-metrics,
+  .startup-guide,
+  .rtk-detail-grid,
+  .rtk-output-grid,
+  .capture-grid,
   .launch-actions {
     grid-template-columns: 1fr;
+  }
+
+  .detail-card.wide {
+    grid-column: auto;
+  }
+
+  .satellite-row {
+    grid-template-columns: 54px 54px 54px 54px 1fr;
   }
 }

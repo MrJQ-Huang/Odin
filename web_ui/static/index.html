@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Odin1 操作台</title>
-    <link rel="stylesheet" href="/styles.css?v=20260809-workbench-8" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/styles.css?v=20260818-rtk-ros-2" />
   </head>
   <body>
     <header class="appbar">
@@ -15,6 +16,7 @@
       <div class="runtime">
         <span id="aTopState" class="badge neutral">A 检查中</span>
         <span id="bTopState" class="badge neutral">B 检查中</span>
+        <span id="rtkTopState" class="badge neutral">RTK 检查中</span>
         <span id="runState" class="badge neutral">ROS 状态</span>
         <button id="refreshBtn" class="ghost">刷新</button>
       </div>
@@ -112,10 +114,152 @@
             <pre id="launchLine" class="cmd"></pre>
           </details>
         </section>
+
+        <section class="panel rtk-panel">
+          <div class="panel-head">
+            <div>
+              <h2>RTK/GNSS</h2>
+              <p id="rtkHint" class="hint">等待串口检测</p>
+            </div>
+            <span id="rtkStateBadge" class="badge neutral">ROS 未启动</span>
+          </div>
+          <div class="rtk-controls">
+            <label>
+              串口
+              <select id="rtkPort"></select>
+            </label>
+            <label>
+              波特率
+              <input id="rtkBaud" value="115200" />
+            </label>
+          </div>
+          <div class="launch-actions rtk-actions">
+            <button id="rtkStartBtn" class="primary">启动 RTK ROS</button>
+            <button id="rtkStopBtn" class="danger">停止 RTK ROS</button>
+            <button id="rtkRecoverBtn">恢复串口输出</button>
+            <button id="rtkUsbResetBtn">软重置 USB</button>
+            <button id="rtkProbeGuardBtn">屏蔽系统探测</button>
+            <button id="rtkFixPermBtn">修复串口权限</button>
+            <button id="rtkRefreshBtn" class="ghost">扫描串口</button>
+          </div>
+          <div id="rtkDeviceList" class="device-list"></div>
+        </section>
       </section>
 
       <section class="workspace">
-        <section class="panel monitor-card">
+        <section class="panel rtk-observer-card">
+          <div class="panel-head">
+            <div>
+              <h2>RTK 观察</h2>
+              <p id="rtkObserveText" class="hint">等待 RTK 数据</p>
+            </div>
+            <div class="button-row">
+              <span id="rtkFixBadge" class="badge neutral">定位 --</span>
+              <span id="rtkHeadingBadge" class="badge neutral">定向 --</span>
+            </div>
+          </div>
+          <div id="rtkStartupTips" class="rtk-startup-tips hidden">
+            <div class="startup-line">
+              <strong id="rtkStartupTitle">等待 RTK 串口回传</strong>
+              <span id="rtkStartupTimer">--</span>
+            </div>
+            <div id="rtkStartupGuide" class="startup-guide"></div>
+          </div>
+          <div id="rtkMetrics" class="rtk-metrics"></div>
+          <div id="rtkDetailGrid" class="rtk-detail-grid"></div>
+          <div class="rtk-output-grid">
+            <section>
+              <h3>解析数据</h3>
+              <pre id="rtkParsedBox" class="output rtk-output"></pre>
+            </section>
+            <section>
+              <h3>原始回传</h3>
+              <pre id="rtkRawBox" class="output rtk-output"></pre>
+            </section>
+          </div>
+        </section>
+
+        <section class="panel rtk-map-card collapsible" data-collapse-panel="rtk-map">
+          <div class="panel-head">
+            <div>
+              <h2>高精度地图</h2>
+              <p id="rtkMapText" class="hint">等待 RTK 坐标</p>
+            </div>
+            <div class="button-row">
+              <button id="rtkMapFollowBtn">跟随</button>
+              <button id="rtkMapClearBtn">清轨迹</button>
+              <a id="rtkMapOpenLink" class="link-button" href="#" target="_blank" rel="noreferrer">打开地图</a>
+              <button class="collapse-toggle" data-collapse-toggle="rtk-map">隐藏</button>
+            </div>
+          </div>
+          <div class="collapsible-body" data-collapse-body="rtk-map">
+            <div class="map-shell">
+              <div id="rtkMapCanvas" class="rtk-map-canvas hidden"></div>
+              <div id="rtkMapPlaceholder" class="map-placeholder">暂无可用经纬度</div>
+            </div>
+            <div class="map-meta">
+              <span id="rtkMapCoord">--</span>
+              <span id="rtkMapAccuracy">--</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel capture-card collapsible" data-collapse-panel="capture">
+          <div class="panel-head">
+            <div>
+              <h2>数据采集</h2>
+              <p id="captureHint" class="hint">录制 Odin 点云 + RTK/GNSS + 绑定元数据</p>
+            </div>
+            <div class="button-row">
+              <span id="captureStateBadge" class="badge neutral">未采集</span>
+              <button class="collapse-toggle" data-collapse-toggle="capture">隐藏</button>
+            </div>
+          </div>
+          <div class="collapsible-body" data-collapse-body="capture">
+            <div class="capture-controls">
+              <label>
+                点云 topic
+                <select id="captureCloudTopic">
+                  <option value="/odin_b/odin1/cloud_render">B RGB 着色点云</option>
+                  <option value="/odin_b/odin1/cloud_slam">B SLAM 点云</option>
+                  <option value="/odin_b/odin1/cloud_raw">B Raw 点云</option>
+                  <option value="/odin_a/odin1/cloud_render">A RGB 着色点云</option>
+                  <option value="/odin_a/odin1/cloud_slam">A SLAM 点云</option>
+                  <option value="/odin_a/odin1/cloud_raw">A Raw 点云</option>
+                </select>
+              </label>
+              <label>
+                采集目录
+                <input id="captureOutputDir" />
+              </label>
+              <label>
+                回放 bag
+                <select id="captureBagSelect"></select>
+              </label>
+            </div>
+            <div class="launch-actions capture-actions">
+              <button id="captureStartBtn" class="primary">开始采集</button>
+              <button id="captureStopBtn" class="danger">停止采集</button>
+              <button id="capturePlayBtn">回放选中</button>
+              <button id="captureStopPlayBtn">停止回放</button>
+              <button id="captureDeleteBtn" class="danger">删除选中</button>
+              <button id="captureRefreshBtn" class="ghost">刷新采集</button>
+            </div>
+            <div id="captureMetrics" class="rtk-metrics"></div>
+            <div class="capture-grid">
+              <section>
+                <h3>录制 topic</h3>
+                <pre id="captureTopicsBox" class="output capture-output"></pre>
+              </section>
+              <section>
+                <h3>最近 bag</h3>
+                <pre id="captureBagsBox" class="output capture-output"></pre>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel monitor-card collapsible" data-collapse-panel="monitor">
           <div class="panel-head">
             <div>
               <h2>运行状态</h2>
@@ -125,17 +269,20 @@
               <span id="topicState" class="badge neutral">topic CLI</span>
               <button id="logBtn">刷新日志</button>
               <button id="topicsBtn">刷新话题</button>
+              <button class="collapse-toggle" data-collapse-toggle="monitor">隐藏</button>
             </div>
           </div>
-          <div class="monitor-tabs">
-            <button class="mini-tab active" data-monitor="log">日志</button>
-            <button class="mini-tab" data-monitor="topics">Odin 话题</button>
+          <div class="collapsible-body" data-collapse-body="monitor">
+            <div class="monitor-tabs">
+              <button class="mini-tab active" data-monitor="log">日志</button>
+              <button class="mini-tab" data-monitor="topics">Odin 话题</button>
+            </div>
+            <pre id="logBox" class="output"></pre>
+            <pre id="topicsBox" class="output hidden"></pre>
           </div>
-          <pre id="logBox" class="output"></pre>
-          <pre id="topicsBox" class="output hidden"></pre>
         </section>
 
-        <section class="panel params-card">
+        <section class="panel params-card collapsible" data-collapse-panel="params">
           <div class="panel-head">
             <div>
               <h2>常用参数</h2>
@@ -144,19 +291,22 @@
             <div class="tabs">
               <button class="tab active" data-slot="odin_a">Odin A</button>
               <button class="tab" data-slot="odin_b">Odin B</button>
+              <button class="collapse-toggle" data-collapse-toggle="params">隐藏</button>
             </div>
           </div>
-          <div id="quickGroups" class="quick-groups"></div>
-          <div class="panel-footer">
-            <label class="param-scope">
-              参数作用范围
-              <select id="paramScope">
-                <option value="launch">将要启动/正在运行的设备</option>
-                <option value="selected">当前编辑设备</option>
-                <option value="both">同步到 A+B</option>
-              </select>
-            </label>
-            <button id="saveQuickBtn" class="primary">保存当前设备参数</button>
+          <div class="collapsible-body" data-collapse-body="params">
+            <div id="quickGroups" class="quick-groups"></div>
+            <div class="panel-footer">
+              <label class="param-scope">
+                参数作用范围
+                <select id="paramScope">
+                  <option value="launch">将要启动/正在运行的设备</option>
+                  <option value="selected">当前编辑设备</option>
+                  <option value="both">同步到 A+B</option>
+                </select>
+              </label>
+              <button id="saveQuickBtn" class="primary">保存当前设备参数</button>
+            </div>
           </div>
         </section>
 
@@ -206,6 +356,7 @@
     </main>
 
     <div id="toast"></div>
-    <script src="/app.js?v=20260809-workbench-8"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/app.js?v=20260818-capture-4"></script>
   </body>
 </html>

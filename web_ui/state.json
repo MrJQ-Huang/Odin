@@ -1,21 +1,31 @@
 {
   "odin_a": {
-    "usb_bus": "2",
-    "usb_addr": "6",
-    "serial": "952033c87532e832",
-    "config": "/home/uros/odin/odin_ros_driver-main/config/control_command_odin_a.yaml",
-    "calib_dir": "/home/uros/.ros/odin_a",
+    "usb_bus": "",
+    "usb_addr": "",
+    "serial": "",
+    "config": "/home/mrjq/odin/odin_ros_driver-main/config/control_command_odin_a.yaml",
+    "calib_dir": "/home/mrjq/.ros/odin_a",
     "command_file": "/tmp/odin_a_command.txt",
     "frame_prefix": "odin_a"
   },
   "odin_b": {
-    "usb_bus": "2",
-    "usb_addr": "5",
+    "usb_bus": "4",
+    "usb_addr": "3",
     "serial": "276fe96f99321c78",
-    "config": "/home/uros/odin/odin_ros_driver-main/config/control_command_odin_b.yaml",
-    "calib_dir": "/home/uros/.ros/odin_b",
+    "config": "/home/mrjq/odin/odin_ros_driver-main/config/control_command_odin_b.yaml",
+    "calib_dir": "/home/mrjq/.ros/odin_b",
     "command_file": "/tmp/odin_b_command.txt",
     "frame_prefix": "odin_b"
   },
-  "use_rviz": true
+  "use_rviz": true,
+  "launch_target": "odin_b",
+  "rtk": {
+    "port": "/dev/serial/by-id/usb-HOLTEK_USB_TO_UART_BRIDGE_0000-if00",
+    "baudrate": "115200"
+  },
+  "capture": {
+    "cloud_topic": "/odin_b/odin1/cloud_render",
+    "output_dir": "/data/mrjq/odin/captures",
+    "last_bag": "/data/mrjq/odin/captures/odin_rtk_20260818_180254"
+  }
 }

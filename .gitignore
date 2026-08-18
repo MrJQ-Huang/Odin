@@ -13,7 +13,11 @@ wiki-master/_site/
 .sass-cache/
 
 # Runtime output
+.vscode/
 web_ui/odin_web_launch.log
+web_ui/rtk_ros_launch.log
+web_ui/capture_rosbag.log
+captures/
 odin_ros_driver-main/log/
 odin_ros_driver-main/recorddata/
 odin_ros_driver-main/map/

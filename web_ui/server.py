@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 import json
+import math
 import os
 import re
 import shutil
 import signal
 import subprocess
+import select
+import termios
+import threading
 import time
 import shlex
+import tty
+from collections import deque
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -19,6 +25,9 @@ DRIVER_DIR = ODIN_ROOT / "odin_ros_driver-main"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 STATE_FILE = Path(__file__).resolve().parent / "state.json"
 LOG_FILE = Path(__file__).resolve().parent / "odin_web_launch.log"
+RTK_LOG_FILE = Path(__file__).resolve().parent / "rtk_ros_launch.log"
+CAPTURE_LOG_FILE = Path(__file__).resolve().parent / "capture_rosbag.log"
+CAPTURE_DIR = ODIN_ROOT / "captures"
 
 DEFAULT_STATE = {
     "odin_a": {
@@ -41,6 +50,15 @@ DEFAULT_STATE = {
     },
     "use_rviz": True,
     "launch_target": "auto",
+    "rtk": {
+        "port": "/dev/ttyACM0",
+        "baudrate": "115200",
+    },
+    "capture": {
+        "cloud_topic": "/odin_b/odin1/cloud_render",
+        "output_dir": str(CAPTURE_DIR),
+        "last_bag": "",
+    },
 }
 
 SLOTS = ("odin_a", "odin_b")
@@ -100,6 +118,41 @@ launch_process = None
 launch_log_handle = None
 launch_target_requested = None
 launch_effective_slots = []
+
+
+def ros_shell_prefix():
+    return (
+        "source /opt/ros/humble/setup.bash && "
+        f"source {shlex.quote(str(ROS_WS / 'install' / 'setup.bash'))} && "
+    )
+
+
+def clean_ros_env():
+    env = os.environ.copy()
+    for key in list(env):
+        if key.startswith("SNAP") or key in {
+            "GDK_PIXBUF_MODULEDIR",
+            "GDK_PIXBUF_MODULE_FILE",
+            "GSETTINGS_SCHEMA_DIR",
+            "GTK_EXE_PREFIX",
+            "GTK_IM_MODULE_FILE",
+            "GTK_PATH",
+            "GIO_EXTRA_MODULES",
+            "GIO_MODULE_DIR",
+            "LD_LIBRARY_PATH",
+            "LOCPATH",
+            "QT_PLUGIN_PATH",
+            "XDG_DATA_HOME",
+        }:
+            env.pop(key, None)
+    xdg_dirs = env.get("XDG_DATA_DIRS", "")
+    if xdg_dirs:
+        filtered = [item for item in xdg_dirs.split(":") if "/snap/" not in item and "/snapd/" not in item]
+        env["XDG_DATA_DIRS"] = ":".join(filtered) or "/usr/local/share:/usr/share"
+    path = env.get("PATH", "")
+    if path:
+        env["PATH"] = ":".join(item for item in path.split(":") if item and item != "/snap/bin")
+    return env
 
 
 def odin_runtime_processes():
@@ -178,6 +231,24 @@ def load_state():
             state[key].update(value)
         else:
             state[key] = value
+    changed = False
+    for slot in SLOTS:
+        slot_state = state.get(slot, {})
+        config = str(slot_state.get("config", ""))
+        if config.startswith("/home/uros/odin/"):
+            slot_state["config"] = config.replace("/home/uros/odin", str(ODIN_ROOT), 1)
+            changed = True
+        calib_dir = str(slot_state.get("calib_dir", ""))
+        if calib_dir.startswith("/home/uros/.ros/"):
+            slot_state["calib_dir"] = calib_dir.replace("/home/uros/.ros", str(HOME / ".ros"), 1)
+            changed = True
+    before_dedupe = json.dumps(state.get("odin_a", {}), sort_keys=True) + json.dumps(state.get("odin_b", {}), sort_keys=True)
+    state = dedupe_odin_bindings(state)
+    after_dedupe = json.dumps(state.get("odin_a", {}), sort_keys=True) + json.dumps(state.get("odin_b", {}), sort_keys=True)
+    if before_dedupe != after_dedupe:
+        changed = True
+    if changed:
+        save_state(state)
     return state
 
 
@@ -265,11 +336,1189 @@ def scan_odin_devices():
     return devices
 
 
+def udev_properties(devnode):
+    try:
+        proc = subprocess.run(
+            ["udevadm", "info", "--query=property", f"--name={devnode}"],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=3,
+        )
+    except Exception:
+        return {}
+    props = {}
+    for line in proc.stdout.splitlines():
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        props[key] = value
+    return props
+
+
+def scan_serial_devices():
+    devices = []
+    for pattern in ("/dev/ttyACM*", "/dev/ttyUSB*"):
+        for path in sorted(Path("/dev").glob(Path(pattern).name)):
+            devnode = str(path)
+            props = udev_properties(devnode)
+            model = props.get("ID_MODEL", "")
+            vendor = props.get("ID_VENDOR", "")
+            serial = props.get("ID_SERIAL", "")
+            by_id = ""
+            links = props.get("DEVLINKS", "")
+            for link in links.split():
+                if "/dev/serial/by-id/" in link:
+                    by_id = link
+                    break
+            stable_path = by_id or devnode
+            label_bits = [part.replace("_", " ") for part in (vendor, model) if part]
+            label = " ".join(label_bits) or path.name
+            is_rtk_candidate = any(
+                token in " ".join([model, vendor, serial]).upper()
+                for token in ("GNSS", "RTK", "GPS", "UART", "HOLTEK", "UM982", "BEITIAN")
+            )
+            devices.append({
+                "devnode": devnode,
+                "name": path.name,
+                "label": label,
+                "vendor": vendor,
+                "model": model,
+                "serial": serial,
+                "by_id": by_id,
+                "stable_path": stable_path,
+                "path": props.get("ID_PATH", ""),
+                "bus": props.get("ID_BUS", ""),
+                "can_read": os.access(devnode, os.R_OK),
+                "can_write": os.access(devnode, os.W_OK),
+                "rtk_candidate": is_rtk_candidate,
+            })
+    return devices
+
+
+def resolved_port(path):
+    try:
+        return str(Path(path).resolve())
+    except Exception:
+        return str(path)
+
+
+def port_matches_device(port, dev):
+    if not port or not dev:
+        return False
+    aliases = {dev.get("devnode", ""), dev.get("by_id", ""), dev.get("stable_path", "")}
+    if port in aliases:
+        return True
+    devnode = dev.get("devnode")
+    return bool(devnode and resolved_port(port) == resolved_port(devnode))
+
+
+def find_serial_device_for_port(port, serial_devices):
+    return next((dev for dev in serial_devices if port_matches_device(port, dev)), None)
+
+
+def select_default_rtk_port(state, serial_devices):
+    configured = str(state.get("rtk", {}).get("port", "")).strip()
+    if configured and Path(configured).exists():
+        selected = find_serial_device_for_port(configured, serial_devices)
+        return selected.get("stable_path") if selected else configured
+    candidate = next((dev for dev in serial_devices if dev.get("rtk_candidate")), None)
+    if candidate:
+        return candidate.get("stable_path") or candidate["devnode"]
+    if serial_devices:
+        return serial_devices[0].get("stable_path") or serial_devices[0]["devnode"]
+    return configured or "/dev/ttyACM0"
+
+
+def same_serial_port(left, right):
+    if not left or not right:
+        return False
+    if left == right:
+        return True
+    return resolved_port(left) == resolved_port(right)
+
+
+def service_state(name):
+    try:
+        proc = subprocess.run(
+            ["systemctl", "is-active", name],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=2,
+        )
+        active = proc.stdout.strip()
+    except Exception:
+        active = "unknown"
+    try:
+        proc = subprocess.run(
+            ["systemctl", "is-enabled", name],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=2,
+        )
+        enabled = proc.stdout.strip()
+    except Exception:
+        enabled = "unknown"
+    return {"active": active, "enabled": enabled}
+
+
 def safe_read(path):
     try:
         return path.read_text(errors="ignore").strip()
     except Exception:
         return ""
+
+
+FIX_QUALITY_TEXT = {
+    "0": "无效",
+    "1": "单点定位",
+    "2": "DGPS/SBAS",
+    "4": "RTK 固定解",
+    "5": "RTK 浮点解",
+    "6": "惯导定位",
+    "7": "固定坐标",
+}
+
+RMC_MODE_TEXT = {
+    "N": "无效",
+    "A": "自主定位",
+    "D": "差分定位",
+    "E": "估算",
+    "R": "RTK 固定解",
+    "F": "RTK 浮点解",
+}
+
+GSA_FIX_TYPE_TEXT = {
+    "1": "无定位",
+    "2": "2D",
+    "3": "3D",
+}
+
+NMEA_TALKER_TEXT = {
+    "GN": "多星座联合",
+    "GP": "GPS",
+    "GL": "GLONASS",
+    "GA": "Galileo",
+    "BD": "北斗",
+    "GB": "北斗",
+}
+
+HEADING_STATUS_TEXT = {
+    "SOL_COMPUTED": "定向已解算",
+    "INSUFFICIENT_OBS": "观测不足",
+    "NONE": "无解",
+}
+
+
+def parse_float(value, default=None):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def parse_int(value, default=0):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def dm_to_deg(value, hemi):
+    if not value:
+        return None
+    raw = parse_float(value)
+    if raw is None:
+        return None
+    degrees = int(raw // 100)
+    minutes = raw - degrees * 100
+    result = degrees + minutes / 60.0
+    if hemi in ("S", "W"):
+        result = -result
+    return result
+
+
+def nmea_checksum_ok(sentence):
+    if not sentence.startswith("$") or "*" not in sentence:
+        return False
+    body, checksum = sentence[1:].split("*", 1)
+    value = 0
+    for char in body:
+        value ^= ord(char)
+    try:
+        return value == int(checksum[:2], 16)
+    except ValueError:
+        return False
+
+
+def nmea_type(sentence):
+    return sentence[3:6] if len(sentence) >= 6 else ""
+
+
+def nmea_talker(sentence):
+    return sentence[1:3] if len(sentence) >= 3 else ""
+
+
+def format_utc_time(value):
+    if not value or len(value) < 6:
+        return ""
+    return f"{value[0:2]}:{value[2:4]}:{value[4:]}"
+
+
+def format_nmea_date(value):
+    if not value or len(value) != 6:
+        return ""
+    day = value[0:2]
+    month = value[2:4]
+    year = int(value[4:6])
+    year += 2000 if year < 80 else 1900
+    return f"{year:04d}-{month}-{day}"
+
+
+def nmea_datetime_utc(time_value, date_value):
+    date_text = format_nmea_date(date_value)
+    time_text = format_utc_time(time_value)
+    if not date_text or not time_text:
+        return ""
+    return f"{date_text} {time_text} UTC"
+
+
+def parse_rtk_sentence(line):
+    if line.startswith("$"):
+        kind = nmea_type(line)
+        talker = nmea_talker(line)
+        checksum_ok = nmea_checksum_ok(line)
+        record = {
+            "raw": line,
+            "family": "NMEA",
+            "talker": talker,
+            "talker_text": NMEA_TALKER_TEXT.get(talker, talker or "未知"),
+            "type": kind,
+            "checksum_ok": checksum_ok,
+        }
+        fields = line.split("*", 1)[0].split(",")
+        if kind == "GGA":
+            quality = fields[6] if len(fields) > 6 else "0"
+            record.update({
+                "label": "定位结果 GGA",
+                "utc": fields[1] if len(fields) > 1 else "",
+                "utc_time": format_utc_time(fields[1]) if len(fields) > 1 else "",
+                "latitude": dm_to_deg(fields[2], fields[3]) if len(fields) > 3 else None,
+                "longitude": dm_to_deg(fields[4], fields[5]) if len(fields) > 5 else None,
+                "fix_quality": quality,
+                "fix_quality_text": FIX_QUALITY_TEXT.get(quality, "未知"),
+                "satellites": parse_int(fields[7]) if len(fields) > 7 else 0,
+                "hdop": parse_float(fields[8]) if len(fields) > 8 else None,
+                "altitude_m": parse_float(fields[9]) if len(fields) > 9 else None,
+                "geoid_sep_m": parse_float(fields[11]) if len(fields) > 11 else None,
+                "diff_age_s": fields[13] if len(fields) > 13 else "",
+                "station_id": fields[14] if len(fields) > 14 else "",
+            })
+        elif kind == "RMC":
+            mode = fields[12] if len(fields) > 12 else ""
+            date_value = fields[9] if len(fields) > 9 else ""
+            utc_value = fields[1] if len(fields) > 1 else ""
+            record.update({
+                "label": "推荐导航 RMC",
+                "utc": utc_value,
+                "utc_time": format_utc_time(utc_value),
+                "valid": len(fields) > 2 and fields[2] == "A",
+                "latitude": dm_to_deg(fields[3], fields[4]) if len(fields) > 4 else None,
+                "longitude": dm_to_deg(fields[5], fields[6]) if len(fields) > 6 else None,
+                "speed_knots": parse_float(fields[7]) if len(fields) > 7 else None,
+                "speed_mps": (parse_float(fields[7], 0.0) or 0.0) * 0.514444 if len(fields) > 7 else None,
+                "course_deg": parse_float(fields[8]) if len(fields) > 8 else None,
+                "date_ddmmyy": date_value,
+                "date": format_nmea_date(date_value),
+                "datetime_utc": nmea_datetime_utc(utc_value, date_value),
+                "mode": mode,
+                "mode_text": RMC_MODE_TEXT.get(mode, "未知"),
+                "nav_status": fields[13] if len(fields) > 13 else "",
+            })
+        elif kind == "GSA":
+            fix_type = fields[2] if len(fields) > 2 else ""
+            prns = [value for value in fields[3:15] if value]
+            record.update({
+                "label": "DOP 与解算卫星 GSA",
+                "selection_mode": fields[1] if len(fields) > 1 else "",
+                "selection_mode_text": "自动" if len(fields) > 1 and fields[1] == "A" else "手动",
+                "fix_type": fix_type,
+                "fix_type_text": GSA_FIX_TYPE_TEXT.get(fix_type, "未知"),
+                "satellites_used_prn": prns,
+                "pdop": parse_float(fields[15]) if len(fields) > 15 else None,
+                "hdop": parse_float(fields[16]) if len(fields) > 16 else None,
+                "vdop": parse_float(fields[17]) if len(fields) > 17 else None,
+                "system_id": fields[18] if len(fields) > 18 else "",
+            })
+        elif kind == "GSV":
+            satellites = []
+            body_fields = fields[4:]
+            for idx in range(0, len(body_fields), 4):
+                chunk = body_fields[idx:idx + 4]
+                if len(chunk) < 4 or not chunk[0]:
+                    continue
+                satellites.append({
+                    "prn": chunk[0],
+                    "elevation_deg": parse_float(chunk[1]),
+                    "azimuth_deg": parse_float(chunk[2]),
+                    "snr_dbhz": parse_float(chunk[3]),
+                })
+            record.update({
+                "label": "可见卫星 GSV",
+                "total_messages": parse_int(fields[1]) if len(fields) > 1 else 0,
+                "message_number": parse_int(fields[2]) if len(fields) > 2 else 0,
+                "satellites_in_view": parse_int(fields[3]) if len(fields) > 3 else 0,
+                "satellites": satellites,
+                "signal_id": fields[-1] if len(fields) > 8 and len(fields[4:]) % 4 == 1 else "",
+            })
+        elif kind == "GST":
+            record.update({
+                "label": "伪距噪声 GST",
+                "utc": fields[1] if len(fields) > 1 else "",
+                "utc_time": format_utc_time(fields[1]) if len(fields) > 1 else "",
+                "rms_m": parse_float(fields[2]) if len(fields) > 2 else None,
+                "semi_major_std_m": parse_float(fields[3]) if len(fields) > 3 else None,
+                "semi_minor_std_m": parse_float(fields[4]) if len(fields) > 4 else None,
+                "orientation_deg": parse_float(fields[5]) if len(fields) > 5 else None,
+                "lat_std_m": parse_float(fields[6]) if len(fields) > 6 else None,
+                "lon_std_m": parse_float(fields[7]) if len(fields) > 7 else None,
+                "alt_std_m": parse_float(fields[8]) if len(fields) > 8 else None,
+            })
+        elif kind == "ZDA":
+            utc_value = fields[1] if len(fields) > 1 else ""
+            day = fields[2] if len(fields) > 2 else ""
+            month = fields[3] if len(fields) > 3 else ""
+            year = fields[4] if len(fields) > 4 else ""
+            date_text = f"{year}-{month.zfill(2)}-{day.zfill(2)}" if year and month and day else ""
+            record.update({
+                "label": "UTC 日期时间 ZDA",
+                "utc": utc_value,
+                "utc_time": format_utc_time(utc_value),
+                "day": day,
+                "month": month,
+                "year": year,
+                "date": date_text,
+                "datetime_utc": f"{date_text} {format_utc_time(utc_value)} UTC" if date_text and utc_value else "",
+                "local_zone_hours": fields[5] if len(fields) > 5 else "",
+                "local_zone_minutes": fields[6] if len(fields) > 6 else "",
+            })
+        elif kind == "VTG":
+            record.update({
+                "label": "地速航向 VTG",
+                "course_true_deg": parse_float(fields[1]) if len(fields) > 1 else None,
+                "course_magnetic_deg": parse_float(fields[3]) if len(fields) > 3 else None,
+                "speed_knots": parse_float(fields[5]) if len(fields) > 5 else None,
+                "speed_kmh": parse_float(fields[7]) if len(fields) > 7 else None,
+                "mode": fields[9] if len(fields) > 9 else "",
+            })
+        elif kind == "GLL":
+            mode = fields[7] if len(fields) > 7 else ""
+            record.update({
+                "label": "地理位置 GLL",
+                "latitude": dm_to_deg(fields[1], fields[2]) if len(fields) > 2 else None,
+                "longitude": dm_to_deg(fields[3], fields[4]) if len(fields) > 4 else None,
+                "utc": fields[5] if len(fields) > 5 else "",
+                "utc_time": format_utc_time(fields[5]) if len(fields) > 5 else "",
+                "status": fields[6] if len(fields) > 6 else "",
+                "valid": len(fields) > 6 and fields[6] == "A",
+                "mode": mode,
+                "mode_text": RMC_MODE_TEXT.get(mode, "未知"),
+            })
+        elif kind == "HDT":
+            record.update({
+                "label": "真北航向 HDT",
+                "heading_deg": parse_float(fields[1]) if len(fields) > 1 else None,
+            })
+        elif kind == "THS":
+            record.update({
+                "label": "真北航向状态 THS",
+                "heading_deg": parse_float(fields[1]) if len(fields) > 1 else None,
+                "status": fields[2] if len(fields) > 2 else "",
+            })
+        elif kind == "TRA":
+            record.update({
+                "label": "姿态角 TRA",
+                "utc": fields[1] if len(fields) > 1 else "",
+                "utc_time": format_utc_time(fields[1]) if len(fields) > 1 else "",
+                "heading_deg": parse_float(fields[2]) if len(fields) > 2 else None,
+                "pitch_deg": parse_float(fields[3]) if len(fields) > 3 else None,
+                "roll_deg": parse_float(fields[4]) if len(fields) > 4 else None,
+                "quality": fields[5] if len(fields) > 5 else "",
+                "satellites": parse_int(fields[6]) if len(fields) > 6 else 0,
+            })
+        else:
+            record["label"] = f"NMEA {kind or '未知'}"
+        return record
+
+    if line.startswith("#"):
+        name = line.split(",", 1)[0].lstrip("#")
+        record = {"raw": line, "family": "Unicore", "type": name, "label": name}
+        if name == "HEADINGA" and ";" in line:
+            data = line.split("*", 1)[0].split(";", 1)[1].split(",")
+            if len(data) >= 5:
+                status = data[0]
+                record.update({
+                    "label": "双天线定向 HEADINGA",
+                    "solution_status": status,
+                    "solution_status_text": HEADING_STATUS_TEXT.get(status, status),
+                    "position_type": data[1],
+                    "baseline_m": parse_float(data[2]),
+                    "heading_deg": parse_float(data[3]),
+                    "pitch_deg": parse_float(data[4]),
+                    "heading_std_deg": parse_float(data[6]) if len(data) > 6 else None,
+                    "pitch_std_deg": parse_float(data[7]) if len(data) > 7 else None,
+                    "station_id": data[8].strip('"') if len(data) > 8 else "",
+                    "satellites_tracked": parse_int(data[9]) if len(data) > 9 else 0,
+                    "satellites_used": parse_int(data[10]) if len(data) > 10 else 0,
+                    "valid": status == "SOL_COMPUTED",
+                })
+        return record
+
+    return {"raw": line, "family": "Unknown", "type": "UNKNOWN", "label": "无法识别"}
+
+
+def compact_gsv(records):
+    latest_parts = {}
+    for item in records:
+        if item.get("type") != "GSV":
+            continue
+        key = (item.get("talker", ""), item.get("message_number", 0))
+        latest_parts[key] = item
+
+    by_talker = {}
+    satellites = []
+    for item in latest_parts.values():
+        talker = item.get("talker", "")
+        bucket = by_talker.setdefault(talker, {
+            "talker": talker,
+            "talker_text": item.get("talker_text", talker),
+            "satellites_in_view": item.get("satellites_in_view", 0),
+            "satellites": [],
+        })
+        bucket["satellites_in_view"] = max(bucket["satellites_in_view"], item.get("satellites_in_view", 0) or 0)
+        for sat in item.get("satellites", []):
+            entry = {
+                **sat,
+                "talker": talker,
+                "talker_text": item.get("talker_text", talker),
+            }
+            bucket["satellites"].append(entry)
+            satellites.append(entry)
+
+    satellites.sort(key=lambda sat: (
+        sat.get("talker_text", ""),
+        parse_int(sat.get("prn"), 999),
+    ))
+    return {
+        "groups": list(by_talker.values()),
+        "satellites": satellites,
+        "reported_in_view": sum(group.get("satellites_in_view", 0) for group in by_talker.values()),
+        "decoded_count": len(satellites),
+    }
+
+
+def compact_gsa(records):
+    latest_by_talker = {}
+    for item in records:
+        if item.get("type") == "GSA":
+            latest_by_talker[item.get("talker", "")] = item
+    return list(latest_by_talker.values())
+
+
+def compact_time(latest):
+    zda = latest.get("ZDA") or {}
+    rmc = latest.get("RMC") or {}
+    gga = latest.get("GGA") or {}
+    source = zda or rmc or gga
+    return {
+        "source": source.get("type", ""),
+        "utc": source.get("utc", ""),
+        "utc_time": source.get("utc_time", ""),
+        "date": source.get("date", ""),
+        "datetime_utc": source.get("datetime_utc", ""),
+    }
+
+
+def compact_rtk_summary(records, connected=False, error=""):
+    latest = {}
+    counts = {}
+    for item in records:
+        typ = item.get("type", "UNKNOWN")
+        counts[typ] = counts.get(typ, 0) + 1
+        latest[typ] = item
+
+    fix = latest.get("GGA") or {}
+    rmc = latest.get("RMC") or {}
+    heading = latest.get("HEADINGA") or latest.get("THS") or latest.get("HDT") or latest.get("TRA") or {}
+    gsa = compact_gsa(records)
+    gsv = compact_gsv(records)
+    gst = latest.get("GST") or {}
+    vtg = latest.get("VTG") or {}
+    zda = latest.get("ZDA") or {}
+    gll = latest.get("GLL") or {}
+    time_info = compact_time(latest)
+    quality = str(fix.get("fix_quality", ""))
+    rtk_fixed = quality == "4" or rmc.get("mode") == "R"
+    rtk_float = quality == "5" or rmc.get("mode") == "F"
+    position_source = fix or rmc or gll
+    position_valid = bool(position_source.get("latitude") is not None and position_source.get("longitude") is not None)
+    heading_valid = bool(heading.get("valid") or (heading.get("heading_deg") is not None and heading.get("type") in ("HDT", "TRA", "THS")))
+
+    if rtk_fixed:
+        state = "RTK 固定解"
+        kind = ""
+    elif rtk_float:
+        state = "RTK 浮点解"
+        kind = "warn"
+    elif position_valid:
+        state = fix.get("fix_quality_text") or rmc.get("mode_text") or "已定位"
+        kind = "warn" if quality == "1" else ""
+    elif connected and not records:
+        state = "串口已打开，等待数据"
+        kind = "warn"
+    elif error:
+        state = "连接异常"
+        kind = "bad"
+    else:
+        state = "未连接"
+        kind = "neutral"
+
+    return {
+        "state": state,
+        "kind": kind,
+        "connected": connected,
+        "error": error,
+        "counts": counts,
+        "fix": fix,
+        "rmc": rmc,
+        "heading": heading,
+        "gsa": gsa,
+        "gsv": gsv,
+        "gst": gst,
+        "vtg": vtg,
+        "zda": zda,
+        "gll": gll,
+        "time": time_info,
+        "position_valid": position_valid,
+        "rtk_fixed": rtk_fixed,
+        "rtk_float": rtk_float,
+        "heading_valid": heading_valid,
+    }
+
+
+def configure_serial_fd(fd, baudrate):
+    tty.setraw(fd)
+    attrs = termios.tcgetattr(fd)
+    attrs[0] &= ~(termios.IXON | termios.IXOFF | termios.IXANY)
+    attrs[1] = 0
+    attrs[2] |= termios.CLOCAL | termios.CREAD
+    attrs[2] &= ~(termios.PARENB | termios.CSTOPB | termios.CSIZE)
+    attrs[2] |= termios.CS8
+    if hasattr(termios, "CRTSCTS"):
+        attrs[2] &= ~termios.CRTSCTS
+    attrs[3] = 0
+    attrs[6][termios.VMIN] = 0
+    attrs[6][termios.VTIME] = 1
+    speed = getattr(termios, f"B{baudrate}", termios.B115200)
+    attrs[4] = speed
+    attrs[5] = speed
+    termios.tcsetattr(fd, termios.TCSANOW, attrs)
+
+
+class RtkMonitor:
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.thread = None
+        self.stop_event = threading.Event()
+        self.launch_process = None
+        self.bridge_process = None
+        self.log_handle = None
+        self.port = ""
+        self.baudrate = 115200
+        self.connected = False
+        self.error = ""
+        self.node_status = {}
+        self.raw_lines = deque(maxlen=80)
+        self.records = deque(maxlen=80)
+        self.last_sentence_at = None
+
+    def start(self, port, baudrate):
+        self.stop()
+        with self.lock:
+            self.port = port
+            self.baudrate = int(baudrate)
+            self.connected = False
+            self.error = ""
+            self.node_status = {}
+            self.raw_lines.clear()
+            self.records.clear()
+            self.last_sentence_at = None
+        self.stop_event.clear()
+        self.launch_ros_node()
+        self.thread = threading.Thread(target=self.run, daemon=True)
+        self.thread.start()
+
+    def stop(self):
+        self.stop_event.set()
+        self.stop_process(self.bridge_process)
+        self.stop_process(self.launch_process)
+        if self.thread and self.thread.is_alive():
+            self.thread.join(timeout=2)
+        self.thread = None
+        self.bridge_process = None
+        self.launch_process = None
+        if self.log_handle:
+            self.log_handle.flush()
+            self.log_handle.close()
+            self.log_handle = None
+        with self.lock:
+            self.connected = False
+
+    def stop_process(self, proc):
+        if proc is None or proc.poll() is not None:
+            return
+        try:
+            os.killpg(os.getpgid(proc.pid), signal.SIGINT)
+            proc.wait(timeout=4)
+        except (ProcessLookupError, subprocess.TimeoutExpired):
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+                proc.wait(timeout=2)
+            except (ProcessLookupError, subprocess.TimeoutExpired):
+                try:
+                    os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+
+    def launch_ros_node(self):
+        RTK_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        self.log_handle = RTK_LOG_FILE.open("a", encoding="utf-8")
+        self.log_handle.write(
+            "\n\n==== RTK ROS launch started "
+            + time.strftime("%Y-%m-%d %H:%M:%S")
+            + f" port={self.port} baudrate={self.baudrate} ====\n"
+        )
+        self.log_handle.flush()
+        args = [
+            "ros2",
+            "launch",
+            "odin_ros_driver",
+            "gnss_rtk.launch.py",
+            f"port:={self.port}",
+            f"baudrate:={self.baudrate}",
+            "namespace:=gnss",
+        ]
+        shell_cmd = ros_shell_prefix() + f"exec {shlex.join(args)}"
+        self.launch_process = subprocess.Popen(
+            ["bash", "-c", shell_cmd],
+            cwd=str(ROS_WS),
+            stdout=self.log_handle,
+            stderr=subprocess.STDOUT,
+            preexec_fn=os.setsid,
+            text=True,
+            env=clean_ros_env(),
+        )
+
+    def start_bridge(self):
+        bridge_code = r'''
+import json
+
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+
+class Bridge(Node):
+    def __init__(self):
+        super().__init__("odin_web_rtk_bridge")
+        self.create_subscription(String, "/gnss/raw_sentence", self.raw_cb, 100)
+        self.create_subscription(String, "/gnss/status", self.status_cb, 10)
+
+    def emit(self, kind, data):
+        print(json.dumps({"kind": kind, "data": data}, ensure_ascii=False), flush=True)
+
+    def raw_cb(self, msg):
+        self.emit("raw", msg.data)
+
+    def status_cb(self, msg):
+        self.emit("status", msg.data)
+
+
+rclpy.init()
+node = Bridge()
+try:
+    rclpy.spin(node)
+except KeyboardInterrupt:
+    pass
+finally:
+    node.destroy_node()
+    if rclpy.ok():
+        rclpy.shutdown()
+'''
+        shell_cmd = ros_shell_prefix() + "exec python3 -u -c " + shlex.quote(bridge_code)
+        self.bridge_process = subprocess.Popen(
+            ["bash", "-c", shell_cmd],
+            cwd=str(ROS_WS),
+            stdout=subprocess.PIPE,
+            stderr=self.log_handle,
+            preexec_fn=os.setsid,
+            text=True,
+            bufsize=1,
+            env=clean_ros_env(),
+        )
+
+    def ros_process_running(self):
+        return self.launch_process is not None and self.launch_process.poll() is None
+
+    def run(self):
+        while not self.stop_event.is_set():
+            if not self.ros_process_running():
+                code = None if self.launch_process is None else self.launch_process.poll()
+                with self.lock:
+                    self.connected = False
+                    self.error = f"RTK ROS launch 已退出: {code}" if code is not None else "RTK ROS launch 未启动"
+                time.sleep(0.5)
+                continue
+            if self.bridge_process is None or self.bridge_process.poll() is not None:
+                self.start_bridge()
+                time.sleep(0.2)
+                continue
+            line = self.bridge_process.stdout.readline() if self.bridge_process.stdout else ""
+            if not line:
+                time.sleep(0.05)
+                continue
+            try:
+                event = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            kind = event.get("kind")
+            data = str(event.get("data", "")).strip()
+            if kind == "raw" and data:
+                record = parse_rtk_sentence(data)
+                with self.lock:
+                    self.raw_lines.append(data)
+                    self.records.append(record)
+                    self.last_sentence_at = time.time()
+            elif kind == "status" and data:
+                try:
+                    status = json.loads(data)
+                except json.JSONDecodeError:
+                    status = {}
+                with self.lock:
+                    self.node_status = status
+                    self.connected = bool(status.get("connected"))
+                    self.error = str(status.get("error") or "")
+        self.stop_process(self.bridge_process)
+        self.bridge_process = None
+
+    def snapshot(self):
+        with self.lock:
+            records = list(self.records)
+            raw_lines = list(self.raw_lines)
+            connected = self.connected
+            error = self.error
+            node_status = dict(self.node_status)
+            last_sentence_at = self.last_sentence_at
+            port = self.port
+            baudrate = self.baudrate
+            thread_running = bool(self.thread and self.thread.is_alive())
+            launch_running = self.ros_process_running()
+            launch_pid = self.launch_process.pid if launch_running else None
+            bridge_pid = self.bridge_process.pid if self.bridge_process and self.bridge_process.poll() is None else None
+        if launch_running and node_status and not error:
+            error = str(node_status.get("error") or "")
+        summary = compact_rtk_summary(records, connected=connected, error=error)
+        return {
+            "running": thread_running and launch_running,
+            "source": "ros2",
+            "topics": {
+                "fix": "/gnss/fix",
+                "heading": "/gnss/heading",
+                "heading_deg": "/gnss/heading_deg",
+                "status": "/gnss/status",
+                "raw_sentence": "/gnss/raw_sentence",
+            },
+            "pid": launch_pid,
+            "bridge_pid": bridge_pid,
+            "log_file": str(RTK_LOG_FILE),
+            "port": port,
+            "baudrate": baudrate,
+            "connected": connected,
+            "last_sentence_age": None if last_sentence_at is None else max(0, time.time() - last_sentence_at),
+            "node_status": node_status,
+            "summary": summary,
+            "records": records[-30:],
+            "raw_lines": raw_lines[-40:],
+        }
+
+
+rtk_monitor = RtkMonitor()
+
+
+def process_running(proc):
+    return proc is not None and proc.poll() is None
+
+
+def stop_process_group(proc, timeout=8):
+    if not process_running(proc):
+        return
+    try:
+        os.killpg(os.getpgid(proc.pid), signal.SIGINT)
+        proc.wait(timeout=timeout)
+    except (ProcessLookupError, subprocess.TimeoutExpired):
+        try:
+            os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+            proc.wait(timeout=3)
+        except (ProcessLookupError, subprocess.TimeoutExpired):
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+
+
+def normalize_capture_dir(path):
+    base = Path(path or CAPTURE_DIR).expanduser().resolve()
+    base.mkdir(parents=True, exist_ok=True)
+    return base
+
+
+def bag_size_bytes(path):
+    total = 0
+    try:
+        for item in Path(path).rglob("*"):
+            if item.is_file():
+                total += item.stat().st_size
+    except OSError:
+        return 0
+    return total
+
+
+def format_bytes(value):
+    units = ["B", "KB", "MB", "GB", "TB"]
+    size = float(value)
+    for unit in units:
+        if size < 1024 or unit == units[-1]:
+            return f"{size:.1f} {unit}" if unit != "B" else f"{int(size)} B"
+        size /= 1024
+    return f"{int(value)} B"
+
+
+def list_capture_bags(output_dir=None):
+    base = normalize_capture_dir(output_dir or load_state().get("capture", {}).get("output_dir"))
+    bags = []
+    for metadata in sorted(base.glob("*/metadata.yaml"), key=lambda p: p.stat().st_mtime, reverse=True):
+        bag_dir = metadata.parent
+        try:
+            stat = bag_dir.stat()
+        except OSError:
+            continue
+        size_bytes = bag_size_bytes(bag_dir)
+        topic_counts = bag_topic_counts(bag_dir)
+        bags.append({
+            "name": bag_dir.name,
+            "path": str(bag_dir),
+            "mtime": stat.st_mtime,
+            "size_bytes": size_bytes,
+            "size": format_bytes(size_bytes),
+            "topic_counts": topic_counts,
+            "cloud_messages": sum(
+                count for topic, count in topic_counts.items()
+                if "cloud" in topic.lower()
+            ),
+            "meta_messages": topic_counts.get("/odin_rtk/bound_meta", 0),
+        })
+    return bags[:20]
+
+
+def bag_topic_counts(bag_dir):
+    metadata = Path(bag_dir) / "metadata.yaml"
+    if not metadata.exists():
+        return {}
+    try:
+        import yaml
+        data = yaml.safe_load(metadata.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return {}
+    info = data.get("rosbag2_bagfile_information", {})
+    counts = {}
+    for item in info.get("topics_with_message_count", []) or []:
+        topic = item.get("topic_metadata", {}).get("name")
+        if topic:
+            counts[topic] = int(item.get("message_count", 0) or 0)
+    return counts
+
+
+def safe_capture_topic(topic):
+    topic = str(topic or "").strip()
+    if not topic.startswith("/") or not re.match(r"^[A-Za-z0-9_/-]+$", topic):
+        raise ValueError("无效的 ROS topic")
+    return topic
+
+
+def resolve_capture_bag_path(bag_path, output_dir=None):
+    base = normalize_capture_dir(output_dir or load_state().get("capture", {}).get("output_dir"))
+    selected = str(bag_path or "").strip()
+    if not selected:
+        raise RuntimeError("没有选择要操作的 bag")
+    bag = Path(selected).expanduser().resolve()
+    if not (bag == base or base in bag.parents):
+        raise RuntimeError("只能管理采集目录内的 bag")
+    if not (bag / "metadata.yaml").exists():
+        raise RuntimeError(f"不是有效的 rosbag 目录: {bag}")
+    return bag
+
+
+def default_capture_topics(cloud_topic):
+    meta_topic = "/odin_rtk/bound_meta"
+    bound_cloud_topic = "/odin_rtk/bound_cloud"
+    topics = [
+        cloud_topic,
+        bound_cloud_topic,
+        meta_topic,
+        "/gnss/fix",
+        "/gnss/heading",
+        "/gnss/heading_deg",
+        "/gnss/status",
+        "/gnss/raw_sentence",
+        "/tf",
+        "/tf_static",
+    ]
+    return list(dict.fromkeys(topics))
+
+
+class CaptureManager:
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.bind_process = None
+        self.record_process = None
+        self.play_process = None
+        self.rviz_process = None
+        self.log_handle = None
+        self.started_at = None
+        self.play_started_at = None
+        self.bag_path = ""
+        self.play_bag_path = ""
+        self.cloud_topic = ""
+        self.topics = []
+
+    def start(self, cloud_topic, output_dir):
+        with self.lock:
+            if process_running(self.record_process):
+                raise RuntimeError("采集已经在运行")
+        cloud_topic = safe_capture_topic(cloud_topic)
+        available_topics = current_topic_names()
+        if cloud_topic not in available_topics:
+            cloud_candidates = sorted(topic for topic in available_topics if "cloud" in topic.lower())
+            hint = "，当前可用点云: " + " ".join(cloud_candidates) if cloud_candidates else "，当前没有检测到点云 topic"
+            raise RuntimeError(f"采集前未发现 {cloud_topic}{hint}")
+        base = normalize_capture_dir(output_dir)
+        bag_path = base / ("odin_rtk_" + time.strftime("%Y%m%d_%H%M%S"))
+        topics = default_capture_topics(cloud_topic)
+        CAPTURE_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        log_handle = CAPTURE_LOG_FILE.open("a", encoding="utf-8")
+        log_handle.write(
+            "\n\n==== Odin RTK capture started "
+            + time.strftime("%Y-%m-%d %H:%M:%S")
+            + f" cloud_topic={cloud_topic} bag={bag_path} ====\n"
+        )
+        log_handle.flush()
+
+        bind_args = [
+            "ros2",
+            "launch",
+            "odin_ros_driver",
+            "odin_rtk_capture.launch.py",
+            f"cloud_topic:={cloud_topic}",
+            "meta_topic:=/odin_rtk/bound_meta",
+            "bound_cloud_topic:=/odin_rtk/bound_cloud",
+        ]
+        record_args = ["ros2", "bag", "record", "-o", str(bag_path), *topics]
+        env = clean_ros_env()
+        bind_proc = subprocess.Popen(
+            ["bash", "-c", ros_shell_prefix() + f"exec {shlex.join(bind_args)}"],
+            cwd=str(ROS_WS),
+            stdout=log_handle,
+            stderr=subprocess.STDOUT,
+            preexec_fn=os.setsid,
+            text=True,
+            env=env,
+        )
+        time.sleep(0.5)
+        record_proc = subprocess.Popen(
+            ["bash", "-c", ros_shell_prefix() + f"exec {shlex.join(record_args)}"],
+            cwd=str(ROS_WS),
+            stdout=log_handle,
+            stderr=subprocess.STDOUT,
+            preexec_fn=os.setsid,
+            text=True,
+            env=env,
+        )
+
+        with self.lock:
+            self.stop_owned_locked(close_log=False)
+            self.bind_process = bind_proc
+            self.record_process = record_proc
+            self.log_handle = log_handle
+            self.started_at = time.time()
+            self.bag_path = str(bag_path)
+            self.cloud_topic = cloud_topic
+            self.topics = topics
+        state = load_state()
+        state.setdefault("capture", {})["cloud_topic"] = cloud_topic
+        state["capture"]["output_dir"] = str(base)
+        state["capture"]["last_bag"] = str(bag_path)
+        save_state(state)
+        return self.status()
+
+    def stop_owned_locked(self, close_log=True):
+        stop_process_group(self.record_process)
+        stop_process_group(self.bind_process)
+        self.record_process = None
+        self.bind_process = None
+        self.started_at = None
+        if close_log and self.log_handle:
+            self.log_handle.flush()
+            self.log_handle.close()
+            self.log_handle = None
+
+    def stop(self):
+        with self.lock:
+            self.stop_owned_locked()
+        return self.status()
+
+    def start_playback(self, bag_path=None, loop=False, with_rviz=True):
+        with self.lock:
+            if process_running(self.play_process):
+                raise RuntimeError("回放已经在运行")
+        state = load_state()
+        selected = str(bag_path or state.get("capture", {}).get("last_bag") or "").strip()
+        if not selected:
+            bags = list_capture_bags(state.get("capture", {}).get("output_dir"))
+            selected = bags[0]["path"] if bags else ""
+        bag = Path(selected).expanduser().resolve()
+        if not (bag / "metadata.yaml").exists():
+            raise RuntimeError(f"找不到可回放的 rosbag: {bag}")
+        args = ["ros2", "bag", "play", str(bag)]
+        if loop:
+            args.append("--loop")
+        rviz_args = [
+            "rviz2",
+            "-d",
+            str(DRIVER_DIR / "config" / "dual_odin_ros2.rviz"),
+        ]
+        CAPTURE_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+        if self.log_handle is None:
+            self.log_handle = CAPTURE_LOG_FILE.open("a", encoding="utf-8")
+        self.log_handle.write(
+            "\n\n==== Odin RTK playback started "
+            + time.strftime("%Y-%m-%d %H:%M:%S")
+            + f" bag={bag} ====\n"
+        )
+        self.log_handle.flush()
+        env = clean_ros_env()
+        play_proc = subprocess.Popen(
+            ["bash", "-c", ros_shell_prefix() + f"exec {shlex.join(args)}"],
+            cwd=str(ROS_WS),
+            stdout=self.log_handle,
+            stderr=subprocess.STDOUT,
+            preexec_fn=os.setsid,
+            text=True,
+            env=env,
+        )
+        rviz_proc = None
+        if with_rviz:
+            rviz_proc = subprocess.Popen(
+                ["bash", "-c", ros_shell_prefix() + f"exec {shlex.join(rviz_args)}"],
+                cwd=str(ROS_WS),
+                stdout=self.log_handle,
+                stderr=subprocess.STDOUT,
+                preexec_fn=os.setsid,
+                text=True,
+                env=env,
+            )
+        with self.lock:
+            self.play_process = play_proc
+            self.rviz_process = rviz_proc
+            self.play_started_at = time.time()
+            self.play_bag_path = str(bag)
+        return self.status()
+
+    def stop_playback(self):
+        with self.lock:
+            stop_process_group(self.play_process)
+            stop_process_group(self.rviz_process)
+            self.play_process = None
+            self.rviz_process = None
+            self.play_started_at = None
+            self.play_bag_path = ""
+        return self.status()
+
+    def delete_bag(self, bag_path):
+        bag = resolve_capture_bag_path(bag_path)
+        with self.lock:
+            if process_running(self.record_process) and Path(self.bag_path).resolve() == bag:
+                raise RuntimeError("当前 bag 正在采集，先停止采集")
+            if process_running(self.play_process) and Path(self.play_bag_path).resolve() == bag:
+                raise RuntimeError("当前 bag 正在回放，先停止回放")
+        shutil.rmtree(bag)
+        state = load_state()
+        capture = state.setdefault("capture", {})
+        if Path(str(capture.get("last_bag", "") or "/")).expanduser().resolve() == bag:
+            capture["last_bag"] = ""
+            save_state(state)
+        return self.status()
+
+    def status(self):
+        state = load_state()
+        with self.lock:
+            recording = process_running(self.record_process)
+            binding = process_running(self.bind_process)
+            playing = process_running(self.play_process)
+            rviz_running = process_running(self.rviz_process)
+            started_at = self.started_at
+            play_started_at = self.play_started_at
+            bag_path = self.bag_path or state.get("capture", {}).get("last_bag", "")
+            play_bag_path = self.play_bag_path
+            cloud_topic = self.cloud_topic or state.get("capture", {}).get("cloud_topic", "/odin_b/odin1/cloud_render")
+            topics = list(self.topics or default_capture_topics(cloud_topic))
+            record_pid = self.record_process.pid if recording else None
+            bind_pid = self.bind_process.pid if binding else None
+            play_pid = self.play_process.pid if playing else None
+            rviz_pid = self.rviz_process.pid if rviz_running else None
+        output_dir = state.get("capture", {}).get("output_dir", str(CAPTURE_DIR))
+        return {
+            "recording": recording,
+            "binding": binding,
+            "playing": playing,
+            "record_pid": record_pid,
+            "bind_pid": bind_pid,
+            "play_pid": play_pid,
+            "rviz_running": rviz_running,
+            "rviz_pid": rviz_pid,
+            "elapsed_sec": None if not started_at or not recording else max(0, time.time() - started_at),
+            "play_elapsed_sec": None if not play_started_at or not playing else max(0, time.time() - play_started_at),
+            "bag_path": bag_path,
+            "play_bag_path": play_bag_path,
+            "cloud_topic": cloud_topic,
+            "topics": topics,
+            "output_dir": output_dir,
+            "bags": list_capture_bags(output_dir),
+            "log_file": str(CAPTURE_LOG_FILE),
+        }
+
+    def shutdown(self):
+        self.stop()
+        self.stop_playback()
+        with self.lock:
+            if self.log_handle:
+                self.log_handle.flush()
+                self.log_handle.close()
+                self.log_handle = None
+
+
+capture_manager = CaptureManager()
 
 
 def parse_config_values(text):
@@ -392,7 +1641,7 @@ def ros2_command_available(command):
         "source /opt/ros/humble/setup.bash >/dev/null 2>&1 && "
         f"ros2 {shlex.quote(command)} -h >/dev/null 2>&1"
     )
-    return subprocess.run(["bash", "-lc", probe], cwd=str(HOME)).returncode == 0
+    return subprocess.run(["bash", "-c", probe], cwd=str(HOME), env=clean_ros_env()).returncode == 0
 
 
 def launch_status():
@@ -422,6 +1671,42 @@ def resolve_usb_bindings(state):
         if match:
             state[slot]["usb_bus"] = match["bus"]
             state[slot]["usb_addr"] = match["addr"]
+    return dedupe_odin_bindings(state)
+
+
+def clear_odin_binding(state, slot):
+    state[slot]["usb_bus"] = ""
+    state[slot]["usb_addr"] = ""
+    state[slot]["serial"] = ""
+    return state
+
+
+def preferred_slot_for_duplicate(state):
+    a_serial = str(state.get("odin_a", {}).get("serial", "")).strip()
+    b_serial = str(state.get("odin_b", {}).get("serial", "")).strip()
+    if b_serial and b_serial == DEFAULT_STATE["odin_b"]["serial"]:
+        return "odin_b"
+    if a_serial and a_serial == DEFAULT_STATE["odin_a"]["serial"]:
+        return "odin_a"
+    return "odin_a"
+
+
+def dedupe_odin_bindings(state):
+    a = state.get("odin_a", {})
+    b = state.get("odin_b", {})
+    duplicate_serial = (
+        str(a.get("serial", "")).strip()
+        and str(a.get("serial", "")).strip() == str(b.get("serial", "")).strip()
+    )
+    duplicate_usb = (
+        str(a.get("usb_bus", "")).strip()
+        and str(a.get("usb_addr", "")).strip()
+        and str(a.get("usb_bus", "")).strip() == str(b.get("usb_bus", "")).strip()
+        and str(a.get("usb_addr", "")).strip() == str(b.get("usb_addr", "")).strip()
+    )
+    if duplicate_serial or duplicate_usb:
+        keep = preferred_slot_for_duplicate(state)
+        clear_odin_binding(state, "odin_b" if keep == "odin_a" else "odin_a")
     return state
 
 
@@ -627,31 +1912,26 @@ def start_launch(target=None):
         f"use_rviz:={'true' if state.get('use_rviz') else 'false'}",
         f"enable_odin_a:={'true' if enable_a else 'false'}",
         f"enable_odin_b:={'true' if enable_b else 'false'}",
-        f"odin_a_usb_bus:={state['odin_a']['usb_bus']}",
-        f"odin_a_usb_addr:={state['odin_a']['usb_addr']}",
-        f"odin_b_usb_bus:={state['odin_b']['usb_bus']}",
-        f"odin_b_usb_addr:={state['odin_b']['usb_addr']}",
         f"odin_a_config:={state['odin_a']['config']}",
         f"odin_b_config:={state['odin_b']['config']}",
         f"odin_a_calib_dir:={state['odin_a']['calib_dir']}",
         f"odin_b_calib_dir:={state['odin_b']['calib_dir']}",
     ]
+    if enable_a:
+        args.extend([
+            f"odin_a_usb_bus:={state['odin_a']['usb_bus']}",
+            f"odin_a_usb_addr:={state['odin_a']['usb_addr']}",
+        ])
+    if enable_b:
+        args.extend([
+            f"odin_b_usb_bus:={state['odin_b']['usb_bus']}",
+            f"odin_b_usb_addr:={state['odin_b']['usb_addr']}",
+        ])
     shell_cmd = (
         "source /opt/ros/humble/setup.bash && "
         f"source {shlex.quote(str(ROS_WS / 'install' / 'setup.bash'))} && "
         f"exec {shlex.join(args)}"
     )
-    clean_env = os.environ.copy()
-    for key in list(clean_env):
-        if key.startswith("SNAP") or key in {
-            "GTK_EXE_PREFIX",
-            "GTK_PATH",
-            "GTK_IM_MODULE_FILE",
-            "GIO_MODULE_DIR",
-            "GIO_EXTRA_MODULES",
-            "LD_LIBRARY_PATH",
-        }:
-            clean_env.pop(key, None)
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     launch_log_handle = LOG_FILE.open("a", encoding="utf-8")
     launch_target_requested = plan["requested"]
@@ -663,13 +1943,13 @@ def start_launch(target=None):
     )
     launch_log_handle.flush()
     launch_process = subprocess.Popen(
-        ["bash", "-lc", shell_cmd],
+        ["bash", "-c", shell_cmd],
         cwd=str(ROS_WS),
         stdout=launch_log_handle,
         stderr=subprocess.STDOUT,
         preexec_fn=os.setsid,
         text=True,
-        env=clean_env,
+        env=clean_ros_env(),
     )
     return launch_status()
 
@@ -707,14 +1987,24 @@ def tail_log(lines=240):
 def list_topics():
     if not ros2_command_available("topic"):
         return {"available": False, "topics": [], "error": "ros-humble-ros2topic is not installed"}
-    cmd = (
-        "source /opt/ros/humble/setup.bash && "
-        f"source {shlex.quote(str(ROS_WS / 'install' / 'setup.bash'))} && "
-        "timeout 5s ros2 topic list"
+    cmd = ros_shell_prefix() + "timeout 5s ros2 topic list"
+    proc = subprocess.run(
+        ["bash", "-c", cmd],
+        cwd=str(ROS_WS),
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env=clean_ros_env(),
     )
-    proc = subprocess.run(["bash", "-lc", cmd], cwd=str(ROS_WS), text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     topics = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
     return {"available": True, "topics": topics, "error": proc.stderr.strip()}
+
+
+def current_topic_names():
+    data = list_topics()
+    if not data.get("available"):
+        raise RuntimeError(data.get("error") or "ros2 topic 不可用")
+    return set(data.get("topics") or [])
 
 
 def odin_usb_devnodes():
@@ -744,6 +2034,183 @@ def fix_usb_permissions():
     return {"ok": True, "devnodes": devnodes}
 
 
+def rtk_status_payload():
+    state = load_state()
+    serial_devices = scan_serial_devices()
+    port = select_default_rtk_port(state, serial_devices)
+    baudrate = str(state.get("rtk", {}).get("baudrate", "115200"))
+    selected = find_serial_device_for_port(port, serial_devices)
+    if state.setdefault("rtk", {}).get("port") != port:
+        state["rtk"]["port"] = port
+        save_state(state)
+    monitor = rtk_monitor.snapshot()
+    monitor_port_missing = bool(monitor.get("port")) and not Path(monitor["port"]).exists()
+    monitor_port_changed = bool(port) and not same_serial_port(monitor.get("port", ""), port)
+    if monitor.get("running") and selected and (monitor_port_missing or monitor_port_changed):
+        rtk_monitor.start(port, baudrate)
+        time.sleep(0.1)
+        monitor = rtk_monitor.snapshot()
+    return {
+        "state": {
+            "port": port,
+            "baudrate": baudrate,
+        },
+        "devices": serial_devices,
+        "selected": selected,
+        "ready": bool(selected and selected.get("can_read") and selected.get("can_write")),
+        "permission_blocked": bool(selected and not (selected.get("can_read") and selected.get("can_write"))),
+        "system": {
+            "modemmanager": service_state("ModemManager"),
+            "modemmanager_candidate": bool(selected and udev_properties(selected["devnode"]).get("ID_MM_CANDIDATE") == "1"),
+        },
+        "monitor": monitor,
+    }
+
+
+RTK_OUTPUT_COMMANDS = [
+    "#AGNGGA COM1 1",
+    "#AGNRMC COM1 1",
+    "#AGPGSA COM1 1",
+    "#AGPGSV COM1 1",
+    "#AGPGST COM1 1",
+    "#AGPZDA COM1 1",
+    "#AGPVTG COM1 1",
+    "#AGPGLL COM1 1",
+    "#AGPGGA COM1 1",
+    "#AGPRMC COM1 1",
+    "#AGPHDT COM1 1",
+    "#AGPTHS COM1 1",
+    "#AGPTRA COM1 1",
+]
+
+
+def configure_rtk_output(port, baudrate):
+    real = Path(port).resolve()
+    if not str(real).startswith("/dev/tty"):
+        raise RuntimeError("不是有效的串口设备")
+    if not real.exists():
+        raise RuntimeError(f"串口不存在: {real}")
+
+    fd = os.open(str(real), os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+    preview = []
+    try:
+        configure_serial_fd(fd, int(baudrate))
+        payload = ("\r\n".join(RTK_OUTPUT_COMMANDS) + "\r\n").encode("ascii")
+        os.write(fd, payload)
+        deadline = time.time() + 2.0
+        buffer = bytearray()
+        while time.time() < deadline and len(preview) < 12:
+            readable, _, _ = select.select([fd], [], [], 0.2)
+            if fd not in readable:
+                continue
+            data = os.read(fd, 4096)
+            if not data:
+                continue
+            buffer.extend(data)
+            while b"\n" in buffer and len(preview) < 12:
+                raw_line, _, rest = buffer.partition(b"\n")
+                buffer = bytearray(rest)
+                line = raw_line.decode("ascii", errors="replace").strip()
+                if line:
+                    preview.append(line)
+    finally:
+        os.close(fd)
+
+    return {
+        "ok": True,
+        "devnode": str(real),
+        "commands": RTK_OUTPUT_COMMANDS,
+        "preview": preview,
+    }
+
+
+def install_rtk_probe_guard():
+    rule = (
+        'SUBSYSTEM=="tty", ATTRS{idVendor}=="04d9", ATTRS{idProduct}=="b534", '
+        'ENV{ID_MM_DEVICE_IGNORE}="1", ENV{ID_MM_PORT_IGNORE}="1", '
+        'MODE="0666", GROUP="dialout"\\n'
+    )
+    script = (
+        "set -e\n"
+        "printf '%s' " + shlex.quote(rule) + " > /etc/udev/rules.d/99-odin-rtk-holtek.rules\n"
+        "udevadm control --reload-rules\n"
+        "udevadm trigger --subsystem-match=tty || true\n"
+        "systemctl restart ModemManager || true\n"
+    )
+    proc = subprocess.run(
+        ["pkexec", "/bin/sh", "-c", script],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=120,
+    )
+    if proc.returncode != 0:
+        detail = proc.stderr.strip() or proc.stdout.strip() or f"pkexec exited with {proc.returncode}"
+        raise RuntimeError(detail)
+    return {"ok": True, "rule": "/etc/udev/rules.d/99-odin-rtk-holtek.rules"}
+
+
+def fix_rtk_permissions(port):
+    real = Path(port).resolve()
+    if not str(real).startswith("/dev/tty"):
+        raise RuntimeError("不是有效的串口设备")
+    if not real.exists():
+        raise RuntimeError(f"串口不存在: {real}")
+    cmd = ["pkexec", "/bin/chmod", "a+rw", str(real)]
+    proc = subprocess.run(
+        cmd,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=120,
+    )
+    if proc.returncode != 0:
+        detail = proc.stderr.strip() or proc.stdout.strip() or f"pkexec exited with {proc.returncode}"
+        raise RuntimeError(detail)
+    return {"ok": True, "devnode": str(real)}
+
+
+def rtk_usb_device_name(port):
+    real = Path(port).resolve()
+    if not str(real).startswith("/dev/tty"):
+        raise RuntimeError("不是有效的串口设备")
+    if not real.exists():
+        raise RuntimeError(f"串口不存在: {real}")
+    tty_sys = Path("/sys/class/tty") / real.name / "device"
+    if not tty_sys.exists():
+        raise RuntimeError(f"找不到串口 sysfs 节点: {real.name}")
+    target = tty_sys.resolve()
+    for parent in [target, *target.parents]:
+        vendor = parent / "idVendor"
+        product = parent / "idProduct"
+        if vendor.exists() and product.exists():
+            return parent.name
+    raise RuntimeError(f"找不到 {real.name} 对应的 USB 设备")
+
+
+def reset_rtk_usb(port):
+    device_name = rtk_usb_device_name(port)
+    script = (
+        "set -e\n"
+        "systemctl stop ModemManager 2>/dev/null || true\n"
+        f"echo -n {shlex.quote(device_name)} > /sys/bus/usb/drivers/usb/unbind\n"
+        "sleep 1\n"
+        f"echo -n {shlex.quote(device_name)} > /sys/bus/usb/drivers/usb/bind\n"
+        "udevadm settle || true\n"
+    )
+    proc = subprocess.run(
+        ["pkexec", "/bin/sh", "-c", script],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=120,
+    )
+    if proc.returncode != 0:
+        detail = proc.stderr.strip() or proc.stdout.strip() or f"pkexec exited with {proc.returncode}"
+        raise RuntimeError(detail)
+    return {"ok": True, "usb_device": device_name}
+
+
 class OdinHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(STATIC_DIR), **kwargs)
@@ -766,11 +2233,19 @@ class OdinHandler(SimpleHTTPRequestHandler):
                 json_response(self, {
                     "state": state,
                     "devices": devices,
+                    "rtk": rtk_status_payload(),
+                    "capture": capture_manager.status(),
                     "launch": launch,
                     "summary": summarize_state(state, devices, launch),
                     "ros2topic_available": ros2_command_available("topic"),
                     "quick_fields": QUICK_FIELDS,
                 })
+                return
+            if path == "/api/capture/status":
+                json_response(self, capture_manager.status())
+                return
+            if path == "/api/rtk/status":
+                json_response(self, rtk_status_payload())
                 return
             if path == "/api/configs":
                 state = load_state()
@@ -815,6 +2290,18 @@ class OdinHandler(SimpleHTTPRequestHandler):
                     state["use_rviz"] = bool(body["use_rviz"])
                 if body.get("launch_target") in LAUNCH_TARGETS:
                     state["launch_target"] = body["launch_target"]
+                if isinstance(body.get("rtk"), dict):
+                    state.setdefault("rtk", {}).update({
+                        k: str(v)
+                        for k, v in body["rtk"].items()
+                        if k in ("port", "baudrate")
+                    })
+                if isinstance(body.get("capture"), dict):
+                    state.setdefault("capture", {}).update({
+                        k: str(v)
+                        for k, v in body["capture"].items()
+                        if k in ("cloud_topic", "output_dir", "last_bag")
+                    })
                 save_state(state)
                 json_response(self, {"ok": True, "state": state})
                 return
@@ -873,6 +2360,88 @@ class OdinHandler(SimpleHTTPRequestHandler):
             if path == "/api/usb-permissions/fix":
                 json_response(self, fix_usb_permissions())
                 return
+            if path == "/api/rtk/start":
+                state = load_state()
+                rtk = state.setdefault("rtk", {})
+                port = str(body.get("port") or rtk.get("port") or "/dev/ttyACM0")
+                baudrate = str(body.get("baudrate") or rtk.get("baudrate") or "115200")
+                rtk["port"] = port
+                rtk["baudrate"] = baudrate
+                save_state(state)
+                rtk_monitor.start(port, baudrate)
+                time.sleep(0.2)
+                json_response(self, rtk_status_payload())
+                return
+            if path == "/api/rtk/stop":
+                rtk_monitor.stop()
+                json_response(self, rtk_status_payload())
+                return
+            if path == "/api/rtk/configure-output":
+                state = load_state()
+                rtk = state.setdefault("rtk", {})
+                port = str(body.get("port") or rtk.get("port") or "/dev/ttyACM0")
+                baudrate = str(body.get("baudrate") or rtk.get("baudrate") or "115200")
+                rtk["port"] = port
+                rtk["baudrate"] = baudrate
+                save_state(state)
+                rtk_monitor.stop()
+                result = configure_rtk_output(port, baudrate)
+                rtk_monitor.start(port, baudrate)
+                time.sleep(0.3)
+                payload = rtk_status_payload()
+                payload["configure_result"] = result
+                json_response(self, payload)
+                return
+            if path == "/api/rtk-permissions/fix":
+                state = load_state()
+                port = str(body.get("port") or state.get("rtk", {}).get("port") or "/dev/ttyACM0")
+                json_response(self, fix_rtk_permissions(port))
+                return
+            if path == "/api/rtk-system/probe-guard":
+                json_response(self, install_rtk_probe_guard())
+                return
+            if path == "/api/rtk-system/usb-reset":
+                state = load_state()
+                rtk = state.setdefault("rtk", {})
+                port = str(body.get("port") or rtk.get("port") or "/dev/ttyACM0")
+                baudrate = str(body.get("baudrate") or rtk.get("baudrate") or "115200")
+                rtk_monitor.stop()
+                result = reset_rtk_usb(port)
+                time.sleep(2)
+                serial_devices = scan_serial_devices()
+                port = select_default_rtk_port(state, serial_devices)
+                rtk["port"] = port
+                rtk["baudrate"] = baudrate
+                save_state(state)
+                rtk_monitor.start(port, baudrate)
+                time.sleep(0.4)
+                payload = rtk_status_payload()
+                payload["reset_result"] = result
+                json_response(self, payload)
+                return
+            if path == "/api/capture/start":
+                state = load_state()
+                capture = state.setdefault("capture", {})
+                cloud_topic = str(body.get("cloud_topic") or capture.get("cloud_topic") or "/odin_b/odin1/cloud_render")
+                output_dir = str(body.get("output_dir") or capture.get("output_dir") or CAPTURE_DIR)
+                json_response(self, capture_manager.start(cloud_topic, output_dir))
+                return
+            if path == "/api/capture/stop":
+                json_response(self, capture_manager.stop())
+                return
+            if path == "/api/capture/play":
+                bag_path = str(body.get("bag_path") or "").strip()
+                loop = bool(body.get("loop", False))
+                with_rviz = bool(body.get("with_rviz", True))
+                json_response(self, capture_manager.start_playback(bag_path, loop, with_rviz))
+                return
+            if path == "/api/capture/stop-play":
+                json_response(self, capture_manager.stop_playback())
+                return
+            if path == "/api/capture/delete":
+                bag_path = str(body.get("bag_path") or "").strip()
+                json_response(self, capture_manager.delete_bag(bag_path))
+                return
             if path == "/api/launch/start":
                 json_response(self, start_launch(body.get("target")))
                 return
@@ -906,6 +2475,8 @@ def main():
     try:
         server.serve_forever()
     finally:
+        capture_manager.shutdown()
+        rtk_monitor.stop()
         stop_launch()
 
 

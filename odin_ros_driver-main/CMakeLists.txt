@@ -424,6 +424,12 @@ elseif(ROS_VERSION STREQUAL "ROS2")
     install(TARGETS libusb_odin_filter
         LIBRARY DESTINATION lib
     )
+
+    install(PROGRAMS
+        script/gnss_rtk_node.py
+        script/odin_rtk_capture_node.py
+        DESTINATION lib/${PROJECT_NAME}
+    )
     
     # Install package.xml
     install(FILES package.xml
