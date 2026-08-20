@@ -119,6 +119,8 @@ launch_process = None
 launch_log_handle = None
 launch_target_requested = None
 launch_effective_slots = []
+topic_cache = {"updated_at": 0.0, "data": None}
+topic_cache_lock = threading.Lock()
 
 
 def ros_shell_prefix():
@@ -1352,8 +1354,9 @@ class CaptureManager:
         with self.lock:
             if process_running(self.record_process):
                 raise RuntimeError("采集已经在运行")
-        cloud_topic = safe_capture_topic(cloud_topic)
+        state = load_state()
         available_topics = current_topic_names()
+        cloud_topic = resolve_capture_cloud_topic(cloud_topic, state, available_topics)
         if cloud_topic not in available_topics:
             cloud_candidates = sorted(topic for topic in available_topics if "cloud" in topic.lower())
             hint = "，当前可用点云: " + " ".join(cloud_candidates) if cloud_candidates else "，当前没有检测到点云 topic"
@@ -1410,7 +1413,6 @@ class CaptureManager:
             self.bag_path = str(bag_path)
             self.cloud_topic = cloud_topic
             self.topics = topics
-        state = load_state()
         state.setdefault("capture", {})["cloud_topic"] = cloud_topic
         state["capture"]["output_dir"] = str(base)
         state["capture"]["last_bag"] = str(bag_path)
@@ -1507,6 +1509,10 @@ class CaptureManager:
                 raise RuntimeError("当前 bag 正在采集，先停止采集")
             if process_running(self.play_process) and Path(self.play_bag_path).resolve() == bag:
                 raise RuntimeError("当前 bag 正在回放，先停止回放")
+            if self.bag_path and Path(self.bag_path).expanduser().resolve() == bag:
+                self.bag_path = ""
+            if self.play_bag_path and Path(self.play_bag_path).expanduser().resolve() == bag:
+                self.play_bag_path = ""
         shutil.rmtree(bag)
         state = load_state()
         capture = state.setdefault("capture", {})
@@ -1517,6 +1523,15 @@ class CaptureManager:
 
     def status(self):
         state = load_state()
+        available_cloud_topics = []
+        auto_cloud_topic = ""
+        topic_error = ""
+        try:
+            available_topics = current_topic_names()
+            available_cloud_topics = capture_cloud_candidates(available_topics, state)
+            auto_cloud_topic = resolve_capture_cloud_topic("__auto__", state, available_topics)
+        except Exception as exc:
+            topic_error = str(exc)
         with self.lock:
             recording = process_running(self.record_process)
             binding = process_running(self.bind_process)
@@ -1526,8 +1541,10 @@ class CaptureManager:
             play_started_at = self.play_started_at
             bag_path = self.bag_path or state.get("capture", {}).get("last_bag", "")
             play_bag_path = self.play_bag_path
-            cloud_topic = self.cloud_topic or state.get("capture", {}).get("cloud_topic", "/odin_b/odin1/cloud_render")
-            topics = list(self.topics or default_capture_topics(cloud_topic))
+            cloud_topic = self.cloud_topic or state.get("capture", {}).get("cloud_topic", "__auto__")
+            if cloud_topic == "__auto__" and auto_cloud_topic:
+                cloud_topic = auto_cloud_topic
+            topics = list(self.topics or default_capture_topics(cloud_topic)) if cloud_topic.startswith("/") else []
             record_pid = self.record_process.pid if recording else None
             bind_pid = self.bind_process.pid if binding else None
             play_pid = self.play_process.pid if playing else None
@@ -1547,6 +1564,9 @@ class CaptureManager:
             "bag_path": bag_path,
             "play_bag_path": play_bag_path,
             "cloud_topic": cloud_topic,
+            "available_cloud_topics": available_cloud_topics,
+            "auto_cloud_topic": auto_cloud_topic,
+            "topic_error": topic_error,
             "topics": topics,
             "output_dir": output_dir,
             "bags": list_capture_bags(output_dir),
@@ -2025,9 +2045,17 @@ def tail_log(lines=240):
     return "\n".join(data[-lines:])
 
 
-def list_topics():
+def list_topics(max_age=1.5):
+    with topic_cache_lock:
+        cached = topic_cache["data"]
+        if cached and time.time() - topic_cache["updated_at"] <= max_age:
+            return dict(cached)
     if not ros2_command_available("topic"):
-        return {"available": False, "topics": [], "error": "ros-humble-ros2topic is not installed"}
+        data = {"available": False, "topics": [], "error": "ros-humble-ros2topic is not installed"}
+        with topic_cache_lock:
+            topic_cache["updated_at"] = time.time()
+            topic_cache["data"] = data
+        return dict(data)
     cmd = ros_shell_prefix() + "timeout 5s ros2 topic list"
     proc = subprocess.run(
         ["bash", "-c", cmd],
@@ -2038,7 +2066,11 @@ def list_topics():
         env=clean_ros_env(),
     )
     topics = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
-    return {"available": True, "topics": topics, "error": proc.stderr.strip()}
+    data = {"available": True, "topics": topics, "error": proc.stderr.strip()}
+    with topic_cache_lock:
+        topic_cache["updated_at"] = time.time()
+        topic_cache["data"] = data
+    return dict(data)
 
 
 def current_topic_names():
@@ -2046,6 +2078,58 @@ def current_topic_names():
     if not data.get("available"):
         raise RuntimeError(data.get("error") or "ros2 topic 不可用")
     return set(data.get("topics") or [])
+
+
+def preferred_capture_topics_for_slots(slots):
+    topics = []
+    for slot in slots:
+        if slot not in SLOTS:
+            continue
+        prefix = "/" + slot
+        topics.extend([
+            f"{prefix}/odin1/cloud_render",
+            f"{prefix}/odin1/cloud_slam",
+            f"{prefix}/odin1/cloud_raw",
+        ])
+    return topics
+
+
+def capture_cloud_candidates(available_topics=None, state=None):
+    topics = set(available_topics if available_topics is not None else current_topic_names())
+    state = state or load_state()
+    plan = launch_plan(state, scan_odin_devices(), state.get("launch_target"))
+    preferred = preferred_capture_topics_for_slots(plan["effective_slots"])
+    fallback = [
+        "/odin_a/odin1/cloud_render",
+        "/odin_b/odin1/cloud_render",
+        "/odin_a/odin1/cloud_slam",
+        "/odin_b/odin1/cloud_slam",
+        "/odin_a/odin1/cloud_raw",
+        "/odin_b/odin1/cloud_raw",
+    ]
+    discovered = sorted(
+        topic for topic in topics
+        if re.match(r"^/odin_[ab]/", topic) and "cloud" in topic.lower()
+    )
+    ordered = []
+    for topic in [*preferred, *fallback, *discovered]:
+        if topic in topics and topic not in ordered:
+            ordered.append(topic)
+    return ordered
+
+
+def resolve_capture_cloud_topic(requested_topic, state=None, available_topics=None):
+    state = state or load_state()
+    topics = set(available_topics if available_topics is not None else current_topic_names())
+    requested = str(requested_topic or "").strip()
+    candidates = capture_cloud_candidates(topics, state)
+    if requested and requested != "__auto__":
+        requested = safe_capture_topic(requested)
+        if requested in topics:
+            return requested
+    if candidates:
+        return candidates[0]
+    raise RuntimeError("采集前没有检测到 Odin 点云 topic，请先启动 Odin 并等待点云发布")
 
 
 def odin_usb_devnodes():
@@ -2310,7 +2394,7 @@ class OdinHandler(SimpleHTTPRequestHandler):
                 json_response(self, {"log": tail_log(lines)})
                 return
             if path == "/api/topics":
-                json_response(self, list_topics())
+                json_response(self, list_topics(max_age=0))
                 return
             super().do_GET()
         except Exception as exc:

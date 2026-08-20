@@ -16,6 +16,7 @@ const app = {
   permissionBusy: false,
   rtkBusy: false,
   captureBusy: false,
+  captureTopicManual: false,
   rtkWaitStartedAt: null,
   collapsedPanels: {},
   rtkMap: null,
@@ -101,6 +102,15 @@ const CLOUD_PRESETS = [
       pubintensitygray: "1",
     },
   },
+];
+
+const FALLBACK_CAPTURE_TOPICS = [
+  "/odin_a/odin1/cloud_render",
+  "/odin_b/odin1/cloud_render",
+  "/odin_a/odin1/cloud_slam",
+  "/odin_b/odin1/cloud_slam",
+  "/odin_a/odin1/cloud_raw",
+  "/odin_b/odin1/cloud_raw",
 ];
 
 const RTK_STARTUP_TIPS = [
@@ -236,7 +246,6 @@ function fillStateForm(serverState, force = false) {
     $("rtkBaud").value = serverState.rtk.baudrate || "115200";
   }
   if (serverState.capture) {
-    $("captureCloudTopic").value = serverState.capture.cloud_topic || "/odin_b/odin1/cloud_render";
     $("captureOutputDir").value = serverState.capture.output_dir || "";
   }
   app.formDirty = false;
@@ -266,7 +275,7 @@ function currentStateFromForm() {
       baudrate: $("rtkBaud").value.trim() || "115200",
     },
     capture: {
-      cloud_topic: $("captureCloudTopic") ? $("captureCloudTopic").value : "/odin_b/odin1/cloud_render",
+      cloud_topic: $("captureCloudTopic") ? $("captureCloudTopic").value || "__auto__" : "__auto__",
       output_dir: $("captureOutputDir") ? $("captureOutputDir").value : "",
     },
   };
@@ -666,6 +675,40 @@ function formatDuration(seconds) {
   return `${mins}:${String(secs).padStart(2, "0")}`;
 }
 
+function captureTopicLabel(topic, online = false) {
+  const slot = topic.includes("/odin_a/") ? "A" : topic.includes("/odin_b/") ? "B" : "Odin";
+  let kind = "点云";
+  if (topic.includes("cloud_render")) kind = "RGB 着色点云";
+  else if (topic.includes("cloud_slam")) kind = "SLAM 点云";
+  else if (topic.includes("cloud_raw")) kind = "Raw 点云";
+  return `${slot} ${kind}${online ? " · 当前在线" : ""}`;
+}
+
+function renderCaptureTopicOptions(capture) {
+  const select = $("captureCloudTopic");
+  if (!select) return;
+  const previous = select.value || "__auto__";
+  const available = capture.available_cloud_topics || [];
+  const topics = [];
+  [...available, capture.cloud_topic, ...FALLBACK_CAPTURE_TOPICS].forEach((topic) => {
+    if (topic && topic !== "__auto__" && !topics.includes(topic)) topics.push(topic);
+  });
+  select.innerHTML = [
+    '<option value="__auto__">自动选择当前点云</option>',
+    ...topics.map((topic) => {
+      const online = available.includes(topic);
+      const label = captureTopicLabel(topic, online);
+      return `<option value="${escapeHtml(topic)}">${escapeHtml(label)}</option>`;
+    }),
+  ].join("");
+  const desired = capture.recording && capture.cloud_topic
+    ? capture.cloud_topic
+    : app.captureTopicManual && topics.includes(previous)
+      ? previous
+      : "__auto__";
+  select.value = [...select.options].some((option) => option.value === desired) ? desired : "__auto__";
+}
+
 function renderCapture(data) {
   app.capture = data || {};
   const recording = Boolean(app.capture.recording);
@@ -674,9 +717,7 @@ function renderCapture(data) {
   const stateText = recording ? "采集中" : playing ? "回放中" : "空闲";
   setBadge($("captureStateBadge"), stateText, recording ? "" : playing ? "warn" : "neutral");
 
-  if (app.capture.cloud_topic && document.activeElement !== $("captureCloudTopic")) {
-    $("captureCloudTopic").value = app.capture.cloud_topic;
-  }
+  renderCaptureTopicOptions(app.capture);
   if (app.capture.output_dir && document.activeElement !== $("captureOutputDir")) {
     $("captureOutputDir").value = app.capture.output_dir;
   }
@@ -709,7 +750,7 @@ function renderCapture(data) {
     metric("录制", recording ? formatDuration(app.capture.elapsed_sec) : "未运行", recording ? "" : "neutral"),
     metric("回放", playing ? formatDuration(app.capture.play_elapsed_sec) : "未运行", playing ? "warn" : "neutral"),
     metric("RViz", app.capture.rviz_running ? `PID ${app.capture.rviz_pid || "--"}` : "未启动", app.capture.rviz_running ? "" : "neutral"),
-    metric("点云", app.capture.cloud_topic || "--"),
+    metric("点云", recording ? app.capture.cloud_topic || "--" : app.capture.auto_cloud_topic || "自动"),
     metric("绑定节点", app.capture.binding ? `PID ${app.capture.bind_pid || "--"}` : "未启动", app.capture.binding ? "" : "neutral"),
     metric("rosbag", recording ? `PID ${app.capture.record_pid || "--"}` : "未启动", recording ? "" : "neutral"),
     metric("最近 bag", app.capture.bag_path ? app.capture.bag_path.split("/").pop() : "--"),
@@ -1481,7 +1522,7 @@ async function controlCapture(action) {
   renderCapture(app.capture);
   try {
     const body = {
-      cloud_topic: $("captureCloudTopic").value || "/odin_b/odin1/cloud_render",
+      cloud_topic: $("captureCloudTopic").value || "__auto__",
       output_dir: $("captureOutputDir").value || "",
     };
     const data = await api(`/api/capture/${action}`, {
@@ -1647,6 +1688,9 @@ function bindEvents() {
   $("rtkMapClearBtn").addEventListener("click", clearRtkTrail);
   $("captureStartBtn").addEventListener("click", () => controlCapture("start"));
   $("captureStopBtn").addEventListener("click", () => controlCapture("stop"));
+  $("captureCloudTopic").addEventListener("change", () => {
+    app.captureTopicManual = $("captureCloudTopic").value !== "__auto__";
+  });
   $("capturePlayBtn").addEventListener("click", () => controlPlayback("play"));
   $("captureStopPlayBtn").addEventListener("click", () => controlPlayback("stop"));
   $("captureDeleteBtn").addEventListener("click", deleteSelectedCapture);

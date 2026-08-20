@@ -220,12 +220,13 @@
               <label>
                 点云 topic
                 <select id="captureCloudTopic">
-                  <option value="/odin_b/odin1/cloud_render">B RGB 着色点云</option>
-                  <option value="/odin_b/odin1/cloud_slam">B SLAM 点云</option>
-                  <option value="/odin_b/odin1/cloud_raw">B Raw 点云</option>
+                  <option value="__auto__">自动选择当前点云</option>
                   <option value="/odin_a/odin1/cloud_render">A RGB 着色点云</option>
                   <option value="/odin_a/odin1/cloud_slam">A SLAM 点云</option>
                   <option value="/odin_a/odin1/cloud_raw">A Raw 点云</option>
+                  <option value="/odin_b/odin1/cloud_render">B RGB 着色点云</option>
+                  <option value="/odin_b/odin1/cloud_slam">B SLAM 点云</option>
+                  <option value="/odin_b/odin1/cloud_raw">B Raw 点云</option>
                 </select>
               </label>
               <label>
@@ -357,6 +358,6 @@
 
     <div id="toast"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/app.js?v=20260818-capture-4"></script>
+    <script src="/app.js?v=20260820-capture-auto-1"></script>
   </body>
 </html>

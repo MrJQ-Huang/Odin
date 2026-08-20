@@ -12,11 +12,11 @@
   "use_rviz": true,
   "launch_target": "auto",
   "rtk": {
-    "port": "/dev/ttyACM0",
+    "port": "",
     "baudrate": "115200"
   },
   "capture": {
-    "cloud_topic": "/odin_b/odin1/cloud_render",
+    "cloud_topic": "__auto__",
     "last_bag": ""
   }
 }
