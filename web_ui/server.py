@@ -24,6 +24,7 @@ ROS_WS = ODIN_ROOT / "ros2_ws"
 DRIVER_DIR = ODIN_ROOT / "odin_ros_driver-main"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 STATE_FILE = Path(__file__).resolve().parent / "state.json"
+LOCAL_STATE_FILE = Path(__file__).resolve().parent / "local_state.json"
 LOG_FILE = Path(__file__).resolve().parent / "odin_web_launch.log"
 RTK_LOG_FILE = Path(__file__).resolve().parent / "rtk_ros_launch.log"
 CAPTURE_LOG_FILE = Path(__file__).resolve().parent / "capture_rosbag.log"
@@ -31,18 +32,18 @@ CAPTURE_DIR = ODIN_ROOT / "captures"
 
 DEFAULT_STATE = {
     "odin_a": {
-        "usb_bus": "2",
-        "usb_addr": "3",
-        "serial": "952033c87532e832",
+        "usb_bus": "",
+        "usb_addr": "",
+        "serial": "",
         "config": str(DRIVER_DIR / "config" / "control_command_odin_a.yaml"),
         "calib_dir": str(HOME / ".ros" / "odin_a"),
         "command_file": "/tmp/odin_a_command.txt",
         "frame_prefix": "odin_a",
     },
     "odin_b": {
-        "usb_bus": "2",
-        "usb_addr": "4",
-        "serial": "276fe96f99321c78",
+        "usb_bus": "",
+        "usb_addr": "",
+        "serial": "",
         "config": str(DRIVER_DIR / "config" / "control_command_odin_b.yaml"),
         "calib_dir": str(HOME / ".ros" / "odin_b"),
         "command_file": "/tmp/odin_b_command.txt",
@@ -216,44 +217,88 @@ def stop_external_odin_processes():
     wait_for_odin_processes_to_exit(timeout=2)
 
 
-def load_state():
-    if not STATE_FILE.exists():
-        save_state(DEFAULT_STATE)
-        return json.loads(json.dumps(DEFAULT_STATE))
+def state_copy(value):
+    return json.loads(json.dumps(value))
+
+
+def read_state_file(path):
+    if not path.exists():
+        return {}
     try:
-        with STATE_FILE.open("r", encoding="utf-8") as f:
-            data = json.load(f)
+        with path.open("r", encoding="utf-8") as f:
+            return json.load(f)
     except Exception:
-        data = {}
-    state = json.loads(json.dumps(DEFAULT_STATE))
+        return {}
+
+
+def merge_state(base, data):
     for key, value in data.items():
-        if isinstance(value, dict) and isinstance(state.get(key), dict):
-            state[key].update(value)
+        if key not in base:
+            continue
+        if isinstance(value, dict) and isinstance(base.get(key), dict):
+            base[key].update(value)
         else:
-            state[key] = value
+            base[key] = value
+    return base
+
+
+def rehome_path(value, anchors):
+    text = str(value or "")
+    if not text:
+        return text
+    for pattern, replacement in anchors:
+        updated = re.sub(pattern, replacement, text, count=1)
+        if updated != text:
+            return updated
+    return text
+
+
+def normalize_state_paths(state):
     changed = False
+    anchors = [
+        (r"^/home/[^/]+/odin", str(ODIN_ROOT)),
+        (r"^/data/[^/]+/odin", str(ODIN_ROOT)),
+    ]
     for slot in SLOTS:
         slot_state = state.get(slot, {})
-        config = str(slot_state.get("config", ""))
-        if config.startswith("/home/uros/odin/"):
-            slot_state["config"] = config.replace("/home/uros/odin", str(ODIN_ROOT), 1)
+        config = rehome_path(slot_state.get("config", ""), anchors)
+        if config != slot_state.get("config", ""):
+            slot_state["config"] = config
             changed = True
-        calib_dir = str(slot_state.get("calib_dir", ""))
-        if calib_dir.startswith("/home/uros/.ros/"):
-            slot_state["calib_dir"] = calib_dir.replace("/home/uros/.ros", str(HOME / ".ros"), 1)
+        calib_dir = rehome_path(
+            slot_state.get("calib_dir", ""),
+            [(r"^/home/[^/]+/\.ros", str(HOME / ".ros"))],
+        )
+        if calib_dir != slot_state.get("calib_dir", ""):
+            slot_state["calib_dir"] = calib_dir
             changed = True
+    capture = state.get("capture", {})
+    for key in ("output_dir", "last_bag"):
+        updated = rehome_path(capture.get(key, ""), anchors)
+        if updated != capture.get(key, ""):
+            capture[key] = updated
+            changed = True
+    return changed
+
+
+def load_state():
+    state = state_copy(DEFAULT_STATE)
+    merge_state(state, read_state_file(STATE_FILE))
+    has_local_state = LOCAL_STATE_FILE.exists()
+    merge_state(state, read_state_file(LOCAL_STATE_FILE))
+    changed = normalize_state_paths(state)
     before_dedupe = json.dumps(state.get("odin_a", {}), sort_keys=True) + json.dumps(state.get("odin_b", {}), sort_keys=True)
     state = dedupe_odin_bindings(state)
     after_dedupe = json.dumps(state.get("odin_a", {}), sort_keys=True) + json.dumps(state.get("odin_b", {}), sort_keys=True)
     if before_dedupe != after_dedupe:
         changed = True
-    if changed:
+    if changed and has_local_state:
         save_state(state)
     return state
 
 
 def save_state(state):
-    STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    LOCAL_STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def json_response(handler, payload, status=200):
@@ -1818,20 +1863,16 @@ def apply_plan_usb_addresses(state, plan):
 
 
 def summarize_state(state, devices, launch):
-    matches = {}
-    for slot in SLOTS:
-        match = match_device_for_slot(state, devices, slot)
-        matches[slot] = match
-
     serials = [
         str(state.get(slot, {}).get("serial", "")).strip()
         for slot in SLOTS
         if str(state.get(slot, {}).get("serial", "")).strip()
     ]
     duplicate_serial = len(serials) == 2 and serials[0] == serials[1]
+    plan = launch_plan(state, devices, state.get("launch_target"))
+    matches = plan["matches"]
     a_online = matches["odin_a"] is not None
     b_online = matches["odin_b"] is not None
-    plan = launch_plan(state, devices, state.get("launch_target"))
     binding_ready = bool(plan["effective_slots"]) and not plan["missing_slots"] and not duplicate_serial
     usb_access_ready = all(bool(dev.get("can_read")) and bool(dev.get("can_write")) for dev in plan["matches"].values() if dev)
     launch_usb_access_ready = not plan["permission_slots"]

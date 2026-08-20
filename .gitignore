@@ -17,6 +17,7 @@ wiki-master/_site/
 web_ui/odin_web_launch.log
 web_ui/rtk_ros_launch.log
 web_ui/capture_rosbag.log
+web_ui/local_state.json
 captures/
 odin_ros_driver-main/log/
 odin_ros_driver-main/recorddata/

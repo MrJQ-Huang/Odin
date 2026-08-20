@@ -304,6 +304,10 @@ function markDirty() {
 }
 
 function slotAssignmentFor(dev) {
+  const summaryMatches = app.summary && app.summary.matches ? app.summary.matches : {};
+  for (const slot of ["odin_a", "odin_b"]) {
+    if (sameDevice(summaryMatches[slot], dev)) return slot;
+  }
   const s = currentStateFromForm();
   for (const slot of ["odin_a", "odin_b"]) {
     const bySerial = s[slot].serial && dev.serial && s[slot].serial === dev.serial;
@@ -313,7 +317,16 @@ function slotAssignmentFor(dev) {
   return "";
 }
 
+function sameDevice(left, right) {
+  if (!left || !right) return false;
+  const bySerial = left.serial && right.serial && left.serial === right.serial;
+  const byAddr = left.bus && left.addr && left.bus === right.bus && left.addr === right.addr;
+  return Boolean(bySerial || byAddr);
+}
+
 function deviceForSlot(slot) {
+  const summaryMatches = app.summary && app.summary.matches ? app.summary.matches : {};
+  if (summaryMatches[slot]) return summaryMatches[slot];
   const s = currentStateFromForm()[slot];
   return app.devices.find((dev) => {
     const bySerial = s.serial && dev.serial && s.serial === dev.serial;
@@ -399,15 +412,21 @@ function renderReadiness() {
     const ids = idsFor(slot);
     const dev = slot === "odin_a" ? health.a : health.b;
     const serial = $(ids.serial).value.trim();
-    $(ids.title).textContent = serial ? shortSerial(serial) : "未绑定";
-    $(ids.serialView).textContent = `Serial ${serial ? shortSerial(serial) : "--"}`;
+    const displaySerial = serial || (dev && dev.serial) || "";
+    $(ids.title).textContent = displaySerial ? shortSerial(displaySerial) : "未绑定";
+    $(ids.serialView).textContent = `Serial ${displaySerial ? shortSerial(displaySerial) : "--"}`;
     if (dev) {
       const accessOk = dev.can_read && dev.can_write;
       setBadge($(ids.badge), accessOk ? "在线" : "权限不足", accessOk ? "" : "warn");
-      $(ids.line).textContent = accessOk ? "已匹配当前连接" : "已识别，但当前用户不能打开 USB 设备";
+      $(ids.line).textContent = serial
+        ? accessOk ? "已匹配当前连接" : "已识别，但当前用户不能打开 USB 设备"
+        : accessOk ? "已临时匹配，保存后记住本机身份" : "已临时匹配，但当前用户不能打开 USB 设备";
       $(ids.usbView).textContent = `USB Bus ${dev.bus} / Addr ${dev.addr}${dev.devnode ? ` · ${dev.devnode}` : ""}`;
       $(ids.bus).value = dev.bus;
       $(ids.addr).value = dev.addr;
+      if (!serial && dev.serial) {
+        $(ids.serial).value = dev.serial;
+      }
     } else if (serial) {
       setBadge($(ids.badge), "未在线", "warn");
       $(ids.line).textContent = "已记住身份，但当前未匹配到设备";
