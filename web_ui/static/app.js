@@ -744,7 +744,7 @@ function renderCapture(data) {
       ? `正在回放 ${app.capture.play_bag_path || "--"}`
       : selectedInfo && !(selectedInfo.cloud_messages || 0)
         ? "选中的 bag 没有点云，只能回放 RTK/GNSS"
-        : "录制 Odin 点云 + RTK/GNSS + 绑定元数据";
+        : "完整录制 Odin 点云、轨迹、IMU、图像、TF 与 RTK/GNSS";
 
   $("captureMetrics").innerHTML = [
     metric("录制", recording ? formatDuration(app.capture.elapsed_sec) : "未运行", recording ? "" : "neutral"),
@@ -756,13 +756,25 @@ function renderCapture(data) {
     metric("最近 bag", app.capture.bag_path ? app.capture.bag_path.split("/").pop() : "--"),
   ].join("");
 
-  $("captureTopicsBox").textContent = (app.capture.topics || []).join("\n") || "暂无录制 topic";
+  const liveTopics = app.capture.live_record_topics || [];
+  const missingTopics = app.capture.missing_record_topics || [];
+  $("captureTopicsBox").textContent = [
+    liveTopics.length ? `当前已发布\n${liveTopics.map((topic) => `  ${topic}`).join("\n")}` : "当前已发布\n  暂无",
+    missingTopics.length ? `等待发布\n${missingTopics.map((topic) => `  ${topic}`).join("\n")}` : "",
+  ].filter(Boolean).join("\n\n");
   $("captureBagsBox").textContent = bags.length
     ? bags.map((bag) => {
       const cloudCount = bag.cloud_messages || 0;
+      const odomCount = bag.odom_messages || 0;
+      const imuCount = bag.imu_messages || 0;
+      const imageCount = bag.image_messages || 0;
+      const rtkCount = bag.rtk_messages || 0;
       const metaCount = bag.meta_messages || 0;
-      const mark = cloudCount > 0 ? "可视化" : "无点云";
-      return `${bag.name}  [${mark}]\n  点云 ${cloudCount}  绑定 ${metaCount}  ${bag.size}\n  ${bag.path}`;
+      const mark = cloudCount > 0 ? bag.has_manifest ? "完整采集" : "可视化" : "无点云";
+      return `${bag.name}  [${mark}]
+  点云 ${cloudCount}  轨迹 ${odomCount}  IMU ${imuCount}  图像 ${imageCount}  RTK ${rtkCount}  绑定 ${metaCount}
+  ${bag.size}
+  ${bag.path}`;
     }).join("\n\n")
     : "暂无采集文件";
 }

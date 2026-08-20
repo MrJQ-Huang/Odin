@@ -29,6 +29,7 @@ LOG_FILE = Path(__file__).resolve().parent / "odin_web_launch.log"
 RTK_LOG_FILE = Path(__file__).resolve().parent / "rtk_ros_launch.log"
 CAPTURE_LOG_FILE = Path(__file__).resolve().parent / "capture_rosbag.log"
 CAPTURE_DIR = ODIN_ROOT / "captures"
+CAPTURE_MANIFEST = "capture_manifest.json"
 
 DEFAULT_STATE = {
     "odin_a": {
@@ -114,6 +115,39 @@ RUNTIME_COMMAND_KEYS = {
     "showcamerapose",
     "devstatuslog",
 }
+
+ODIN_CAPTURE_SUFFIXES = [
+    "odin1/cloud_render",
+    "odin1/cloud_slam",
+    "odin1/cloud_raw",
+    "odin1/odometry",
+    "odin1/odometry_highfreq",
+    "odin1/wiwc",
+    "odin1/imu",
+    "odin1/path",
+    "odin1/camera_pose_visual",
+    "odin1/image",
+    "odin1/image/compressed",
+    "odin1/image/undistorted",
+    "odin1/image/intensity_gray",
+    "odin1/reprojected_image",
+    "odin1/overlay_image",
+]
+
+RTK_CAPTURE_TOPICS = [
+    "/gnss/fix",
+    "/gnss/heading",
+    "/gnss/heading_deg",
+    "/gnss/status",
+    "/gnss/raw_sentence",
+]
+
+CAPTURE_SUPPORT_TOPICS = [
+    "/odin_rtk/bound_cloud",
+    "/odin_rtk/bound_meta",
+    "/tf",
+    "/tf_static",
+]
 
 launch_process = None
 launch_log_handle = None
@@ -1263,6 +1297,7 @@ def list_capture_bags(output_dir=None):
             continue
         size_bytes = bag_size_bytes(bag_dir)
         topic_counts = bag_topic_counts(bag_dir)
+        manifest = bag_dir / CAPTURE_MANIFEST
         bags.append({
             "name": bag_dir.name,
             "path": str(bag_dir),
@@ -1270,11 +1305,28 @@ def list_capture_bags(output_dir=None):
             "size_bytes": size_bytes,
             "size": format_bytes(size_bytes),
             "topic_counts": topic_counts,
+            "has_manifest": manifest.exists(),
             "cloud_messages": sum(
                 count for topic, count in topic_counts.items()
                 if "cloud" in topic.lower()
             ),
             "meta_messages": topic_counts.get("/odin_rtk/bound_meta", 0),
+            "odom_messages": sum(
+                count for topic, count in topic_counts.items()
+                if "odometry" in topic or topic.endswith("/wiwc")
+            ),
+            "imu_messages": sum(
+                count for topic, count in topic_counts.items()
+                if topic.endswith("/imu")
+            ),
+            "image_messages": sum(
+                count for topic, count in topic_counts.items()
+                if "/image" in topic
+            ),
+            "rtk_messages": sum(
+                count for topic, count in topic_counts.items()
+                if topic.startswith("/gnss/")
+            ),
         })
     return bags[:20]
 
@@ -1317,22 +1369,97 @@ def resolve_capture_bag_path(bag_path, output_dir=None):
     return bag
 
 
-def default_capture_topics(cloud_topic):
-    meta_topic = "/odin_rtk/bound_meta"
-    bound_cloud_topic = "/odin_rtk/bound_cloud"
-    topics = [
-        cloud_topic,
-        bound_cloud_topic,
-        meta_topic,
-        "/gnss/fix",
-        "/gnss/heading",
-        "/gnss/heading_deg",
-        "/gnss/status",
-        "/gnss/raw_sentence",
-        "/tf",
-        "/tf_static",
-    ]
+def slot_from_odin_topic(topic):
+    match = re.match(r"^/(odin_[ab])/", str(topic or ""))
+    return match.group(1) if match else ""
+
+
+def capture_slots_for_context(cloud_topic, state=None, available_topics=None):
+    state = state or load_state()
+    topics = set(available_topics if available_topics is not None else [])
+    observed_slots = []
+    for topic in sorted(topics):
+        slot = slot_from_odin_topic(topic)
+        if slot:
+            observed_slots.append(slot)
+    slots = list(observed_slots)
+    if not slots:
+        try:
+            plan = launch_plan(state, scan_odin_devices(), state.get("launch_target"))
+            slots.extend(plan["effective_slots"])
+        except Exception:
+            pass
+    try:
+        selected_slot = slot_from_odin_topic(cloud_topic)
+        if selected_slot:
+            slots.append(selected_slot)
+    except Exception:
+        pass
+    return [slot for slot in SLOTS if slot in slots]
+
+
+def odin_capture_topics_for_slots(slots):
+    topics = []
+    for slot in slots:
+        topics.extend(f"/{slot}/{suffix}" for suffix in ODIN_CAPTURE_SUFFIXES)
+    return topics
+
+
+def default_capture_topics(cloud_topic, state=None, available_topics=None):
+    slots = capture_slots_for_context(cloud_topic, state, available_topics)
+    topics = []
+    if cloud_topic and cloud_topic.startswith("/"):
+        topics.append(cloud_topic)
+    topics.extend(odin_capture_topics_for_slots(slots))
+    topics.extend([*CAPTURE_SUPPORT_TOPICS, *RTK_CAPTURE_TOPICS])
     return list(dict.fromkeys(topics))
+
+
+def copy_if_exists(src, dest):
+    src = Path(src).expanduser()
+    if not src.exists() or not src.is_file():
+        return False
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dest)
+    return True
+
+
+def write_capture_sidecars(bag_path, state, cloud_topic, topics, available_topics):
+    bag = Path(bag_path)
+    deadline = time.time() + 4
+    while time.time() < deadline and not bag.exists():
+        time.sleep(0.1)
+    if not bag.exists():
+        return
+    slots = capture_slots_for_context(cloud_topic, state, available_topics)
+    sidecar_dir = bag / "odin_metadata"
+    sidecar_dir.mkdir(parents=True, exist_ok=True)
+    copied = []
+    for slot in slots:
+        slot_state = state.get(slot, {})
+        cfg = slot_state.get("config")
+        if cfg and copy_if_exists(cfg, sidecar_dir / f"{slot}_control_command.yaml"):
+            copied.append(str(sidecar_dir / f"{slot}_control_command.yaml"))
+        calib = Path(slot_state.get("calib_dir", "")) / "calib.yaml"
+        if copy_if_exists(calib, sidecar_dir / f"{slot}_calib.yaml"):
+            copied.append(str(sidecar_dir / f"{slot}_calib.yaml"))
+    common_calib = DRIVER_DIR / "config" / "calib.yaml"
+    if copy_if_exists(common_calib, sidecar_dir / "driver_calib.yaml"):
+        copied.append(str(sidecar_dir / "driver_calib.yaml"))
+    manifest = {
+        "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "profile": "full_odin_fusion_capture",
+        "primary_cloud_topic": cloud_topic,
+        "slots": slots,
+        "record_topics": topics,
+        "available_topics_at_start": sorted(available_topics),
+        "sidecar_files": copied,
+        "notes": [
+            "This capture mirrors the useful parts of Odin OLX recording in ROS bag form.",
+            "It records point clouds, odometry, IMU, images, TF, RTK/GNSS topics, and binding metadata when available.",
+        ],
+    }
+    (bag / CAPTURE_MANIFEST).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 class CaptureManager:
@@ -1363,7 +1490,7 @@ class CaptureManager:
             raise RuntimeError(f"采集前未发现 {cloud_topic}{hint}")
         base = normalize_capture_dir(output_dir)
         bag_path = base / ("odin_rtk_" + time.strftime("%Y%m%d_%H%M%S"))
-        topics = default_capture_topics(cloud_topic)
+        topics = default_capture_topics(cloud_topic, state, available_topics)
         CAPTURE_LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
         log_handle = CAPTURE_LOG_FILE.open("a", encoding="utf-8")
         log_handle.write(
@@ -1403,6 +1530,11 @@ class CaptureManager:
             text=True,
             env=env,
         )
+        try:
+            write_capture_sidecars(bag_path, state, cloud_topic, topics, available_topics)
+        except Exception as exc:
+            log_handle.write(f"capture sidecar write failed: {exc}\n")
+            log_handle.flush()
 
         with self.lock:
             self.stop_owned_locked(close_log=False)
@@ -1526,6 +1658,7 @@ class CaptureManager:
         available_cloud_topics = []
         auto_cloud_topic = ""
         topic_error = ""
+        available_topics = set()
         try:
             available_topics = current_topic_names()
             available_cloud_topics = capture_cloud_candidates(available_topics, state)
@@ -1544,7 +1677,9 @@ class CaptureManager:
             cloud_topic = self.cloud_topic or state.get("capture", {}).get("cloud_topic", "__auto__")
             if cloud_topic == "__auto__" and auto_cloud_topic:
                 cloud_topic = auto_cloud_topic
-            topics = list(self.topics or default_capture_topics(cloud_topic)) if cloud_topic.startswith("/") else []
+            topics = list(self.topics or default_capture_topics(cloud_topic, state, available_topics)) if cloud_topic.startswith("/") else []
+            live_record_topics = [topic for topic in topics if topic in available_topics]
+            missing_record_topics = [topic for topic in topics if topic not in available_topics]
             record_pid = self.record_process.pid if recording else None
             bind_pid = self.bind_process.pid if binding else None
             play_pid = self.play_process.pid if playing else None
@@ -1568,6 +1703,8 @@ class CaptureManager:
             "auto_cloud_topic": auto_cloud_topic,
             "topic_error": topic_error,
             "topics": topics,
+            "live_record_topics": live_record_topics,
+            "missing_record_topics": missing_record_topics,
             "output_dir": output_dir,
             "bags": list_capture_bags(output_dir),
             "log_file": str(CAPTURE_LOG_FILE),
