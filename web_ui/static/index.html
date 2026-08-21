@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Odin1 操作台</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/styles.css?v=20260821-hard-3col-1" />
+    <link rel="stylesheet" href="/styles.css?v=20260821-bin-playback-2" />
   </head>
   <body>
     <header class="appbar">
@@ -264,8 +264,8 @@
         <section class="panel fusion-card collapsible" data-collapse-panel="fusion">
           <div class="panel-head">
             <div>
-              <h2>点云融合 Demo</h2>
-              <p id="fusionHint" class="hint">选择两个采集包，先用手动位姿生成融合预览</p>
+              <h2>点云时序工作台</h2>
+              <p id="fusionHint" class="hint">先建立 A/B 时间轴，再对齐播放，最后进入空间融合</p>
             </div>
             <div class="button-row">
               <span id="fusionStateBadge" class="badge neutral">未生成</span>
@@ -311,14 +311,6 @@
                   <h3>预览</h3>
                   <div class="fusion-actions">
                     <label>
-                      同步
-                      <select id="fusionSyncMode">
-                        <option value="overlap_mid">重叠区中点</option>
-                        <option value="start">开始附近</option>
-                        <option value="end">结束附近</option>
-                      </select>
-                    </label>
-                    <label>
                       点数
                       <input id="fusionMaxPoints" type="number" min="1000" max="120000" step="1000" value="60000" />
                     </label>
@@ -326,7 +318,14 @@
                       <input id="fusionSavePly" type="checkbox" />
                       保存 PLY
                     </label>
-                    <button id="fusionPreviewBtn" class="primary">生成预览</button>
+                    <button id="fusionAlignBtn">自动对齐</button>
+                    <button id="fusionPreviewABtn">预览 A</button>
+                    <button id="fusionPreviewBBtn">预览 B</button>
+                    <button id="fusionPreviewBtn" class="primary">对齐叠加</button>
+                    <button id="fusionPlayABtn">播放 A</button>
+                    <button id="fusionPlayBBtn">播放 B</button>
+                    <button id="fusionPlayBothBtn">同步播放</button>
+                    <button id="fusionStopPlayBtn" class="danger">停止播放</button>
                     <button id="fusionRefreshBtn" class="ghost">刷新数据</button>
                     <button id="fusionResetViewBtn">重置视角</button>
                   </div>
@@ -337,8 +336,49 @@
                   <pre id="fusionBagsBox" class="output capture-output"></pre>
                 </section>
               </div>
-              <div class="fusion-viewer">
-                <canvas id="fusionCanvas"></canvas>
+              <div id="fusionViewer" class="fusion-viewer split-mode">
+                <div class="fusion-split-view">
+                  <div class="fusion-pane">
+                    <div id="fusionPaneLabelA" class="fusion-pane-label">A</div>
+                    <canvas id="fusionCanvasA"></canvas>
+                  </div>
+                  <div class="fusion-pane">
+                    <div id="fusionPaneLabelB" class="fusion-pane-label">B</div>
+                    <canvas id="fusionCanvasB"></canvas>
+                  </div>
+                </div>
+                <div class="fusion-overlay-pane">
+                  <div id="fusionOverlayLabel" class="fusion-pane-label fusion-overlay-label">A/B</div>
+                  <canvas id="fusionCanvas"></canvas>
+                </div>
+                <div class="fusion-timeline-panel">
+                  <div id="fusionAlignmentBox" class="fusion-alignment-box">等待选择 A/B 数据源</div>
+                  <div class="timeline-row">
+                    <div class="timeline-meta">
+                      <strong>A</strong>
+                      <button id="fusionPrevABtn">上一帧</button>
+                      <input id="fusionFrameA" type="number" min="1" value="1" />
+                      <button id="fusionNextABtn">下一帧</button>
+                    </div>
+                    <div class="timeline-stack">
+                      <div id="fusionTrackA" class="timeline-track"></div>
+                      <div id="fusionTrajectoryA" class="trajectory-panel"></div>
+                    </div>
+                  </div>
+                  <div class="timeline-row">
+                    <div class="timeline-meta">
+                      <strong>B</strong>
+                      <button id="fusionPrevBBtn">上一帧</button>
+                      <input id="fusionFrameB" type="number" min="1" value="1" />
+                      <button id="fusionNextBBtn">下一帧</button>
+                    </div>
+                    <div class="timeline-stack">
+                      <div id="fusionTrackB" class="timeline-track"></div>
+                      <div id="fusionTrajectoryB" class="trajectory-panel"></div>
+                    </div>
+                  </div>
+                  <pre id="fusionEventsBox" class="output fusion-events"></pre>
+                </div>
                 <pre id="fusionInfoBox" class="output fusion-info"></pre>
               </div>
             </div>
@@ -443,6 +483,6 @@
 
     <div id="toast"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/app.js?v=20260821-fusion-source-1"></script>
+    <script src="/app.js?v=20260821-bin-playback-2"></script>
   </body>
 </html>

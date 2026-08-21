@@ -6,6 +6,7 @@ import re
 import shutil
 import signal
 import sqlite3
+import struct
 import subprocess
 import select
 import termios
@@ -33,6 +34,9 @@ CAPTURE_DIR = ODIN_ROOT / "captures"
 CAPTURE_MANIFEST = "capture_manifest.json"
 FUSION_OUTPUT_DIR = CAPTURE_DIR / "fusion_outputs"
 FUSION_MAX_POINTS = 120000
+FUSION_TOPIC_SAMPLE_FRAMES = 3
+FUSION_TOPIC_STATS_CACHE = {}
+EXTERNAL_FUSION_DIR = Path("/media/mrjq/My PSSD/odincloudpoint")
 
 DEFAULT_STATE = {
     "odin_a": {
@@ -345,6 +349,17 @@ def json_response(handler, payload, status=200):
     handler.send_response(status)
     handler.send_header("Content-Type", "application/json; charset=utf-8")
     handler.send_header("Content-Length", str(len(body)))
+    handler.end_headers()
+    handler.wfile.write(body)
+
+
+def binary_response(handler, body, content_type="application/octet-stream", status=200, extra_headers=None):
+    handler.send_response(status)
+    handler.send_header("Content-Type", content_type)
+    handler.send_header("Content-Length", str(len(body)))
+    handler.send_header("Cache-Control", "no-store")
+    for key, value in (extra_headers or {}).items():
+        handler.send_header(key, str(value))
     handler.end_headers()
     handler.wfile.write(body)
 
@@ -1301,6 +1316,7 @@ def list_capture_bags(output_dir=None):
         size_bytes = bag_size_bytes(bag_dir)
         topic_counts = bag_topic_counts(bag_dir)
         manifest = bag_dir / CAPTURE_MANIFEST
+        bin_cache = bag_bin_cache_summary(bag_dir)
         bags.append({
             "name": bag_dir.name,
             "path": str(bag_dir),
@@ -1309,6 +1325,7 @@ def list_capture_bags(output_dir=None):
             "size": format_bytes(size_bytes),
             "topic_counts": topic_counts,
             "has_manifest": manifest.exists(),
+            "bin_cache": bin_cache,
             "cloud_messages": sum(
                 count for topic, count in topic_counts.items()
                 if "cloud" in topic.lower()
@@ -1332,6 +1349,31 @@ def list_capture_bags(output_dir=None):
             ),
         })
     return bags[:20]
+
+
+def bag_bin_cache_summary(bag_dir):
+    base = Path(bag_dir) / "odin_bin"
+    if not base.exists():
+        return {"available": False, "frame_count": 0, "topics": []}
+    topics = []
+    total = 0
+    for manifest in sorted(base.glob("*/manifest_mp*.json")):
+        try:
+            data = json.loads(manifest.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        count = int(data.get("frame_count") or 0)
+        total += count
+        topics.append({
+            "topic": data.get("topic") or manifest.parent.name,
+            "max_points": data.get("max_points") or 0,
+            "frame_count": count,
+            "manifest": str(manifest),
+        })
+    if not topics:
+        bin_files = list(base.glob("*/*.bin"))
+        return {"available": bool(bin_files), "frame_count": len(bin_files), "topics": []}
+    return {"available": True, "frame_count": total, "topics": topics}
 
 
 def bag_topic_counts(bag_dir):
@@ -1390,59 +1432,85 @@ def db3_topic_summary(db_path):
             con.close()
 
 
+def fusion_source_dirs(output_dir=None):
+    dirs = []
+    external = EXTERNAL_FUSION_DIR.expanduser()
+    if external.exists() and external.is_dir():
+        dirs.append(external.resolve())
+        return dirs
+    if output_dir:
+        dirs.append(Path(output_dir).expanduser().resolve())
+    else:
+        state_dir = load_state().get("capture", {}).get("output_dir")
+        dirs.append(normalize_capture_dir(state_dir))
+    dirs.append(CAPTURE_DIR.resolve())
+    unique = []
+    for item in dirs:
+        if item not in unique and item.exists() and item.is_dir():
+            unique.append(item)
+    return unique
+
+
 def scan_fusion_bags(output_dir=None):
-    base = normalize_capture_dir(output_dir or load_state().get("capture", {}).get("output_dir"))
     bags = []
-    for bag_dir in sorted([item for item in base.iterdir() if item.is_dir()], key=lambda p: p.stat().st_mtime, reverse=True):
-        if bag_dir.name == FUSION_OUTPUT_DIR.name:
-            continue
-        db_files = bag_db_files(bag_dir)
-        if not db_files:
-            continue
-        topic_map = {}
-        start_ns = 0
-        end_ns = 0
-        messages = 0
-        errors = []
-        readable = False
-        for db_file in db_files:
-            summary = db3_topic_summary(db_file)
-            if not summary["ok"]:
-                errors.append(f"{db_file.name}: {summary['error']}")
+    for base in fusion_source_dirs(output_dir):
+        for bag_dir in sorted([item for item in base.iterdir() if item.is_dir()], key=lambda p: p.stat().st_mtime, reverse=True):
+            if bag_dir.name == FUSION_OUTPUT_DIR.name:
                 continue
-            readable = True
-            messages += summary["messages"]
-            if summary["start_ns"]:
-                start_ns = summary["start_ns"] if not start_ns else min(start_ns, summary["start_ns"])
-            if summary["end_ns"]:
-                end_ns = max(end_ns, summary["end_ns"])
-            for topic in summary["topics"]:
-                item = topic_map.setdefault(topic["name"], {"name": topic["name"], "type": topic["type"], "count": 0})
-                item["count"] += int(topic.get("count") or 0)
-        pointcloud_topics = [
-            topic for topic in topic_map.values()
-            if topic["type"] == "sensor_msgs/msg/PointCloud2" and topic["count"] > 0
-        ]
-        pointcloud_topics.sort(key=lambda topic: (
-            0 if topic["name"].endswith("/cloud_render") else 1 if topic["name"].endswith("/bound_cloud") else 2,
-            topic["name"],
-        ))
-        bags.append({
-            "name": bag_dir.name,
-            "path": str(bag_dir),
-            "size": format_bytes(bag_size_bytes(bag_dir)),
-            "size_bytes": bag_size_bytes(bag_dir),
-            "has_metadata": (bag_dir / "metadata.yaml").exists(),
-            "has_manifest": (bag_dir / CAPTURE_MANIFEST).exists(),
-            "readable": readable,
-            "error": "; ".join(errors),
-            "start_ns": start_ns,
-            "end_ns": end_ns,
-            "duration_sec": (end_ns - start_ns) / 1e9 if start_ns and end_ns and end_ns >= start_ns else 0,
-            "messages": messages,
-            "topics": sorted(topic_map.values(), key=lambda topic: topic["name"]),
-            "pointcloud_topics": pointcloud_topics,
-        })
+            db_files = bag_db_files(bag_dir)
+            if not db_files:
+                continue
+            topic_map = {}
+            start_ns = 0
+            end_ns = 0
+            messages = 0
+            errors = []
+            readable = False
+            for db_file in db_files:
+                summary = db3_topic_summary(db_file)
+                if not summary["ok"]:
+                    errors.append(f"{db_file.name}: {summary['error']}")
+                    continue
+                readable = True
+                messages += summary["messages"]
+                if summary["start_ns"]:
+                    start_ns = summary["start_ns"] if not start_ns else min(start_ns, summary["start_ns"])
+                if summary["end_ns"]:
+                    end_ns = max(end_ns, summary["end_ns"])
+                for topic in summary["topics"]:
+                    item = topic_map.setdefault(topic["name"], {"name": topic["name"], "type": topic["type"], "count": 0})
+                    item["count"] += int(topic.get("count") or 0)
+            pointcloud_topics = [
+                topic for topic in topic_map.values()
+                if topic["type"] == "sensor_msgs/msg/PointCloud2" and topic["count"] > 0
+            ]
+            pointcloud_topics.sort(key=lambda topic: (
+                0 if topic["name"].endswith("/cloud_render") else 1 if topic["name"].endswith("/bound_cloud") else 2,
+                topic["name"],
+            ))
+            for topic in pointcloud_topics:
+                try:
+                    topic.update(pointcloud_topic_stats(bag_dir, topic["name"]))
+                except Exception as exc:
+                    topic["stats_error"] = str(exc)
+            bags.append({
+                "name": bag_dir.name,
+                "path": str(bag_dir),
+                "source_root": str(base),
+                "source_label": "My PSSD" if base == EXTERNAL_FUSION_DIR.resolve() else "本机 captures",
+                "size": format_bytes(bag_size_bytes(bag_dir)),
+                "size_bytes": bag_size_bytes(bag_dir),
+                "has_metadata": (bag_dir / "metadata.yaml").exists(),
+                "has_manifest": (bag_dir / CAPTURE_MANIFEST).exists(),
+                "readable": readable,
+                "error": "; ".join(errors),
+                "start_ns": start_ns,
+                "end_ns": end_ns,
+                "duration_sec": (end_ns - start_ns) / 1e9 if start_ns and end_ns and end_ns >= start_ns else 0,
+                "messages": messages,
+                "topics": sorted(topic_map.values(), key=lambda topic: topic["name"]),
+                "pointcloud_topics": pointcloud_topics,
+            })
     return bags
 
 
@@ -1460,18 +1528,19 @@ def fusion_bag_status(output_dir=None):
     return {
         "bags": bags,
         "outputs": outputs,
+        "source_dirs": [str(item) for item in fusion_source_dirs(output_dir)],
         "default_max_points": 60000,
         "max_points_limit": FUSION_MAX_POINTS,
     }
 
 
 def resolve_fusion_bag_path(bag_path):
-    base = normalize_capture_dir(load_state().get("capture", {}).get("output_dir"))
     bag = Path(str(bag_path or "")).expanduser().resolve()
     if not bag_path:
         raise RuntimeError("没有选择点云 bag")
-    if not (bag == base or base in bag.parents):
-        raise RuntimeError("只能读取采集目录内的 bag")
+    allowed_roots = fusion_source_dirs()
+    if not any(bag == root or root in bag.parents for root in allowed_roots):
+        raise RuntimeError("只能读取 captures 或 My PSSD/odincloudpoint 内的 bag")
     if not bag.is_dir() or not bag_db_files(bag):
         raise RuntimeError(f"不是有效的 rosbag 数据目录: {bag}")
     return bag
@@ -1487,6 +1556,434 @@ def safe_fusion_topic(bag_dir, topic):
             if item["name"] == topic and item["type"] == "sensor_msgs/msg/PointCloud2" and item["count"] > 0:
                 return topic
     raise RuntimeError(f"{bag_dir.name} 中没有可用点云 topic: {topic}")
+
+
+def fusion_bag_cache_signature(bag_dir):
+    signature = []
+    for db_file in bag_db_files(bag_dir):
+        try:
+            stat = db_file.stat()
+            signature.append((db_file.name, stat.st_size, stat.st_mtime_ns))
+        except OSError:
+            signature.append((db_file.name, 0, 0))
+    return tuple(signature)
+
+
+def pointcloud_message_index(bag_dir, topic):
+    rows = []
+    for db_file in bag_db_files(bag_dir):
+        con = None
+        try:
+            con = sqlite3.connect(f"file:{db_file}?mode=ro&immutable=1", uri=True)
+            topic_row = con.execute(
+                "select id, type from topics where name = ?",
+                (topic,),
+            ).fetchone()
+            if not topic_row or topic_row[1] != "sensor_msgs/msg/PointCloud2":
+                continue
+            topic_id = int(topic_row[0])
+            for message_id, timestamp in con.execute(
+                "select id, timestamp from messages where topic_id = ? order by timestamp",
+                (topic_id,),
+            ):
+                rows.append((int(timestamp), str(db_file), int(message_id)))
+        finally:
+            if con is not None:
+                con.close()
+    rows.sort(key=lambda item: item[0])
+    return rows
+
+
+def topic_message_index(bag_dir, topic):
+    rows = []
+    topic_type = ""
+    for db_file in bag_db_files(bag_dir):
+        con = None
+        try:
+            con = sqlite3.connect(f"file:{db_file}?mode=ro&immutable=1", uri=True)
+            topic_row = con.execute(
+                "select id, type from topics where name = ?",
+                (topic,),
+            ).fetchone()
+            if not topic_row:
+                continue
+            topic_type = topic_type or str(topic_row[1] or "")
+            topic_id = int(topic_row[0])
+            for message_id, timestamp in con.execute(
+                "select id, timestamp from messages where topic_id = ? order by timestamp",
+                (topic_id,),
+            ):
+                rows.append((int(timestamp), str(db_file), int(message_id)))
+        finally:
+            if con is not None:
+                con.close()
+    rows.sort(key=lambda item: item[0])
+    return topic_type, rows
+
+
+def fusion_layer_kind(topic_name, topic_type):
+    name = topic_name.lower()
+    if topic_type == "sensor_msgs/msg/PointCloud2":
+        return "cloud", "点云"
+    if topic_type in ("sensor_msgs/msg/Image", "sensor_msgs/msg/CompressedImage") or "/image" in name:
+        return "image", "图像"
+    if topic_type == "sensor_msgs/msg/Imu" or name.endswith("/imu"):
+        return "imu", "IMU"
+    if topic_type == "nav_msgs/msg/Odometry" or "odometry" in name or name.endswith("/wiwc"):
+        return "odom", "Odom"
+    if topic_type == "tf2_msgs/msg/TFMessage" or topic_name in ("/tf", "/tf_static"):
+        return "tf", "TF"
+    if topic_name.startswith("/gnss/"):
+        return "rtk", "RTK"
+    if topic_name == "/odin_rtk/bound_meta":
+        return "binding", "绑定"
+    return "", ""
+
+
+def timeline_topic_layer(topic_name, topic_type, rows, base_start_ns, base_end_ns):
+    if not rows:
+        return None
+    kind, label = fusion_layer_kind(topic_name, topic_type)
+    if not kind:
+        return None
+    count = len(rows)
+    start_ns = rows[0][0]
+    end_ns = rows[-1][0]
+    duration_sec = (end_ns - start_ns) / 1e9 if end_ns >= start_ns else 0
+    span_ns = max(1, base_end_ns - base_start_ns)
+    samples = []
+    max_samples = 160
+    if count <= max_samples:
+        sample_rows = list(enumerate(rows))
+    else:
+        sample_rows = []
+        last_index = -1
+        for slot in range(max_samples):
+            index = round(slot * (count - 1) / (max_samples - 1))
+            if index != last_index:
+                sample_rows.append((index, rows[index]))
+                last_index = index
+    for index, row in sample_rows:
+        samples.append({
+            "index": index,
+            "timestamp_ns": row[0],
+            "offset_sec": round((row[0] - base_start_ns) / 1e9, 6),
+            "position": round(max(0, min(1, (row[0] - base_start_ns) / span_ns)), 6),
+        })
+    return {
+        "kind": kind,
+        "label": label,
+        "topic": topic_name,
+        "type": topic_type,
+        "count": count,
+        "start_ns": start_ns,
+        "end_ns": end_ns,
+        "duration_sec": round(duration_sec, 6),
+        "start_offset_sec": round((start_ns - base_start_ns) / 1e9, 6),
+        "end_offset_sec": round((end_ns - base_start_ns) / 1e9, 6),
+        "coverage": round(max(0, min(1, (end_ns - start_ns) / span_ns)), 6),
+        "samples": samples,
+    }
+
+
+def nearest_timeline_frame_index(rows, target_ns):
+    if not rows:
+        return 0
+    target_ns = int(target_ns or 0)
+    best_index = 0
+    best_delta = abs(rows[0][0] - target_ns)
+    for index, row in enumerate(rows[1:], start=1):
+        delta = abs(row[0] - target_ns)
+        if delta < best_delta:
+            best_index = index
+            best_delta = delta
+    return best_index
+
+
+def quaternion_yaw(x, y, z, w):
+    siny_cosp = 2 * (w * z + x * y)
+    cosy_cosp = 1 - 2 * (y * y + z * z)
+    return math.degrees(math.atan2(siny_cosp, cosy_cosp))
+
+
+def trajectory_topics_for_bag(bag_dir):
+    topics = []
+    seen = set()
+    for db_file in bag_db_files(bag_dir):
+        summary = db3_topic_summary(db_file)
+        if not summary["ok"]:
+            continue
+        for topic in summary["topics"]:
+            if topic["name"] in seen or topic["type"] != "nav_msgs/msg/Odometry" or int(topic.get("count") or 0) <= 0:
+                continue
+            seen.add(topic["name"])
+            topics.append({
+                "name": topic["name"],
+                "type": topic["type"],
+                "count": int(topic.get("count") or 0),
+            })
+    topics.sort(key=lambda topic: (
+        0 if topic["name"].endswith("/odometry") else 1 if topic["name"].endswith("/wiwc") else 2,
+        topic["name"],
+    ))
+    return topics
+
+
+def extract_odometry_trajectory(bag_dir, base_start_ns, base_end_ns, preferred_topic=""):
+    import numpy as np
+    from nav_msgs.msg import Odometry
+    from rclpy.serialization import deserialize_message
+
+    topics = trajectory_topics_for_bag(bag_dir)
+    if not topics:
+        return {
+            "ok": False,
+            "topic": "",
+            "topics": [],
+            "poses": [],
+            "samples": [],
+            "current": None,
+            "distance_m": 0,
+            "error": "bag 中没有 nav_msgs/msg/Odometry",
+        }
+    topic = preferred_topic if preferred_topic and any(item["name"] == preferred_topic for item in topics) else topics[0]["name"]
+    _topic_type, rows = topic_message_index(bag_dir, topic)
+    poses = []
+    distance_m = 0.0
+    previous = None
+    for index, row in enumerate(rows):
+        try:
+            msg = deserialize_message(read_pointcloud_index_row(row), Odometry)
+            pos = msg.pose.pose.position
+            quat = msg.pose.pose.orientation
+            point = np.array([float(pos.x), float(pos.y), float(pos.z)], dtype=np.float64)
+            if previous is not None:
+                distance_m += float(np.linalg.norm(point - previous))
+            previous = point
+            poses.append({
+                "index": index,
+                "timestamp_ns": row[0],
+                "offset_sec": round((row[0] - base_start_ns) / 1e9, 6),
+                "x": round(float(pos.x), 5),
+                "y": round(float(pos.y), 5),
+                "z": round(float(pos.z), 5),
+                "yaw_deg": round(quaternion_yaw(float(quat.x), float(quat.y), float(quat.z), float(quat.w)), 3),
+                "frame_id": msg.header.frame_id,
+                "child_frame_id": msg.child_frame_id,
+            })
+        except Exception:
+            continue
+    if not poses:
+        return {
+            "ok": False,
+            "topic": topic,
+            "topics": topics,
+            "poses": [],
+            "samples": [],
+            "current": None,
+            "distance_m": 0,
+            "error": "Odometry 消息解析失败",
+        }
+    xs = [pose["x"] for pose in poses]
+    ys = [pose["y"] for pose in poses]
+    zs = [pose["z"] for pose in poses]
+    max_samples = 400
+    if len(poses) <= max_samples:
+        samples = poses
+    else:
+        sample_indexes = sorted({round(i * (len(poses) - 1) / (max_samples - 1)) for i in range(max_samples)})
+        samples = [poses[index] for index in sample_indexes]
+    span_ns = max(1, base_end_ns - base_start_ns)
+    for sample in samples:
+        sample["position"] = round(max(0, min(1, (sample["timestamp_ns"] - base_start_ns) / span_ns)), 6)
+    return {
+        "ok": True,
+        "topic": topic,
+        "topics": topics,
+        "pose_count": len(poses),
+        "start_ns": poses[0]["timestamp_ns"],
+        "end_ns": poses[-1]["timestamp_ns"],
+        "duration_sec": round((poses[-1]["timestamp_ns"] - poses[0]["timestamp_ns"]) / 1e9, 6),
+        "distance_m": round(distance_m, 4),
+        "bounds": {
+            "min": [round(min(xs), 5), round(min(ys), 5), round(min(zs), 5)],
+            "max": [round(max(xs), 5), round(max(ys), 5), round(max(zs), 5)],
+        },
+        "poses": poses,
+        "samples": samples,
+        "error": "",
+    }
+
+
+def fusion_timeline_layers(bag_dir, base_start_ns, base_end_ns):
+    layers = []
+    seen = set()
+    for db_file in bag_db_files(bag_dir):
+        summary = db3_topic_summary(db_file)
+        if not summary["ok"]:
+            continue
+        for topic in summary["topics"]:
+            name = topic["name"]
+            if name in seen or int(topic.get("count") or 0) <= 0:
+                continue
+            seen.add(name)
+            kind, _label = fusion_layer_kind(name, topic["type"])
+            if not kind:
+                continue
+            topic_type, rows = topic_message_index(bag_dir, name)
+            layer = timeline_topic_layer(name, topic_type or topic["type"], rows, base_start_ns, base_end_ns)
+            if layer:
+                layers.append(layer)
+    order = {"cloud": 0, "image": 1, "imu": 2, "odom": 3, "tf": 4, "binding": 5, "rtk": 6}
+    layers.sort(key=lambda item: (order.get(item["kind"], 99), item["topic"]))
+    return layers
+
+
+def read_pointcloud_index_row(row):
+    db_file = row[1]
+    message_id = row[2]
+    con = None
+    try:
+        con = sqlite3.connect(f"file:{db_file}?mode=ro&immutable=1", uri=True)
+        data = con.execute(
+            "select data from messages where id = ?",
+            (message_id,),
+        ).fetchone()
+        if not data:
+            raise RuntimeError("点云帧不存在")
+        return bytes(data[0])
+    finally:
+        if con is not None:
+            con.close()
+
+
+def sampled_index_rows(rows, max_samples=FUSION_TOPIC_SAMPLE_FRAMES):
+    if not rows:
+        return []
+    if len(rows) == 1 or max_samples <= 1:
+        return [(0, rows[0], "首帧")]
+    if max_samples == 2:
+        indexes = [0, len(rows) - 1]
+        labels = ["首帧", "末帧"]
+    else:
+        indexes = sorted({0, len(rows) // 2, len(rows) - 1})
+        label_map = {0: "首帧", len(rows) // 2: "中帧", len(rows) - 1: "末帧"}
+        labels = [label_map[index] for index in indexes]
+    return [(index, rows[index], labels[pos]) for pos, index in enumerate(indexes)]
+
+
+def pointcloud_topic_stats(bag_dir, topic):
+    cache_key = (str(Path(bag_dir).resolve()), topic, fusion_bag_cache_signature(bag_dir))
+    cached = FUSION_TOPIC_STATS_CACHE.get(cache_key)
+    if cached:
+        return cached
+    rows = pointcloud_message_index(bag_dir, topic)
+    stats = {
+        "start_ns": rows[0][0] if rows else 0,
+        "end_ns": rows[-1][0] if rows else 0,
+        "duration_sec": round((rows[-1][0] - rows[0][0]) / 1e9, 3) if len(rows) > 1 and rows[-1][0] >= rows[0][0] else 0,
+        "frame_count": len(rows),
+        "sample_frames": [],
+        "stats_error": "",
+    }
+    for index, row, label in sampled_index_rows(rows):
+        sample = {
+            "label": label,
+            "index": index,
+            "time_ns": row[0],
+            "points": None,
+            "frame": "",
+            "error": "",
+        }
+        try:
+            msg, _points, _colors, original = pointcloud_to_arrays(read_pointcloud_index_row(row), 1)
+            sample["points"] = original
+            sample["frame"] = msg.header.frame_id
+        except Exception as exc:
+            sample["error"] = str(exc)
+        stats["sample_frames"].append(sample)
+    FUSION_TOPIC_STATS_CACHE[cache_key] = stats
+    return stats
+
+
+def fusion_timeline_payload(body):
+    bag = resolve_fusion_bag_path(body.get("bag"))
+    topic = safe_fusion_topic(bag, body.get("topic"))
+    rows = pointcloud_message_index(bag, topic)
+    if not rows:
+        raise RuntimeError("所选 topic 没有点云帧")
+    start_ns = rows[0][0]
+    end_ns = rows[-1][0]
+    frames = []
+    gaps_ms = []
+    for index, row in enumerate(rows):
+        gap_ms = None
+        if index > 0:
+            gap_ms = (row[0] - rows[index - 1][0]) / 1e6
+            gaps_ms.append(gap_ms)
+        frames.append({
+            "index": index,
+            "timestamp_ns": row[0],
+            "offset_sec": round((row[0] - start_ns) / 1e9, 6),
+            "gap_ms": round(gap_ms, 3) if gap_ms is not None else None,
+        })
+    sorted_gaps = sorted(gaps_ms)
+    median_gap = sorted_gaps[len(sorted_gaps) // 2] if sorted_gaps else 0
+    avg_gap = sum(gaps_ms) / len(gaps_ms) if gaps_ms else 0
+    gap_threshold = max(200, median_gap * 2.5) if median_gap else 200
+    events = [
+        {"type": "start", "frame_index": 0, "timestamp_ns": start_ns, "label": "开始"},
+        {"type": "end", "frame_index": len(rows) - 1, "timestamp_ns": end_ns, "label": "结束"},
+    ]
+    for frame in frames:
+        gap_ms = frame.get("gap_ms")
+        if gap_ms is not None and gap_ms > gap_threshold:
+            events.append({
+                "type": "gap",
+                "frame_index": frame["index"],
+                "timestamp_ns": frame["timestamp_ns"],
+                "label": f"帧间隔 {gap_ms:.1f} ms",
+            })
+    stats = pointcloud_topic_stats(bag, topic)
+    for sample in stats.get("sample_frames", []):
+        events.append({
+            "type": "sample",
+            "frame_index": sample.get("index", 0),
+            "timestamp_ns": sample.get("time_ns", 0),
+            "label": f"{sample.get('label', '抽样')} {sample.get('points', '--')} 点",
+        })
+    layers = fusion_timeline_layers(bag, start_ns, end_ns)
+    trajectory = extract_odometry_trajectory(bag, start_ns, end_ns, body.get("trajectory_topic") or "")
+    for layer in layers:
+        events.append({
+            "type": f"layer_{layer['kind']}",
+            "frame_index": nearest_timeline_frame_index(rows, layer["start_ns"]),
+            "timestamp_ns": layer["start_ns"],
+            "label": f"{layer['label']}开始 {layer['count']} 条",
+            "topic": layer["topic"],
+        })
+    return {
+        "ok": True,
+        "bag": str(bag),
+        "bag_name": bag.name,
+        "topic": topic,
+        "start_ns": start_ns,
+        "end_ns": end_ns,
+        "duration_sec": round((end_ns - start_ns) / 1e9, 6) if end_ns >= start_ns else 0,
+        "frame_count": len(rows),
+        "interval_ms": {
+            "median": round(median_gap, 3) if median_gap else 0,
+            "average": round(avg_gap, 3) if avg_gap else 0,
+            "min": round(min(gaps_ms), 3) if gaps_ms else 0,
+            "max": round(max(gaps_ms), 3) if gaps_ms else 0,
+        },
+        "fps": round(1000 / median_gap, 3) if median_gap else 0,
+        "frames": frames,
+        "events": sorted(events, key=lambda item: (item["timestamp_ns"], item["type"])),
+        "layers": layers,
+        "trajectory": trajectory,
+        "sample_frames": stats.get("sample_frames", []),
+    }
 
 
 def pointcloud_message_rows(bag_dir, topic):
@@ -1595,6 +2092,116 @@ def cloud_bounds(points):
     }
 
 
+def safe_bin_topic_name(topic):
+    return re.sub(r"[^A-Za-z0-9_.-]+", "_", str(topic).strip("/")) or "cloud"
+
+
+def fusion_bin_cache_path(bag_dir, topic, frame_index, max_points):
+    return Path(bag_dir) / "odin_bin" / safe_bin_topic_name(topic) / f"mp{int(max_points)}_{int(frame_index):06d}.bin"
+
+
+def pack_cloud_bin_payload(meta, points, colors):
+    points = points.astype("float32", copy=False)
+    colors = colors.astype("uint8", copy=False)
+    header = json.dumps(meta, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    padded_len = (len(header) + 3) // 4 * 4
+    prefix = struct.pack("<4sIII", b"ODNB", 1, len(header), padded_len)
+    return prefix + header.ljust(padded_len, b"\0") + points.tobytes(order="C") + colors.tobytes(order="C")
+
+
+def read_cloud_bin_payload(path):
+    return Path(path).read_bytes()
+
+
+def cloud_bin_payload_for_row(bag, topic, rows, row, frame_index, max_points):
+    cache_path = fusion_bin_cache_path(bag, topic, frame_index, max_points)
+    if cache_path.exists():
+        return read_cloud_bin_payload(cache_path)
+    msg, points, colors, original = pointcloud_to_arrays(read_pointcloud_index_row(row), max_points)
+    bounds = cloud_bounds(points)
+    meta = {
+        "ok": True,
+        "mode": "single-bin",
+        "bag": str(bag),
+        "topic": topic,
+        "selected_ns": row[0],
+        "selected_index": frame_index,
+        "frame_count": len(rows),
+        "start_ns": rows[0][0],
+        "end_ns": rows[-1][0],
+        "duration_sec": round((rows[-1][0] - rows[0][0]) / 1e9, 3) if rows[-1][0] >= rows[0][0] else 0,
+        "frame": msg.header.frame_id,
+        "original_points": original,
+        "points_total": len(points),
+        "bounds": bounds,
+        "bin_cache": str(cache_path),
+    }
+    payload = pack_cloud_bin_payload(meta, points, colors)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = cache_path.with_suffix(".tmp")
+    tmp.write_bytes(payload)
+    tmp.replace(cache_path)
+    return payload
+
+
+def fusion_cloud_bin_payload(body):
+    bag = resolve_fusion_bag_path(body.get("bag"))
+    topic = safe_fusion_topic(bag, body.get("topic"))
+    max_points = max(1000, min(FUSION_MAX_POINTS, int(body.get("max_points") or 22000)))
+    target_ns = int(body.get("target_ns") or 0)
+    fraction = float(body.get("fraction") if body.get("fraction") is not None else 0.5)
+    fraction = max(0, min(1, fraction))
+    rows = pointcloud_message_index(bag, topic)
+    row = choose_cloud_row(rows, target_ns or None, fraction)
+    frame_index = rows.index(row)
+    return cloud_bin_payload_for_row(bag, topic, rows, row, frame_index, max_points)
+
+
+def export_pointcloud_bin_cache(bag_path, topic, max_points=22000):
+    bag = Path(bag_path).expanduser().resolve()
+    if not bag.exists() or not topic:
+        return {"ok": False, "error": "bag 或 topic 不存在"}
+    topic = safe_fusion_topic(bag, topic)
+    rows = pointcloud_message_index(bag, topic)
+    exported = []
+    started = time.time()
+    for index, row in enumerate(rows):
+        payload = cloud_bin_payload_for_row(bag, topic, rows, row, index, max_points)
+        cache_path = fusion_bin_cache_path(bag, topic, index, max_points)
+        exported.append({
+            "index": index,
+            "timestamp_ns": row[0],
+            "file": str(cache_path.relative_to(bag)),
+            "bytes": len(payload),
+        })
+    manifest = {
+        "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "format": "ODNB v1",
+        "topic": topic,
+        "max_points": int(max_points),
+        "frame_count": len(exported),
+        "duration_sec": round(time.time() - started, 3),
+        "frames": exported,
+    }
+    manifest_path = bag / "odin_bin" / safe_bin_topic_name(topic) / f"manifest_mp{int(max_points)}.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"ok": True, "manifest": str(manifest_path), "frame_count": len(exported)}
+
+
+def export_pointcloud_bin_cache_async(bag_path, topic, log_file=CAPTURE_LOG_FILE):
+    def worker():
+        try:
+            result = export_pointcloud_bin_cache(bag_path, topic)
+            with log_file.open("a", encoding="utf-8") as handle:
+                handle.write(f"bin cache export result: {json.dumps(result, ensure_ascii=False)}\n")
+        except Exception as exc:
+            with log_file.open("a", encoding="utf-8") as handle:
+                handle.write(f"bin cache export failed: {exc}\n")
+
+    threading.Thread(target=worker, daemon=True).start()
+
+
 def write_ascii_ply(path, points, colors):
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="ascii") as handle:
@@ -1620,16 +2227,23 @@ def fusion_preview_payload(body):
     topic_a = safe_fusion_topic(bag_a, body.get("topic_a"))
     topic_b = safe_fusion_topic(bag_b, body.get("topic_b"))
     max_points = max(1000, min(FUSION_MAX_POINTS, int(body.get("max_points") or 60000)))
-    rows_a = pointcloud_message_rows(bag_a, topic_a)
-    rows_b = pointcloud_message_rows(bag_b, topic_b)
+    rows_a = pointcloud_message_index(bag_a, topic_a)
+    rows_b = pointcloud_message_index(bag_b, topic_b)
     start = max(rows_a[0][0], rows_b[0][0])
     end = min(rows_a[-1][0], rows_b[-1][0])
     sync_mode = str(body.get("sync_mode") or "overlap_mid")
+    target_fraction = float(body.get("target_fraction") if body.get("target_fraction") is not None else 0.5)
+    target_fraction = max(0, min(1, target_fraction))
+    explicit_a_ns = int(body.get("target_a_ns") or 0)
+    explicit_b_ns = int(body.get("target_b_ns") or 0)
     target_ns = None
     sync_note = ""
-    if sync_mode == "overlap_mid" and start <= end:
-        target_ns = (start + end) // 2
-        sync_note = "使用两段 bag 时间重叠区中点"
+    if explicit_a_ns and explicit_b_ns:
+        target_ns = explicit_a_ns
+        sync_note = "使用时间轴当前选中的 A/B 帧"
+    elif sync_mode == "overlap_mid" and start <= end:
+        target_ns = int(start + (end - start) * target_fraction)
+        sync_note = f"使用两段 bag 时间重叠区 {target_fraction * 100:.1f}% 位置"
     elif sync_mode == "start":
         target_ns = max(rows_a[0][0], rows_b[0][0])
         sync_note = "使用较晚开始时间附近的帧"
@@ -1638,11 +2252,11 @@ def fusion_preview_payload(body):
         sync_note = "使用较早结束时间附近的帧"
     else:
         sync_note = "两段 bag 没有重叠时间，已各取中间帧"
-    row_a = choose_cloud_row(rows_a, target_ns)
-    row_b = choose_cloud_row(rows_b, target_ns)
+    row_a = choose_cloud_row(rows_a, explicit_a_ns or target_ns)
+    row_b = choose_cloud_row(rows_b, explicit_b_ns or target_ns)
     per_cloud_limit = max(500, max_points // 2)
-    msg_a, points_a, colors_a, original_a = pointcloud_to_arrays(row_a[1], per_cloud_limit)
-    msg_b, points_b, colors_b, original_b = pointcloud_to_arrays(row_b[1], per_cloud_limit)
+    msg_a, points_a, colors_a, original_a = pointcloud_to_arrays(read_pointcloud_index_row(row_a), per_cloud_limit)
+    msg_b, points_b, colors_b, original_b = pointcloud_to_arrays(read_pointcloud_index_row(row_b), per_cloud_limit)
     transform = body.get("transform") if isinstance(body.get("transform"), dict) else {}
     points_b_world = transform_points(points_b, transform)
     points = np.vstack((points_a, points_b_world)).astype(np.float32)
@@ -1657,6 +2271,9 @@ def fusion_preview_payload(body):
         "ok": True,
         "sync_note": sync_note,
         "target_ns": target_ns,
+        "target_a_ns": explicit_a_ns or target_ns,
+        "target_b_ns": explicit_b_ns or target_ns,
+        "target_fraction": target_fraction,
         "bag_a": str(bag_a),
         "bag_b": str(bag_b),
         "topic_a": topic_a,
@@ -1673,6 +2290,41 @@ def fusion_preview_payload(body):
         "points_total": len(points),
         "bounds": bounds,
         "output_path": output_path,
+        "points": np.round(points, 4).reshape(-1).tolist(),
+        "colors": colors.reshape(-1).tolist(),
+    }
+
+
+def fusion_cloud_preview_payload(body):
+    import numpy as np
+
+    bag = resolve_fusion_bag_path(body.get("bag"))
+    topic = safe_fusion_topic(bag, body.get("topic"))
+    max_points = max(1000, min(FUSION_MAX_POINTS, int(body.get("max_points") or 60000)))
+    target_ns = int(body.get("target_ns") or 0)
+    fraction = float(body.get("fraction") if body.get("fraction") is not None else 0.5)
+    fraction = max(0, min(1, fraction))
+    rows = pointcloud_message_index(bag, topic)
+    row = choose_cloud_row(rows, target_ns or None, fraction)
+    frame_index = rows.index(row)
+    msg, points, colors, original = pointcloud_to_arrays(read_pointcloud_index_row(row), max_points)
+    bounds = cloud_bounds(points)
+    return {
+        "ok": True,
+        "mode": "single",
+        "bag": str(bag),
+        "topic": topic,
+        "selected_ns": row[0],
+        "selected_index": frame_index,
+        "frame_count": len(rows),
+        "fraction": fraction,
+        "start_ns": rows[0][0],
+        "end_ns": rows[-1][0],
+        "duration_sec": round((rows[-1][0] - rows[0][0]) / 1e9, 3) if rows[-1][0] >= rows[0][0] else 0,
+        "frame": msg.header.frame_id,
+        "original_points": original,
+        "points_total": len(points),
+        "bounds": bounds,
         "points": np.round(points, 4).reshape(-1).tolist(),
         "colors": colors.reshape(-1).tolist(),
     }
@@ -1892,8 +2544,14 @@ class CaptureManager:
             self.log_handle = None
 
     def stop(self):
+        bag_path = ""
+        cloud_topic = ""
         with self.lock:
+            bag_path = self.bag_path
+            cloud_topic = self.cloud_topic
             self.stop_owned_locked()
+        if bag_path and cloud_topic:
+            export_pointcloud_bin_cache_async(bag_path, cloud_topic)
         return self.status()
 
     def start_playback(self, bag_path=None, loop=False, with_rviz=True):
@@ -3038,6 +3696,15 @@ class OdinHandler(SimpleHTTPRequestHandler):
                 return
             if path == "/api/fusion/preview":
                 json_response(self, fusion_preview_payload(body))
+                return
+            if path == "/api/fusion/cloud-preview":
+                json_response(self, fusion_cloud_preview_payload(body))
+                return
+            if path == "/api/fusion/cloud-bin":
+                binary_response(self, fusion_cloud_bin_payload(body))
+                return
+            if path == "/api/fusion/timeline":
+                json_response(self, fusion_timeline_payload(body))
                 return
             if path == "/api/launch/start":
                 json_response(self, start_launch(body.get("target")))
