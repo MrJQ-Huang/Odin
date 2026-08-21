@@ -29,6 +29,7 @@ function createTrajectoryViewState() {
 }
 
 const app = {
+  currentView: localStorage.getItem("odin-webui-view") || "overview",
   selectedSlot: "odin_a",
   selectedEditor: "config",
   selectedMonitor: "log",
@@ -46,6 +47,7 @@ const app = {
   permissionBusy: false,
   rtkBusy: false,
   captureBusy: false,
+  captureExportBusy: false,
   captureTopicManual: false,
   rtkWaitStartedAt: null,
   collapsedPanels: {},
@@ -83,6 +85,34 @@ const app = {
     b: createTrajectoryViewState(),
   },
 };
+
+function selectView(view) {
+  const aliases = {
+    devices: "setup",
+    rtk: "test",
+  };
+  view = aliases[view] || view;
+  const allowed = new Set(["overview", "setup", "test", "capture", "fusion", "annotation", "settings"]);
+  app.currentView = allowed.has(view) ? view : "overview";
+  document.body.dataset.view = app.currentView;
+  localStorage.setItem("odin-webui-view", app.currentView);
+  document.querySelectorAll(".nav-tab[data-view]").forEach((node) => {
+    node.classList.toggle("active", node.dataset.view === app.currentView);
+  });
+  requestAnimationFrame(() => {
+    if (app.currentView === "fusion") {
+      [app.fusionView, app.fusionViewA, app.fusionViewB].forEach((viewState) => {
+        resizeFusionCanvas(viewState);
+        drawFusionScene(viewState);
+      });
+      renderTrajectoryPanel("a");
+      renderTrajectoryPanel("b");
+    }
+    if (app.currentView === "test" && app.rtkMap) {
+      app.rtkMap.invalidateSize();
+    }
+  });
+}
 
 const PARAM_GROUPS = [
   {
@@ -1299,19 +1329,25 @@ function renderCapture(data) {
       return `<option value="${escapeHtml(bag.path)}" ${bag.path === selectedBag ? "selected" : ""}>${escapeHtml(`${bag.name} · ${suffix}`)}</option>`;
     }).join("")
     : '<option value="">暂无 bag</option>';
+  const selectedInfo = bags.find((bag) => bag.path === $("captureBagSelect").value) || bags[0] || null;
+  const selectedExport = selectedInfo && selectedInfo.annotation_export || {};
+  const exportBusy = app.captureExportBusy || (app.capture.annotation_jobs || []).some((job) => job.status === "running");
 
   $("captureStartBtn").disabled = app.captureBusy || recording || playing;
   $("captureStopBtn").disabled = app.captureBusy || !recording;
   $("capturePlayBtn").disabled = app.captureBusy || recording || playing || !bags.length;
   $("captureStopPlayBtn").disabled = app.captureBusy || !playing;
+  $("captureExportAnnotationBtn").disabled = app.captureBusy || exportBusy || recording || playing || !selectedInfo || !(selectedInfo.cloud_messages || 0);
   $("captureDeleteBtn").disabled = app.captureBusy || recording || playing || !bags.length;
   $("captureStartBtn").textContent = app.captureBusy ? "处理中..." : "开始采集";
+  $("captureExportAnnotationBtn").textContent = exportBusy ? "正在导出..." : "导出标注数据";
 
-  const selectedInfo = bags.find((bag) => bag.path === $("captureBagSelect").value) || bags[0] || null;
   $("captureHint").textContent = recording
     ? `正在写入 ${app.capture.bag_path || "--"}`
     : playing
       ? `正在回放 ${app.capture.play_bag_path || "--"}`
+      : exportBusy
+        ? "正在后台生成 CVAT 标注数据，完成后列表会显示 PCD/ZIP 路径"
       : selectedInfo && !(selectedInfo.cloud_messages || 0)
         ? "选中的 bag 没有点云，只能回放 RTK/GNSS"
         : "完整录制 Odin 点云、轨迹、IMU、图像、TF 与 RTK/GNSS";
@@ -1341,14 +1377,36 @@ function renderCapture(data) {
       const rtkCount = bag.rtk_messages || 0;
       const metaCount = bag.meta_messages || 0;
       const binCache = bag.bin_cache || {};
+      const annotation = bag.annotation_export || {};
       const mark = cloudCount > 0 ? bag.has_manifest ? "完整采集" : "可视化" : "无点云";
       return `${bag.name}  [${mark}]
   点云 ${cloudCount}  轨迹 ${odomCount}  IMU ${imuCount}  图像 ${imageCount}  RTK ${rtkCount}  绑定 ${metaCount}
   BIN ${binCache.available ? `${binCache.frame_count || 0} 帧` : "未生成"}
+  CVAT ${annotation.available ? `${annotation.frame_count || 0} 帧` : "未导出"}
   ${bag.size}
   ${bag.path}`;
     }).join("\n\n")
     : "暂无采集文件";
+  const jobs = app.capture.annotation_jobs || [];
+  $("captureAnnotationBox").textContent = [
+    selectedInfo
+      ? [
+        `选中: ${selectedInfo.name}`,
+        selectedExport.available
+          ? `已导出: ${selectedExport.frame_count || 0} 帧\n目录: ${selectedExport.path || "--"}\nZIP: ${selectedExport.zip || "未生成"}`
+          : "尚未导出 CVAT/PCD 标注数据",
+      ].join("\n")
+      : "没有选中的采集包",
+    jobs.length
+      ? jobs.map((job) => {
+        const bagName = (job.bag || "").split("/").pop();
+        const result = job.result || {};
+        if (job.status === "done") return `完成 ${bagName}: ${result.frame_count || 0} 帧  ${result.zip || result.path || ""}`;
+        if (job.status === "error") return `失败 ${bagName}: ${job.error || "--"}`;
+        return `运行中 ${bagName}: 正在生成 PCD/ZIP`;
+      }).join("\n")
+      : "暂无导出任务",
+  ].join("\n\n");
 }
 
 function fusionBagByPath(path) {
@@ -2797,6 +2855,33 @@ async function deleteSelectedCapture() {
   }
 }
 
+async function exportSelectedCaptureAnnotation() {
+  const bagPath = $("captureBagSelect").value || "";
+  if (!bagPath) {
+    toast("没有选中的 bag");
+    return;
+  }
+  app.captureExportBusy = true;
+  renderCapture(app.capture);
+  try {
+    const data = await api("/api/capture/export-annotation", {
+      method: "POST",
+      body: JSON.stringify({
+        bag_path: bagPath,
+        max_points: 0,
+        make_zip: true,
+      }),
+    });
+    toast(`标注导出已开始：${data.job && data.job.id ? data.job.id : "后台任务"}`);
+    await refreshCapture();
+  } catch (error) {
+    toast(`标注导出失败：${error.message}`);
+  } finally {
+    app.captureExportBusy = false;
+    await refreshCapture().catch(() => {});
+  }
+}
+
 async function sendCommand() {
   const key = $("cmdKey").value.trim();
   const value = $("cmdValue").value.trim();
@@ -2857,6 +2942,9 @@ function selectMonitor(name) {
 }
 
 function bindEvents() {
+  document.querySelectorAll(".nav-tab[data-view]").forEach((node) => {
+    node.addEventListener("click", () => selectView(node.dataset.view));
+  });
   ["aBus", "aAddr", "aSerial", "aConfig", "aCalib", "bBus", "bAddr", "bSerial", "bConfig", "bCalib", "useRviz"].forEach((id) => {
     $(id).addEventListener("input", markDirty);
     $(id).addEventListener("change", markDirty);
@@ -2902,6 +2990,7 @@ function bindEvents() {
   });
   $("capturePlayBtn").addEventListener("click", () => controlPlayback("play"));
   $("captureStopPlayBtn").addEventListener("click", () => controlPlayback("stop"));
+  $("captureExportAnnotationBtn").addEventListener("click", exportSelectedCaptureAnnotation);
   $("captureDeleteBtn").addEventListener("click", deleteSelectedCapture);
   $("captureRefreshBtn").addEventListener("click", async () => {
     await refreshCapture();
@@ -2963,7 +3052,10 @@ function bindEvents() {
   $("topicsBtn").addEventListener("click", refreshTopics);
   $("logBtn").addEventListener("click", refreshLog);
   document.querySelectorAll("[data-slot]").forEach((node) => {
-    node.addEventListener("click", () => selectSlot(node.dataset.slot));
+    node.addEventListener("click", () => {
+      selectSlot(node.dataset.slot);
+      if (node.classList.contains("slot-switch")) selectView("setup");
+    });
   });
   document.querySelectorAll(".mini-tab[data-editor]").forEach((node) => {
     node.addEventListener("click", () => {
@@ -2980,6 +3072,7 @@ async function main() {
   bindEvents();
   initCollapsiblePanels();
   initFusionViewer();
+  selectView(app.currentView);
   setInterval(() => refreshStatus({ forceForm: false }).catch(() => {}), 5000);
   setInterval(() => refreshRtk().catch(() => {}), 1000);
   setInterval(() => refreshCapture().catch(() => {}), 1000);

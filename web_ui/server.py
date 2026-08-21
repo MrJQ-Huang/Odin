@@ -14,6 +14,7 @@ import threading
 import time
 import shlex
 import tty
+import uuid
 from collections import deque
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -37,6 +38,9 @@ FUSION_MAX_POINTS = 120000
 FUSION_TOPIC_SAMPLE_FRAMES = 3
 FUSION_TOPIC_STATS_CACHE = {}
 EXTERNAL_FUSION_DIR = Path("/media/mrjq/My PSSD/odincloudpoint")
+ANNOTATION_EXPORT_DIR = "annotation_export"
+ANNOTATION_EXPORT_JOBS = {}
+ANNOTATION_EXPORT_LOCK = threading.Lock()
 
 DEFAULT_STATE = {
     "odin_a": {
@@ -1317,6 +1321,7 @@ def list_capture_bags(output_dir=None):
         topic_counts = bag_topic_counts(bag_dir)
         manifest = bag_dir / CAPTURE_MANIFEST
         bin_cache = bag_bin_cache_summary(bag_dir)
+        annotation_export = bag_annotation_export_summary(bag_dir)
         bags.append({
             "name": bag_dir.name,
             "path": str(bag_dir),
@@ -1326,6 +1331,7 @@ def list_capture_bags(output_dir=None):
             "topic_counts": topic_counts,
             "has_manifest": manifest.exists(),
             "bin_cache": bin_cache,
+            "annotation_export": annotation_export,
             "cloud_messages": sum(
                 count for topic, count in topic_counts.items()
                 if "cloud" in topic.lower()
@@ -1374,6 +1380,32 @@ def bag_bin_cache_summary(bag_dir):
         bin_files = list(base.glob("*/*.bin"))
         return {"available": bool(bin_files), "frame_count": len(bin_files), "topics": []}
     return {"available": True, "frame_count": total, "topics": topics}
+
+
+def bag_annotation_export_summary(bag_dir):
+    base = Path(bag_dir) / ANNOTATION_EXPORT_DIR
+    pointcloud_dir = base / "pointcloud"
+    manifest = base / "manifest.json"
+    files = list(pointcloud_dir.glob("*.pcd")) if pointcloud_dir.exists() else []
+    if manifest.exists():
+        try:
+            data = json.loads(manifest.read_text(encoding="utf-8"))
+        except Exception:
+            data = {}
+        return {
+            "available": True,
+            "frame_count": int(data.get("frame_count") or len(files)),
+            "topic": data.get("topic") or "",
+            "path": str(base),
+            "zip": data.get("zip") or "",
+        }
+    return {
+        "available": bool(files),
+        "frame_count": len(files),
+        "topic": "",
+        "path": str(base) if base.exists() else "",
+        "zip": "",
+    }
 
 
 def bag_topic_counts(bag_dir):
@@ -2036,8 +2068,9 @@ def pointcloud_to_arrays(serialized, max_points):
     count = int(arr.shape[0])
     if count <= 0:
         raise RuntimeError("点云消息为空")
-    sample_count = max(1, min(int(max_points), count))
-    if count > sample_count:
+    max_points = int(max_points or 0)
+    sample_count = count if max_points <= 0 else max(1, min(max_points, count))
+    if max_points > 0 and count > sample_count:
         indices = np.linspace(0, count - 1, sample_count, dtype=np.int64)
         arr = arr[indices]
     xyz = np.column_stack((arr["x"], arr["y"], arr["z"])).astype(np.float32)
@@ -2215,6 +2248,207 @@ def write_ascii_ply(path, points, colors):
                 f"{float(point[0]):.5f} {float(point[1]):.5f} {float(point[2]):.5f} "
                 f"{int(color[0])} {int(color[1])} {int(color[2])}\n"
             )
+
+
+def write_binary_pcd(path, points, colors):
+    import numpy as np
+
+    points = points.astype("float32", copy=False)
+    colors = colors.astype("uint8", copy=False)
+    rgb_uint32 = (
+        (colors[:, 0].astype(np.uint32) << 16)
+        | (colors[:, 1].astype(np.uint32) << 8)
+        | colors[:, 2].astype(np.uint32)
+    )
+    payload = np.empty((points.shape[0], 4), dtype=np.float32)
+    payload[:, 0:3] = points
+    payload[:, 3] = rgb_uint32.view(np.float32)
+    header = (
+        "# .PCD v0.7 - Point Cloud Data file format\n"
+        "VERSION 0.7\n"
+        "FIELDS x y z rgb\n"
+        "SIZE 4 4 4 4\n"
+        "TYPE F F F F\n"
+        "COUNT 1 1 1 1\n"
+        f"WIDTH {points.shape[0]}\n"
+        "HEIGHT 1\n"
+        "VIEWPOINT 0 0 0 1 0 0 0\n"
+        f"POINTS {points.shape[0]}\n"
+        "DATA binary\n"
+    ).encode("ascii")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("wb") as handle:
+        handle.write(header)
+        handle.write(payload.tobytes(order="C"))
+
+
+def default_annotation_cloud_topic(bag_dir, preferred_topic=""):
+    bag = Path(bag_dir)
+    if preferred_topic:
+        try:
+            return safe_fusion_topic(bag, preferred_topic)
+        except Exception:
+            pass
+    manifest_path = bag / CAPTURE_MANIFEST
+    if manifest_path.exists():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            topic = manifest.get("primary_cloud_topic") or ""
+            if topic:
+                return safe_fusion_topic(bag, topic)
+        except Exception:
+            pass
+    topics = []
+    for db_file in bag_db_files(bag):
+        summary = db3_topic_summary(db_file)
+        if not summary["ok"]:
+            continue
+        for topic in summary["topics"]:
+            if topic["type"] == "sensor_msgs/msg/PointCloud2" and int(topic.get("count") or 0) > 0:
+                topics.append(topic["name"])
+    if not topics:
+        raise RuntimeError(f"{bag.name} 中没有可导出的 PointCloud2 topic")
+    topics.sort(key=lambda name: (
+        0 if name.endswith("/cloud_render") else 1 if name.endswith("/bound_cloud") else 2,
+        name,
+    ))
+    return safe_fusion_topic(bag, topics[0])
+
+
+def nearest_pose_for_ns(poses, timestamp_ns):
+    if not poses:
+        return None
+    return min(poses, key=lambda pose: abs(int(pose["timestamp_ns"]) - int(timestamp_ns)))
+
+
+def export_annotation_dataset(bag_path, topic="", max_points=0, make_zip=True):
+    bag = resolve_fusion_bag_path(bag_path)
+    topic = default_annotation_cloud_topic(bag, topic)
+    rows = pointcloud_message_index(bag, topic)
+    if not rows:
+        raise RuntimeError("所选点云没有可导出的帧")
+    max_points = max(0, int(max_points or 0))
+    export_dir = bag / ANNOTATION_EXPORT_DIR
+    pointcloud_dir = export_dir / "pointcloud"
+    shutil.rmtree(export_dir, ignore_errors=True)
+    pointcloud_dir.mkdir(parents=True, exist_ok=True)
+    trajectory = extract_odometry_trajectory(bag, rows[0][0], rows[-1][0])
+    poses = trajectory.get("poses") or []
+    frames = []
+    started = time.time()
+    for index, row in enumerate(rows):
+        msg, points, colors, original = pointcloud_to_arrays(read_pointcloud_index_row(row), max_points)
+        pcd_name = f"{index:06d}.pcd"
+        write_binary_pcd(pointcloud_dir / pcd_name, points, colors)
+        pose = nearest_pose_for_ns(poses, row[0])
+        frames.append({
+            "index": index,
+            "timestamp_ns": row[0],
+            "offset_sec": round((row[0] - rows[0][0]) / 1e9, 6),
+            "file": f"pointcloud/{pcd_name}",
+            "frame_id": msg.header.frame_id,
+            "original_points": original,
+            "exported_points": int(points.shape[0]),
+            "pose": pose,
+        })
+    timestamps = {
+        "format": "odin_pointcloud_timestamps_v1",
+        "source_bag": str(bag),
+        "topic": topic,
+        "frame_count": len(frames),
+        "start_ns": rows[0][0],
+        "end_ns": rows[-1][0],
+        "duration_sec": round((rows[-1][0] - rows[0][0]) / 1e9, 6),
+        "frames": frames,
+    }
+    poses_payload = {
+        "format": "odin_odometry_poses_v1",
+        "source_bag": str(bag),
+        "trajectory_topic": trajectory.get("topic") or "",
+        "trajectory_ok": bool(trajectory.get("ok")),
+        "trajectory_error": trajectory.get("error") or "",
+        "poses": poses,
+    }
+    manifest = {
+        "format": "odin_annotation_export_v1",
+        "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "source_bag": str(bag),
+        "topic": topic,
+        "pointcloud_format": "PCD v0.7 binary, fields x y z rgb",
+        "frame_count": len(frames),
+        "max_points": max_points,
+        "duration_sec": round(time.time() - started, 3),
+        "cvat_layout": "将 annotation_export 目录或 zip 导入 CVAT 3D point cloud task",
+        "files": {
+            "pointcloud": "pointcloud/*.pcd",
+            "timestamps": "timestamps.json",
+            "poses": "poses.json",
+        },
+        "zip": "",
+    }
+    (export_dir / "timestamps.json").write_text(json.dumps(timestamps, ensure_ascii=False, indent=2), encoding="utf-8")
+    (export_dir / "poses.json").write_text(json.dumps(poses_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    (export_dir / "README.txt").write_text(
+        "\n".join([
+            "Odin annotation export",
+            "",
+            "pointcloud/*.pcd  - colored point cloud frames for CVAT/SUSTechPOINTS style annotation",
+            "timestamps.json   - original ROS bag timestamps for each frame",
+            "poses.json        - nearest Odin odometry pose for each frame and full odometry trajectory",
+            "",
+            "For tracking labels, keep the same object id across frames in the annotation tool.",
+        ]) + "\n",
+        encoding="utf-8",
+    )
+    if make_zip:
+        zip_base = bag / f"{bag.name}_cvat_pointcloud"
+        zip_path = shutil.make_archive(str(zip_base), "zip", root_dir=export_dir)
+        manifest["zip"] = zip_path
+    (export_dir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {
+        "ok": True,
+        "bag": str(bag),
+        "topic": topic,
+        "path": str(export_dir),
+        "zip": manifest["zip"],
+        "frame_count": len(frames),
+        "trajectory_ok": bool(trajectory.get("ok")),
+    }
+
+
+def annotation_export_jobs_snapshot():
+    with ANNOTATION_EXPORT_LOCK:
+        return sorted(ANNOTATION_EXPORT_JOBS.values(), key=lambda item: item.get("started_at", 0), reverse=True)[:8]
+
+
+def start_annotation_export_job(bag_path, topic="", max_points=0, make_zip=True):
+    bag = resolve_fusion_bag_path(bag_path)
+    job_id = uuid.uuid4().hex[:12]
+    job = {
+        "id": job_id,
+        "status": "running",
+        "started_at": time.time(),
+        "bag": str(bag),
+        "topic": topic,
+        "max_points": int(max_points or 0),
+        "make_zip": bool(make_zip),
+        "result": None,
+        "error": "",
+    }
+    with ANNOTATION_EXPORT_LOCK:
+        ANNOTATION_EXPORT_JOBS[job_id] = job
+
+    def worker():
+        try:
+            result = export_annotation_dataset(bag, topic, max_points, make_zip)
+            with ANNOTATION_EXPORT_LOCK:
+                job.update({"status": "done", "finished_at": time.time(), "result": result, "topic": result.get("topic") or topic})
+        except Exception as exc:
+            with ANNOTATION_EXPORT_LOCK:
+                job.update({"status": "error", "finished_at": time.time(), "error": str(exc)})
+
+    threading.Thread(target=worker, daemon=True).start()
+    return {"ok": True, "job": job}
 
 
 def fusion_preview_payload(body):
@@ -2694,6 +2928,7 @@ class CaptureManager:
             "missing_record_topics": missing_record_topics,
             "output_dir": output_dir,
             "bags": list_capture_bags(output_dir),
+            "annotation_jobs": annotation_export_jobs_snapshot(),
             "log_file": str(CAPTURE_LOG_FILE),
         }
 
@@ -3693,6 +3928,13 @@ class OdinHandler(SimpleHTTPRequestHandler):
             if path == "/api/capture/delete":
                 bag_path = str(body.get("bag_path") or "").strip()
                 json_response(self, capture_manager.delete_bag(bag_path))
+                return
+            if path == "/api/capture/export-annotation":
+                bag_path = str(body.get("bag_path") or "").strip()
+                topic = str(body.get("topic") or "").strip()
+                max_points = int(body.get("max_points") or 0)
+                make_zip = bool(body.get("make_zip", True))
+                json_response(self, start_annotation_export_job(bag_path, topic, max_points, make_zip))
                 return
             if path == "/api/fusion/preview":
                 json_response(self, fusion_preview_payload(body))

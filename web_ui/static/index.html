@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Odin1 操作台</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/styles.css?v=20260821-bin-playback-2" />
+    <link rel="stylesheet" href="/styles.css?v=20260821-palette-1" />
   </head>
-  <body>
+  <body data-view="overview">
     <header class="appbar">
       <div class="brand">
         <h1>Odin1 操作台</h1>
@@ -22,9 +22,19 @@
       </div>
     </header>
 
+    <nav class="appnav" aria-label="主工作区">
+      <button class="nav-tab active" data-view="overview">总览</button>
+      <button class="nav-tab" data-view="setup">设备配置</button>
+      <button class="nav-tab" data-view="test">传感器测试</button>
+      <button class="nav-tab" data-view="capture">数据采集</button>
+      <button class="nav-tab" data-view="fusion">数据融合</button>
+      <button class="nav-tab" data-view="annotation">标注训练</button>
+      <button class="nav-tab" data-view="settings">系统设置</button>
+    </nav>
+
     <main class="shell">
       <section class="control-column">
-        <section class="panel readiness-panel">
+        <section class="panel readiness-panel" data-pages="overview setup test">
           <div class="panel-head">
             <div>
               <h2>设备就绪</h2>
@@ -84,7 +94,7 @@
           <div id="deviceList" class="device-list"></div>
         </section>
 
-        <section class="panel launch-panel">
+        <section class="panel launch-panel" data-pages="overview setup test">
           <div class="panel-head">
             <div>
               <h2>启动控制</h2>
@@ -115,7 +125,7 @@
           </details>
         </section>
 
-        <section class="panel rtk-panel">
+        <section class="panel rtk-panel" data-pages="setup test">
           <div class="panel-head">
             <div>
               <h2>RTK/GNSS</h2>
@@ -148,7 +158,7 @@
       </section>
 
       <section class="workspace">
-        <section class="panel rtk-observer-card">
+        <section class="panel rtk-observer-card" data-pages="overview test">
           <div class="panel-head">
             <div>
               <h2>RTK 观察</h2>
@@ -180,7 +190,7 @@
           </div>
         </section>
 
-        <section class="panel rtk-map-card collapsible" data-collapse-panel="rtk-map">
+        <section class="panel rtk-map-card collapsible" data-pages="test" data-collapse-panel="rtk-map">
           <div class="panel-head">
             <div>
               <h2>高精度地图</h2>
@@ -205,7 +215,7 @@
           </div>
         </section>
 
-        <section class="panel capture-card collapsible" data-collapse-panel="capture">
+        <section class="panel capture-card collapsible" data-pages="overview capture annotation" data-collapse-panel="capture">
           <div class="panel-head">
             <div>
               <h2>数据采集</h2>
@@ -244,6 +254,7 @@
               <button id="captureStopBtn" class="danger">停止采集</button>
               <button id="capturePlayBtn">回放选中</button>
               <button id="captureStopPlayBtn">停止回放</button>
+              <button id="captureExportAnnotationBtn">导出标注数据</button>
               <button id="captureDeleteBtn" class="danger">删除选中</button>
               <button id="captureRefreshBtn" class="ghost">刷新采集</button>
             </div>
@@ -257,11 +268,15 @@
                 <h3>最近 bag</h3>
                 <pre id="captureBagsBox" class="output capture-output"></pre>
               </section>
+              <section class="capture-wide">
+                <h3>标注导出</h3>
+                <pre id="captureAnnotationBox" class="output capture-output"></pre>
+              </section>
             </div>
           </div>
         </section>
 
-        <section class="panel fusion-card collapsible" data-collapse-panel="fusion">
+        <section class="panel fusion-card collapsible" data-pages="fusion" data-collapse-panel="fusion">
           <div class="panel-head">
             <div>
               <h2>点云时序工作台</h2>
@@ -385,7 +400,7 @@
           </div>
         </section>
 
-        <section class="panel monitor-card collapsible" data-collapse-panel="monitor">
+        <section class="panel monitor-card collapsible" data-pages="settings" data-collapse-panel="monitor">
           <div class="panel-head">
             <div>
               <h2>运行状态</h2>
@@ -408,7 +423,7 @@
           </div>
         </section>
 
-        <section class="panel params-card collapsible" data-collapse-panel="params">
+        <section class="panel params-card collapsible" data-pages="setup settings" data-collapse-panel="params">
           <div class="panel-head">
             <div>
               <h2>常用参数</h2>
@@ -436,7 +451,7 @@
           </div>
         </section>
 
-        <section class="panel command-card">
+        <section class="panel command-card" data-pages="test settings">
           <div class="panel-head">
             <div>
               <h2>运行时命令</h2>
@@ -450,7 +465,7 @@
           </div>
         </section>
 
-        <section class="panel advanced-card">
+        <section class="panel advanced-card" data-pages="settings">
           <details>
             <summary>高级设置与原始文件</summary>
             <div class="advanced-grid">
@@ -483,6 +498,6 @@
 
     <div id="toast"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/app.js?v=20260821-bin-playback-2"></script>
+    <script src="/app.js?v=20260821-palette-1"></script>
   </body>
 </html>
