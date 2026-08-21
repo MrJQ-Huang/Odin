@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Odin1 操作台</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/styles.css?v=20260818-rtk-ros-2" />
+    <link rel="stylesheet" href="/styles.css?v=20260821-hard-3col-1" />
   </head>
   <body>
     <header class="appbar">
@@ -144,6 +144,7 @@
           </div>
           <div id="rtkDeviceList" class="device-list"></div>
         </section>
+
       </section>
 
       <section class="workspace">
@@ -260,6 +261,90 @@
           </div>
         </section>
 
+        <section class="panel fusion-card collapsible" data-collapse-panel="fusion">
+          <div class="panel-head">
+            <div>
+              <h2>点云融合 Demo</h2>
+              <p id="fusionHint" class="hint">选择两个采集包，先用手动位姿生成融合预览</p>
+            </div>
+            <div class="button-row">
+              <span id="fusionStateBadge" class="badge neutral">未生成</span>
+              <button class="collapse-toggle" data-collapse-toggle="fusion">隐藏</button>
+            </div>
+          </div>
+          <div class="collapsible-body" data-collapse-body="fusion">
+            <div class="fusion-layout">
+              <div class="fusion-controls">
+                <section class="fusion-block">
+                  <h3>数据源</h3>
+                  <div class="fusion-source-grid">
+                    <label>
+                      视角 A bag
+                      <select id="fusionBagA"></select>
+                    </label>
+                    <label>
+                      A 点云
+                      <select id="fusionTopicA"></select>
+                    </label>
+                    <label>
+                      视角 B bag
+                      <select id="fusionBagB"></select>
+                    </label>
+                    <label>
+                      B 点云
+                      <select id="fusionTopicB"></select>
+                    </label>
+                  </div>
+                </section>
+                <section class="fusion-block">
+                  <h3>B 到 A 位姿</h3>
+                  <div class="fusion-transform-grid">
+                    <label>X<input id="fusionX" type="number" step="0.05" value="0" /></label>
+                    <label>Y<input id="fusionY" type="number" step="0.05" value="0" /></label>
+                    <label>Z<input id="fusionZ" type="number" step="0.05" value="0" /></label>
+                    <label>Roll<input id="fusionRoll" type="number" step="1" value="0" /></label>
+                    <label>Pitch<input id="fusionPitch" type="number" step="1" value="0" /></label>
+                    <label>Yaw<input id="fusionYaw" type="number" step="1" value="0" /></label>
+                  </div>
+                </section>
+                <section class="fusion-block">
+                  <h3>预览</h3>
+                  <div class="fusion-actions">
+                    <label>
+                      同步
+                      <select id="fusionSyncMode">
+                        <option value="overlap_mid">重叠区中点</option>
+                        <option value="start">开始附近</option>
+                        <option value="end">结束附近</option>
+                      </select>
+                    </label>
+                    <label>
+                      点数
+                      <input id="fusionMaxPoints" type="number" min="1000" max="120000" step="1000" value="60000" />
+                    </label>
+                    <label class="checkline">
+                      <input id="fusionSavePly" type="checkbox" />
+                      保存 PLY
+                    </label>
+                    <button id="fusionPreviewBtn" class="primary">生成预览</button>
+                    <button id="fusionRefreshBtn" class="ghost">刷新数据</button>
+                    <button id="fusionResetViewBtn">重置视角</button>
+                  </div>
+                </section>
+                <div id="fusionMetrics" class="rtk-metrics fusion-metrics"></div>
+                <section class="fusion-block fusion-bag-block">
+                  <h3>采集包</h3>
+                  <pre id="fusionBagsBox" class="output capture-output"></pre>
+                </section>
+              </div>
+              <div class="fusion-viewer">
+                <canvas id="fusionCanvas"></canvas>
+                <pre id="fusionInfoBox" class="output fusion-info"></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="panel monitor-card collapsible" data-collapse-panel="monitor">
           <div class="panel-head">
             <div>
@@ -358,6 +443,6 @@
 
     <div id="toast"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="/app.js?v=20260820-full-capture-2"></script>
+    <script src="/app.js?v=20260821-fusion-source-1"></script>
   </body>
 </html>

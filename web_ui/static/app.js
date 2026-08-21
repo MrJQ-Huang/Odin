@@ -26,6 +26,24 @@ const app = {
   rtkTrailPoints: [],
   rtkLastPointKey: "",
   rtkMapFollow: true,
+  fusion: null,
+  fusionPreview: null,
+  fusionBusy: false,
+  fusionView: {
+    gl: null,
+    program: null,
+    positionBuffer: null,
+    colorBuffer: null,
+    count: 0,
+    center: [0, 0, 0],
+    extent: 1,
+    yaw: -0.65,
+    pitch: 0.55,
+    zoom: 1,
+    dragging: false,
+    lastX: 0,
+    lastY: 0,
+  },
 };
 
 const PARAM_GROUPS = [
@@ -779,6 +797,311 @@ function renderCapture(data) {
     : "暂无采集文件";
 }
 
+function fusionBagByPath(path) {
+  return (app.fusion && app.fusion.bags || []).find((bag) => bag.path === path) || null;
+}
+
+function preferredFusionTopic(bag, previous = "") {
+  const topics = bag && bag.pointcloud_topics || [];
+  if (previous && topics.some((topic) => topic.name === previous)) return previous;
+  const render = topics.find((topic) => topic.name.endsWith("/cloud_render"));
+  return (render || topics[0] || {}).name || "";
+}
+
+function renderFusionTopicSelect(selectId, bagPath, previous) {
+  const select = $(selectId);
+  const bag = fusionBagByPath(bagPath);
+  const topics = bag && bag.pointcloud_topics || [];
+  select.innerHTML = topics.length
+    ? topics.map((topic) => {
+      const label = `${topic.name} · ${topic.count}`;
+      return `<option value="${escapeHtml(topic.name)}">${escapeHtml(label)}</option>`;
+    }).join("")
+    : '<option value="">无可用点云</option>';
+  select.value = preferredFusionTopic(bag, previous);
+}
+
+function fusionReadableBags() {
+  return (app.fusion && app.fusion.bags || []).filter((bag) => bag.readable && (bag.pointcloud_topics || []).length);
+}
+
+function chooseDistinctFusionBag(readable, preferred, avoid = "") {
+  if (preferred && preferred !== avoid && readable.some((bag) => bag.path === preferred)) return preferred;
+  const candidate = readable.find((bag) => bag.path !== avoid);
+  return candidate ? candidate.path : "";
+}
+
+function renderFusion(data = app.fusion) {
+  app.fusion = data || { bags: [], outputs: [] };
+  const bags = app.fusion.bags || [];
+  const readable = fusionReadableBags();
+  const prevA = $("fusionBagA").value;
+  const prevB = $("fusionBagB").value;
+  const bagA = chooseDistinctFusionBag(readable, prevA);
+  const bagB = chooseDistinctFusionBag(readable, prevB, bagA);
+  const optionHtml = [
+    '<option value="">从 captures 选择采集包</option>',
+    ...readable.map((bag) => `<option value="${escapeHtml(bag.path)}">${escapeHtml(`${bag.name} · ${bag.duration_sec.toFixed(1)}s · ${bag.size}`)}</option>`),
+  ].join("");
+  $("fusionBagA").innerHTML = optionHtml;
+  $("fusionBagB").innerHTML = optionHtml;
+  $("fusionBagA").value = bagA;
+  $("fusionBagB").value = bagB;
+  renderFusionTopicSelect("fusionTopicA", bagA, $("fusionTopicA").value);
+  renderFusionTopicSelect("fusionTopicB", bagB, $("fusionTopicB").value);
+  $("fusionTopicA").disabled = !bagA;
+  $("fusionTopicB").disabled = !bagB;
+
+  const invalid = bags.filter((bag) => !bag.readable || !(bag.pointcloud_topics || []).length);
+  $("fusionBagsBox").textContent = bags.length
+    ? bags.map((bag) => {
+      const status = bag.readable ? (bag.pointcloud_topics || []).length ? "可融合" : "无点云" : "不可读";
+      const pcs = (bag.pointcloud_topics || []).map((topic) => `    ${topic.name}  ${topic.count}`).join("\n");
+      return `${bag.name}  [${status}]
+  ${bag.size}  ${bag.duration_sec ? `${bag.duration_sec.toFixed(1)}s` : "--"}
+  ${bag.path}
+${pcs || `  ${bag.error || "没有 PointCloud2 topic"}`}`;
+    }).join("\n\n")
+    : "暂无采集数据";
+
+  const sameBagSelected = Boolean(bagA && bagB && bagA === bagB);
+  const readyToPreview = Boolean(bagA && bagB && !sameBagSelected && $("fusionTopicA").value && $("fusionTopicB").value);
+  $("fusionPreviewBtn").disabled = app.fusionBusy || !readyToPreview;
+  $("fusionRefreshBtn").disabled = app.fusionBusy;
+  $("fusionStateBadge").textContent = app.fusionBusy ? "生成中" : app.fusionPreview ? "已生成" : "未生成";
+  $("fusionStateBadge").className = `badge ${app.fusionBusy ? "warn" : app.fusionPreview ? "" : "neutral"}`;
+  $("fusionHint").textContent = readable.length < 2
+    ? `captures 中只有 ${readable.length} 个可融合采集包，至少需要 2 个不同数据源`
+    : sameBagSelected
+      ? "A/B 不能选择同一个采集包，请从 captures 中选择两个不同数据源"
+      : invalid.length
+        ? `${invalid.length} 个采集包不可用于融合，详情见下方列表`
+        : "选择两个采集包，先用手动位姿生成融合预览";
+
+  const preview = app.fusionPreview;
+  $("fusionMetrics").innerHTML = [
+    metric("可用 bag", readable.length || "0", readable.length >= 2 ? "" : "warn"),
+    metric("A 帧", preview ? `${preview.points_a}/${preview.original_points_a}` : "--"),
+    metric("B 帧", preview ? `${preview.points_b}/${preview.original_points_b}` : "--"),
+    metric("时间差", preview ? `${preview.delta_ms} ms` : "--", preview && preview.delta_ms > 100 ? "warn" : ""),
+    metric("总点数", preview ? preview.points_total : "--"),
+    metric("输出", preview && preview.output_path ? preview.output_path.split("/").pop() : "未保存"),
+  ].join("");
+  $("fusionInfoBox").textContent = preview
+    ? [
+      preview.sync_note,
+      `A: ${preview.bag_a.split("/").pop()}  ${preview.topic_a}  frame=${preview.frame_a}`,
+      `B: ${preview.bag_b.split("/").pop()}  ${preview.topic_b}  frame=${preview.frame_b}`,
+      `selected delta=${preview.delta_ms}ms`,
+      `bounds min=${preview.bounds.min.join(", ")} max=${preview.bounds.max.join(", ")}`,
+      preview.output_path ? `PLY: ${preview.output_path}` : "",
+    ].filter(Boolean).join("\n")
+    : "生成预览后，这里显示帧、时间差、范围和 PLY 输出路径";
+}
+
+async function refreshFusion() {
+  const data = await api("/api/fusion/status");
+  renderFusion(data);
+}
+
+function collectFusionTransform() {
+  return {
+    x: Number($("fusionX").value || 0),
+    y: Number($("fusionY").value || 0),
+    z: Number($("fusionZ").value || 0),
+    roll: Number($("fusionRoll").value || 0),
+    pitch: Number($("fusionPitch").value || 0),
+    yaw: Number($("fusionYaw").value || 0),
+  };
+}
+
+async function previewFusion() {
+  if ($("fusionBagA").value && $("fusionBagA").value === $("fusionBagB").value) {
+    toast("A/B 不能选择同一个采集包");
+    return;
+  }
+  app.fusionBusy = true;
+  renderFusion();
+  try {
+    const payload = {
+      bag_a: $("fusionBagA").value,
+      topic_a: $("fusionTopicA").value,
+      bag_b: $("fusionBagB").value,
+      topic_b: $("fusionTopicB").value,
+      sync_mode: $("fusionSyncMode").value,
+      max_points: Number($("fusionMaxPoints").value || 60000),
+      save_ply: $("fusionSavePly").checked,
+      transform: collectFusionTransform(),
+    };
+    const data = await api("/api/fusion/preview", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    app.fusionPreview = data;
+    updateFusionPointBuffers(data);
+    drawFusionScene();
+    renderFusion();
+    toast("融合预览已生成");
+  } catch (error) {
+    toast(`融合预览失败：${error.message}`);
+  } finally {
+    app.fusionBusy = false;
+    await refreshFusion().catch(() => renderFusion());
+    drawFusionScene();
+  }
+}
+
+function compileFusionShader(gl, type, source) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    throw new Error(gl.getShaderInfoLog(shader));
+  }
+  return shader;
+}
+
+function initFusionViewer() {
+  const canvas = $("fusionCanvas");
+  if (!canvas) return;
+  const gl = canvas.getContext("webgl", { antialias: true });
+  if (!gl) {
+    $("fusionInfoBox").textContent = "当前浏览器不支持 WebGL";
+    return;
+  }
+  const vertex = compileFusionShader(gl, gl.VERTEX_SHADER, `
+    attribute vec3 aPosition;
+    attribute vec3 aColor;
+    uniform vec3 uCenter;
+    uniform float uScale;
+    uniform float uYaw;
+    uniform float uPitch;
+    uniform float uZoom;
+    varying vec3 vColor;
+    void main() {
+      vec3 p = aPosition - uCenter;
+      float cy = cos(uYaw);
+      float sy = sin(uYaw);
+      float cp = cos(uPitch);
+      float sp = sin(uPitch);
+      float x1 = cy * p.x - sy * p.y;
+      float y1 = sy * p.x + cy * p.y;
+      float z1 = p.z;
+      float y2 = cp * y1 - sp * z1;
+      float z2 = sp * y1 + cp * z1;
+      gl_Position = vec4(vec2(x1, y2) * uScale * uZoom, z2 * uScale * 0.12, 1.0);
+      gl_PointSize = 2.0;
+      vColor = aColor;
+    }
+  `);
+  const fragment = compileFusionShader(gl, gl.FRAGMENT_SHADER, `
+    precision mediump float;
+    varying vec3 vColor;
+    void main() {
+      gl_FragColor = vec4(vColor, 1.0);
+    }
+  `);
+  const program = gl.createProgram();
+  gl.attachShader(program, vertex);
+  gl.attachShader(program, fragment);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    throw new Error(gl.getProgramInfoLog(program));
+  }
+  app.fusionView.gl = gl;
+  app.fusionView.program = program;
+  app.fusionView.positionBuffer = gl.createBuffer();
+  app.fusionView.colorBuffer = gl.createBuffer();
+
+  canvas.addEventListener("mousedown", (event) => {
+    app.fusionView.dragging = true;
+    app.fusionView.lastX = event.clientX;
+    app.fusionView.lastY = event.clientY;
+  });
+  window.addEventListener("mouseup", () => {
+    app.fusionView.dragging = false;
+  });
+  window.addEventListener("mousemove", (event) => {
+    if (!app.fusionView.dragging) return;
+    const dx = event.clientX - app.fusionView.lastX;
+    const dy = event.clientY - app.fusionView.lastY;
+    app.fusionView.lastX = event.clientX;
+    app.fusionView.lastY = event.clientY;
+    app.fusionView.yaw += dx * 0.006;
+    app.fusionView.pitch = Math.max(-1.45, Math.min(1.45, app.fusionView.pitch + dy * 0.006));
+    drawFusionScene();
+  });
+  canvas.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    const factor = event.deltaY > 0 ? 0.9 : 1.1;
+    app.fusionView.zoom = Math.max(0.2, Math.min(12, app.fusionView.zoom * factor));
+    drawFusionScene();
+  }, { passive: false });
+  window.addEventListener("resize", drawFusionScene);
+  drawFusionScene();
+}
+
+function resetFusionView() {
+  app.fusionView.yaw = -0.65;
+  app.fusionView.pitch = 0.55;
+  app.fusionView.zoom = 1;
+  drawFusionScene();
+}
+
+function updateFusionPointBuffers(preview) {
+  const gl = app.fusionView.gl;
+  if (!gl || !preview || !preview.points || !preview.colors) return;
+  const points = new Float32Array(preview.points);
+  const colors = new Uint8Array(preview.colors);
+  app.fusionView.count = Math.floor(points.length / 3);
+  app.fusionView.center = preview.bounds && preview.bounds.center || [0, 0, 0];
+  app.fusionView.extent = Math.max(0.001, preview.bounds && preview.bounds.extent || 1);
+  gl.bindBuffer(gl.ARRAY_BUFFER, app.fusionView.positionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, app.fusionView.colorBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+}
+
+function resizeFusionCanvas() {
+  const canvas = $("fusionCanvas");
+  const gl = app.fusionView.gl;
+  if (!canvas || !gl) return;
+  const ratio = window.devicePixelRatio || 1;
+  const width = Math.max(320, Math.floor(canvas.clientWidth * ratio));
+  const height = Math.max(260, Math.floor(canvas.clientHeight * ratio));
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+  gl.viewport(0, 0, canvas.width, canvas.height);
+}
+
+function drawFusionScene() {
+  const gl = app.fusionView.gl;
+  const program = app.fusionView.program;
+  if (!gl || !program) return;
+  resizeFusionCanvas();
+  gl.clearColor(0.063, 0.094, 0.125, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  if (!app.fusionView.count) return;
+  gl.useProgram(program);
+  const scale = 1.75 / app.fusionView.extent;
+  gl.uniform3fv(gl.getUniformLocation(program, "uCenter"), new Float32Array(app.fusionView.center));
+  gl.uniform1f(gl.getUniformLocation(program, "uScale"), scale);
+  gl.uniform1f(gl.getUniformLocation(program, "uYaw"), app.fusionView.yaw);
+  gl.uniform1f(gl.getUniformLocation(program, "uPitch"), app.fusionView.pitch);
+  gl.uniform1f(gl.getUniformLocation(program, "uZoom"), app.fusionView.zoom);
+  gl.bindBuffer(gl.ARRAY_BUFFER, app.fusionView.positionBuffer);
+  const posLoc = gl.getAttribLocation(program, "aPosition");
+  gl.enableVertexAttribArray(posLoc);
+  gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, app.fusionView.colorBuffer);
+  const colorLoc = gl.getAttribLocation(program, "aColor");
+  gl.enableVertexAttribArray(colorLoc);
+  gl.vertexAttribPointer(colorLoc, 3, gl.UNSIGNED_BYTE, true, 0, 0);
+  gl.drawArrays(gl.POINTS, 0, app.fusionView.count);
+}
+
 function detailCard(title, rows, extraClass = "") {
   const body = rows.length
     ? `<div class="detail-list">${rows.map(([label, value]) => `<span>${escapeHtml(label)}</span><span>${escapeHtml(String(value ?? "--"))}</span>`).join("")}</div>`
@@ -1330,6 +1653,11 @@ async function refreshCapture() {
   renderCapture(data);
 }
 
+async function refreshFusionStatusOnly() {
+  const data = await api("/api/fusion/status");
+  renderFusion(data);
+}
+
 async function refreshConfigs() {
   app.configs = await api("/api/configs");
   app.quickDirty = false;
@@ -1710,6 +2038,14 @@ function bindEvents() {
     await refreshCapture();
     toast("采集状态已刷新");
   });
+  $("fusionBagA").addEventListener("change", () => renderFusion());
+  $("fusionBagB").addEventListener("change", () => renderFusion());
+  $("fusionPreviewBtn").addEventListener("click", previewFusion);
+  $("fusionRefreshBtn").addEventListener("click", async () => {
+    await refreshFusionStatusOnly();
+    toast("融合数据已刷新");
+  });
+  $("fusionResetViewBtn").addEventListener("click", resetFusionView);
   $("autoBindBtn").addEventListener("click", autoBind);
   $("saveStateBtn").addEventListener("click", saveState);
   $("swapABBtn").addEventListener("click", swapAB);
@@ -1739,11 +2075,14 @@ function bindEvents() {
 async function main() {
   bindEvents();
   initCollapsiblePanels();
+  initFusionViewer();
   setInterval(() => refreshStatus({ forceForm: false }).catch(() => {}), 5000);
   setInterval(() => refreshRtk().catch(() => {}), 1000);
   setInterval(() => refreshCapture().catch(() => {}), 1000);
+  setInterval(() => refreshFusionStatusOnly().catch(() => {}), 5000);
   try {
     await refreshStatus({ forceForm: true });
+    await refreshFusionStatusOnly();
     const planned = app.launchPlan ? app.launchPlan.effective_slots || [] : [];
     selectSlot(planned.length === 1 ? planned[0] : "odin_a");
   } catch (error) {

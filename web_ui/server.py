@@ -5,6 +5,7 @@ import os
 import re
 import shutil
 import signal
+import sqlite3
 import subprocess
 import select
 import termios
@@ -30,6 +31,8 @@ RTK_LOG_FILE = Path(__file__).resolve().parent / "rtk_ros_launch.log"
 CAPTURE_LOG_FILE = Path(__file__).resolve().parent / "capture_rosbag.log"
 CAPTURE_DIR = ODIN_ROOT / "captures"
 CAPTURE_MANIFEST = "capture_manifest.json"
+FUSION_OUTPUT_DIR = CAPTURE_DIR / "fusion_outputs"
+FUSION_MAX_POINTS = 120000
 
 DEFAULT_STATE = {
     "odin_a": {
@@ -1349,6 +1352,332 @@ def bag_topic_counts(bag_dir):
     return counts
 
 
+def bag_db_files(bag_dir):
+    return sorted(Path(bag_dir).glob("*.db3"))
+
+
+def db3_topic_summary(db_path):
+    con = None
+    try:
+        con = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
+        topics = {
+            int(row[0]): {"name": row[1], "type": row[2], "count": 0}
+            for row in con.execute("select id, name, type from topics order by id")
+        }
+        for topic_id, count in con.execute("select topic_id, count(*) from messages group by topic_id"):
+            if int(topic_id) in topics:
+                topics[int(topic_id)]["count"] = int(count or 0)
+        time_row = con.execute("select min(timestamp), max(timestamp), count(*) from messages").fetchone()
+        return {
+            "ok": True,
+            "topics": list(topics.values()),
+            "start_ns": int(time_row[0] or 0) if time_row else 0,
+            "end_ns": int(time_row[1] or 0) if time_row else 0,
+            "messages": int(time_row[2] or 0) if time_row else 0,
+            "error": "",
+        }
+    except Exception as exc:
+        return {
+            "ok": False,
+            "topics": [],
+            "start_ns": 0,
+            "end_ns": 0,
+            "messages": 0,
+            "error": str(exc),
+        }
+    finally:
+        if con is not None:
+            con.close()
+
+
+def scan_fusion_bags(output_dir=None):
+    base = normalize_capture_dir(output_dir or load_state().get("capture", {}).get("output_dir"))
+    bags = []
+    for bag_dir in sorted([item for item in base.iterdir() if item.is_dir()], key=lambda p: p.stat().st_mtime, reverse=True):
+        if bag_dir.name == FUSION_OUTPUT_DIR.name:
+            continue
+        db_files = bag_db_files(bag_dir)
+        if not db_files:
+            continue
+        topic_map = {}
+        start_ns = 0
+        end_ns = 0
+        messages = 0
+        errors = []
+        readable = False
+        for db_file in db_files:
+            summary = db3_topic_summary(db_file)
+            if not summary["ok"]:
+                errors.append(f"{db_file.name}: {summary['error']}")
+                continue
+            readable = True
+            messages += summary["messages"]
+            if summary["start_ns"]:
+                start_ns = summary["start_ns"] if not start_ns else min(start_ns, summary["start_ns"])
+            if summary["end_ns"]:
+                end_ns = max(end_ns, summary["end_ns"])
+            for topic in summary["topics"]:
+                item = topic_map.setdefault(topic["name"], {"name": topic["name"], "type": topic["type"], "count": 0})
+                item["count"] += int(topic.get("count") or 0)
+        pointcloud_topics = [
+            topic for topic in topic_map.values()
+            if topic["type"] == "sensor_msgs/msg/PointCloud2" and topic["count"] > 0
+        ]
+        pointcloud_topics.sort(key=lambda topic: (
+            0 if topic["name"].endswith("/cloud_render") else 1 if topic["name"].endswith("/bound_cloud") else 2,
+            topic["name"],
+        ))
+        bags.append({
+            "name": bag_dir.name,
+            "path": str(bag_dir),
+            "size": format_bytes(bag_size_bytes(bag_dir)),
+            "size_bytes": bag_size_bytes(bag_dir),
+            "has_metadata": (bag_dir / "metadata.yaml").exists(),
+            "has_manifest": (bag_dir / CAPTURE_MANIFEST).exists(),
+            "readable": readable,
+            "error": "; ".join(errors),
+            "start_ns": start_ns,
+            "end_ns": end_ns,
+            "duration_sec": (end_ns - start_ns) / 1e9 if start_ns and end_ns and end_ns >= start_ns else 0,
+            "messages": messages,
+            "topics": sorted(topic_map.values(), key=lambda topic: topic["name"]),
+            "pointcloud_topics": pointcloud_topics,
+        })
+    return bags
+
+
+def fusion_bag_status(output_dir=None):
+    bags = scan_fusion_bags(output_dir)
+    outputs = []
+    FUSION_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for item in sorted(FUSION_OUTPUT_DIR.glob("*.ply"), key=lambda p: p.stat().st_mtime, reverse=True)[:20]:
+        outputs.append({
+            "name": item.name,
+            "path": str(item),
+            "size": format_bytes(item.stat().st_size),
+            "mtime": item.stat().st_mtime,
+        })
+    return {
+        "bags": bags,
+        "outputs": outputs,
+        "default_max_points": 60000,
+        "max_points_limit": FUSION_MAX_POINTS,
+    }
+
+
+def resolve_fusion_bag_path(bag_path):
+    base = normalize_capture_dir(load_state().get("capture", {}).get("output_dir"))
+    bag = Path(str(bag_path or "")).expanduser().resolve()
+    if not bag_path:
+        raise RuntimeError("没有选择点云 bag")
+    if not (bag == base or base in bag.parents):
+        raise RuntimeError("只能读取采集目录内的 bag")
+    if not bag.is_dir() or not bag_db_files(bag):
+        raise RuntimeError(f"不是有效的 rosbag 数据目录: {bag}")
+    return bag
+
+
+def safe_fusion_topic(bag_dir, topic):
+    topic = safe_capture_topic(topic)
+    for db_file in bag_db_files(bag_dir):
+        summary = db3_topic_summary(db_file)
+        if not summary["ok"]:
+            continue
+        for item in summary["topics"]:
+            if item["name"] == topic and item["type"] == "sensor_msgs/msg/PointCloud2" and item["count"] > 0:
+                return topic
+    raise RuntimeError(f"{bag_dir.name} 中没有可用点云 topic: {topic}")
+
+
+def pointcloud_message_rows(bag_dir, topic):
+    rows = []
+    for db_file in bag_db_files(bag_dir):
+        con = None
+        try:
+            con = sqlite3.connect(f"file:{db_file}?mode=ro&immutable=1", uri=True)
+            topic_row = con.execute(
+                "select id, type from topics where name = ?",
+                (topic,),
+            ).fetchone()
+            if not topic_row or topic_row[1] != "sensor_msgs/msg/PointCloud2":
+                continue
+            topic_id = int(topic_row[0])
+            for timestamp, data in con.execute(
+                "select timestamp, data from messages where topic_id = ? order by timestamp",
+                (topic_id,),
+            ):
+                rows.append((int(timestamp), bytes(data), db_file.name))
+        finally:
+            if con is not None:
+                con.close()
+    rows.sort(key=lambda item: item[0])
+    return rows
+
+
+def choose_cloud_row(rows, target_ns=None, fraction=0.5):
+    if not rows:
+        raise RuntimeError("所选 topic 没有点云消息")
+    if target_ns:
+        return min(rows, key=lambda item: abs(item[0] - target_ns))
+    index = int(max(0, min(len(rows) - 1, round((len(rows) - 1) * float(fraction)))))
+    return rows[index]
+
+
+def pointcloud_to_arrays(serialized, max_points):
+    import numpy as np
+    from rclpy.serialization import deserialize_message
+    from sensor_msgs.msg import PointCloud2
+    from sensor_msgs_py import point_cloud2
+
+    msg = deserialize_message(serialized, PointCloud2)
+    field_names = [field.name for field in msg.fields]
+    wanted = ["x", "y", "z"]
+    has_rgb = "rgb" in field_names
+    if has_rgb:
+        wanted.append("rgb")
+    arr = point_cloud2.read_points(msg, field_names=wanted, skip_nans=True)
+    count = int(arr.shape[0])
+    if count <= 0:
+        raise RuntimeError("点云消息为空")
+    sample_count = max(1, min(int(max_points), count))
+    if count > sample_count:
+        indices = np.linspace(0, count - 1, sample_count, dtype=np.int64)
+        arr = arr[indices]
+    xyz = np.column_stack((arr["x"], arr["y"], arr["z"])).astype(np.float32)
+    colors = np.full((xyz.shape[0], 3), 188, dtype=np.uint8)
+    if has_rgb:
+        packed = arr["rgb"].copy().view(np.uint32)
+        colors[:, 0] = ((packed >> 16) & 255).astype(np.uint8)
+        colors[:, 1] = ((packed >> 8) & 255).astype(np.uint8)
+        colors[:, 2] = (packed & 255).astype(np.uint8)
+    return msg, xyz, colors, count
+
+
+def euler_transform_matrix(transform):
+    import numpy as np
+
+    tx = float(transform.get("x", 0) or 0)
+    ty = float(transform.get("y", 0) or 0)
+    tz = float(transform.get("z", 0) or 0)
+    roll = math.radians(float(transform.get("roll", 0) or 0))
+    pitch = math.radians(float(transform.get("pitch", 0) or 0))
+    yaw = math.radians(float(transform.get("yaw", 0) or 0))
+    cr, sr = math.cos(roll), math.sin(roll)
+    cp, sp = math.cos(pitch), math.sin(pitch)
+    cy, sy = math.cos(yaw), math.sin(yaw)
+    rx = np.array([[1, 0, 0], [0, cr, -sr], [0, sr, cr]], dtype=np.float32)
+    ry = np.array([[cp, 0, sp], [0, 1, 0], [-sp, 0, cp]], dtype=np.float32)
+    rz = np.array([[cy, -sy, 0], [sy, cy, 0], [0, 0, 1]], dtype=np.float32)
+    rotation = rz @ ry @ rx
+    translation = np.array([tx, ty, tz], dtype=np.float32)
+    return rotation, translation
+
+
+def transform_points(points, transform):
+    rotation, translation = euler_transform_matrix(transform)
+    return (points @ rotation.T) + translation
+
+
+def cloud_bounds(points):
+    import numpy as np
+
+    if points.size == 0:
+        return {"min": [0, 0, 0], "max": [0, 0, 0], "center": [0, 0, 0], "extent": 1}
+    mins = points.min(axis=0)
+    maxs = points.max(axis=0)
+    center = (mins + maxs) * 0.5
+    extent = float(max((maxs - mins).max(), 0.001))
+    return {
+        "min": [round(float(v), 4) for v in mins],
+        "max": [round(float(v), 4) for v in maxs],
+        "center": [round(float(v), 4) for v in center],
+        "extent": round(extent, 4),
+    }
+
+
+def write_ascii_ply(path, points, colors):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="ascii") as handle:
+        handle.write("ply\nformat ascii 1.0\n")
+        handle.write(f"element vertex {len(points)}\n")
+        handle.write("property float x\nproperty float y\nproperty float z\n")
+        handle.write("property uchar red\nproperty uchar green\nproperty uchar blue\n")
+        handle.write("end_header\n")
+        for point, color in zip(points, colors):
+            handle.write(
+                f"{float(point[0]):.5f} {float(point[1]):.5f} {float(point[2]):.5f} "
+                f"{int(color[0])} {int(color[1])} {int(color[2])}\n"
+            )
+
+
+def fusion_preview_payload(body):
+    import numpy as np
+
+    bag_a = resolve_fusion_bag_path(body.get("bag_a"))
+    bag_b = resolve_fusion_bag_path(body.get("bag_b"))
+    if bag_a == bag_b:
+        raise RuntimeError("A/B 不能选择同一个采集包，请从 captures 中选择两个不同数据源")
+    topic_a = safe_fusion_topic(bag_a, body.get("topic_a"))
+    topic_b = safe_fusion_topic(bag_b, body.get("topic_b"))
+    max_points = max(1000, min(FUSION_MAX_POINTS, int(body.get("max_points") or 60000)))
+    rows_a = pointcloud_message_rows(bag_a, topic_a)
+    rows_b = pointcloud_message_rows(bag_b, topic_b)
+    start = max(rows_a[0][0], rows_b[0][0])
+    end = min(rows_a[-1][0], rows_b[-1][0])
+    sync_mode = str(body.get("sync_mode") or "overlap_mid")
+    target_ns = None
+    sync_note = ""
+    if sync_mode == "overlap_mid" and start <= end:
+        target_ns = (start + end) // 2
+        sync_note = "使用两段 bag 时间重叠区中点"
+    elif sync_mode == "start":
+        target_ns = max(rows_a[0][0], rows_b[0][0])
+        sync_note = "使用较晚开始时间附近的帧"
+    elif sync_mode == "end":
+        target_ns = min(rows_a[-1][0], rows_b[-1][0])
+        sync_note = "使用较早结束时间附近的帧"
+    else:
+        sync_note = "两段 bag 没有重叠时间，已各取中间帧"
+    row_a = choose_cloud_row(rows_a, target_ns)
+    row_b = choose_cloud_row(rows_b, target_ns)
+    per_cloud_limit = max(500, max_points // 2)
+    msg_a, points_a, colors_a, original_a = pointcloud_to_arrays(row_a[1], per_cloud_limit)
+    msg_b, points_b, colors_b, original_b = pointcloud_to_arrays(row_b[1], per_cloud_limit)
+    transform = body.get("transform") if isinstance(body.get("transform"), dict) else {}
+    points_b_world = transform_points(points_b, transform)
+    points = np.vstack((points_a, points_b_world)).astype(np.float32)
+    colors = np.vstack((colors_a, colors_b)).astype(np.uint8)
+    bounds = cloud_bounds(points)
+    output_path = ""
+    if body.get("save_ply"):
+        stamp = time.strftime("%Y%m%d_%H%M%S")
+        output_path = str(FUSION_OUTPUT_DIR / f"fusion_preview_{stamp}.ply")
+        write_ascii_ply(Path(output_path), points, colors)
+    return {
+        "ok": True,
+        "sync_note": sync_note,
+        "target_ns": target_ns,
+        "bag_a": str(bag_a),
+        "bag_b": str(bag_b),
+        "topic_a": topic_a,
+        "topic_b": topic_b,
+        "selected_a_ns": row_a[0],
+        "selected_b_ns": row_b[0],
+        "delta_ms": round(abs(row_a[0] - row_b[0]) / 1e6, 3),
+        "frame_a": msg_a.header.frame_id,
+        "frame_b": msg_b.header.frame_id,
+        "original_points_a": original_a,
+        "original_points_b": original_b,
+        "points_a": len(points_a),
+        "points_b": len(points_b),
+        "points_total": len(points),
+        "bounds": bounds,
+        "output_path": output_path,
+        "points": np.round(points, 4).reshape(-1).tolist(),
+        "colors": colors.reshape(-1).tolist(),
+    }
+
+
 def safe_capture_topic(topic):
     topic = str(topic or "").strip()
     if not topic.startswith("/") or not re.match(r"^[A-Za-z0-9_/-]+$", topic):
@@ -2506,6 +2835,9 @@ class OdinHandler(SimpleHTTPRequestHandler):
             if path == "/api/capture/status":
                 json_response(self, capture_manager.status())
                 return
+            if path == "/api/fusion/status":
+                json_response(self, fusion_bag_status())
+                return
             if path == "/api/rtk/status":
                 json_response(self, rtk_status_payload())
                 return
@@ -2703,6 +3035,9 @@ class OdinHandler(SimpleHTTPRequestHandler):
             if path == "/api/capture/delete":
                 bag_path = str(body.get("bag_path") or "").strip()
                 json_response(self, capture_manager.delete_bag(bag_path))
+                return
+            if path == "/api/fusion/preview":
+                json_response(self, fusion_preview_payload(body))
                 return
             if path == "/api/launch/start":
                 json_response(self, start_launch(body.get("target")))
