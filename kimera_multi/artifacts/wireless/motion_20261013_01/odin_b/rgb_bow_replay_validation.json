@@ -1,0 +1,113 @@
+{
+  "robot": "odin_b",
+  "wall_duration_s": 40.03944224100087,
+  "note": "BoW headers describe communication envelopes and may repeat across destination robot IDs; sensor monotonicity is checked on sensor streams.",
+  "counts": {
+    "raw_imu": 15985,
+    "raw_sdk": 15978,
+    "raw_rgb": 412,
+    "raw_cloud": 413,
+    "graph": 26,
+    "sdk": 15973,
+    "bow": 100,
+    "rgbd": 411,
+    "sdk_diagnostics": 41,
+    "vlc": 49,
+    "adapter_diagnostics": 40
+  },
+  "sensor_rates_hz": {
+    "raw_imu": 398.10944925951,
+    "raw_sdk": 398.1098690191368,
+    "raw_rgb": 10.25916559115168,
+    "raw_cloud": 10.259165594506877,
+    "graph": 0.5992510197561031,
+    "sdk": 398.1094099577698,
+    "rgbd": 10.25917766413156,
+    "vlc": 1.2099287450036438
+  },
+  "strictly_increasing": {
+    "raw_imu": true,
+    "raw_sdk": true,
+    "raw_rgb": true,
+    "raw_cloud": true,
+    "graph": true,
+    "sdk": true,
+    "rgbd": true,
+    "vlc": true
+  },
+  "last": {
+    "graph_nodes": 81,
+    "graph_edges": 80,
+    "sdk_diagnostics": {
+      "trajectory_source": "odin_sdk",
+      "graph_pose_frame": "camera",
+      "odom_covariance": "configured_initial_model",
+      "robot_id": 1,
+      "bow_feature_source": "rgb",
+      "last_keyframe_processing_ms": 46.6958,
+      "pending_rgbd": 0,
+      "cached_visual_frames": 81,
+      "counters": {
+        "bow_queries": 162,
+        "bow_rgb_features": 97200,
+        "depth_supported_features": 10665,
+        "interpolated_sdk_poses": 1079,
+        "keyframes": 81,
+        "rgbd_not_selected": 998,
+        "rgbd_pairs": 1079,
+        "sdk_odometry_forwarded": 42010,
+        "visual_keyframes": 81
+      }
+    },
+    "latest_vlc_id": 80,
+    "latest_vlc_features": 126,
+    "adapter_diagnostics": {
+      "status": "running",
+      "middleware": "ROS1",
+      "deskew": "odometry",
+      "counters": {
+        "imu_forwarded": 41998,
+        "poses_received": 41994,
+        "sdk_odometry_forwarded": 41994,
+        "rgbd_pose_unavailable": 1,
+        "rgbd_worker_queue_full": 1,
+        "rgbd_published": 1079,
+        "rgbd_processing_ms_last": 78.85298099972715
+      },
+      "synchronization": {
+        "cloud_unmatched": 1,
+        "paired": 1081
+      },
+      "worker_queue": 0,
+      "last_input_sensor_stamps_ns": {
+        "imu": 5449920396062,
+        "pose": 5449911156167
+      }
+    }
+  },
+  "sdk_pose_comparisons": 15973,
+  "sdk_max_pose_component_change": 0.0,
+  "diagnostic_counter_changes": {
+    "sdk_diagnostics": {
+      "bow_queries": 98,
+      "bow_rgb_features": 58800,
+      "depth_supported_features": 5614,
+      "interpolated_sdk_poses": 410,
+      "keyframes": 49,
+      "rgbd_not_selected": 361,
+      "rgbd_pairs": 410,
+      "sdk_odometry_forwarded": 15901,
+      "visual_keyframes": 49
+    },
+    "adapter_diagnostics": {
+      "imu_forwarded": 15525,
+      "poses_received": 15522,
+      "sdk_odometry_forwarded": 15522,
+      "rgbd_pose_unavailable": 0,
+      "rgbd_worker_queue_full": 0,
+      "rgbd_published": 400
+    }
+  },
+  "errors": [],
+  "status": "pass"
+}

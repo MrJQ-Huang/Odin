@@ -107,3 +107,5 @@ Kimera-Multi 跨机回环和全局优化结果。
 已验证 SDK 本地前端、两路并发运动回放和独立 VIO 对照。
 ROS 2→ROS 1 实时桥接、跨电脑通信、跨机回环、DPGO 与优化后的实时地图显示
 尚未完成联调，当前分支不应被解释为完整的双机实时融合系统。
+
+两台电脑在同一局域网时，参见 [无线部署说明](docker/README.wireless.md)。除基本 Noetic 环境外，需要构建 `Dockerfile.odin1-wireless`，其中包含原生 ROS 1 Odin 驱动、SDK 前端、Kimera 分布式回环和 DPGO。ARM64 与 x86_64 分别编译自己的镜像；SDK 驱动库由 Odin 仓库中的 `odin_ros_driver-main` 提供。

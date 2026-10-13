@@ -2,6 +2,8 @@ from collections import Counter
 
 
 def stamp_ns(msg):
+    if hasattr(msg.header.stamp, 'to_nsec'):
+        return msg.header.stamp.to_nsec()
     return int(msg.header.stamp.sec)*1_000_000_000 + int(msg.header.stamp.nanosec)
 
 

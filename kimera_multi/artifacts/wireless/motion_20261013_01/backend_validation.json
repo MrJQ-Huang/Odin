@@ -1,0 +1,43 @@
+{
+  "wall_duration_s": 100.0,
+  "counts": {
+    "odin_a/loop_closures": 1,
+    "odin_b/bow": 160,
+    "odin_b/loop_closures": 1,
+    "odin_a/bow": 85,
+    "odin_a/status": 64,
+    "odin_b/status": 64
+  },
+  "last": {
+    "odin_a/status": {
+      "robot_id": 0,
+      "cluster_id": 0,
+      "state": 2,
+      "iteration_number": 0,
+      "instance_number": 4
+    },
+    "odin_b/status": {
+      "robot_id": 1,
+      "cluster_id": 0,
+      "state": 1,
+      "iteration_number": 0,
+      "instance_number": 5
+    }
+  },
+  "distributed_graphs": {
+    "odin_a": {
+      "nodes": 26,
+      "edges": 25,
+      "cross_robot_edges": 0
+    },
+    "odin_b": {
+      "nodes": 27,
+      "edges": 26,
+      "cross_robot_edges": 0
+    }
+  },
+  "observed_unique_cross_robot_loops": 0,
+  "errors": [],
+  "status": "fail",
+  "scope": "Live SDK frontends, real wireless ROS traffic and backend operation. Static capture does not establish fusion accuracy or motion performance."
+}

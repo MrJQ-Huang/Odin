@@ -7,8 +7,8 @@
     {
       "path": "adapters/odin1/README.md",
       "kind": "source_or_experiment_sample",
-      "bytes": 12284,
-      "sha256": "7b9e5925ee57fce26983305fe3a0916676d0843ce16ee7cacb3218dfe985057a"
+      "bytes": 12700,
+      "sha256": "99fcd8921d61ce661412d2857a44b262a550bdbcd0968c4128ae16ec87058915"
     },
     {
       "path": "adapters/odin1/config/adapter.yaml",
@@ -61,8 +61,8 @@
     {
       "path": "adapters/odin1/odin1_adapter/synchronization.py",
       "kind": "source_or_experiment_sample",
-      "bytes": 1505,
-      "sha256": "32cd4428b2a38a818612b4d2211dd3f6ccedb8c6f7a8f9265b8e0594998e8b59"
+      "bytes": 1592,
+      "sha256": "8806a53151d6afcdc0411b7bb9304f09d611f559402ac1a37d0991b4901cd4a7"
     },
     {
       "path": "adapters/odin1/pyproject.toml",
@@ -1285,8 +1285,8 @@
     {
       "path": "src/odin_sdk_frontend.cpp",
       "kind": "source_or_experiment_sample",
-      "bytes": 19040,
-      "sha256": "0866e1a30040c735bf3cd5c8b931633d8a83fcb4f7f373eb196bfdd32b358aa4"
+      "bytes": 19506,
+      "sha256": "f52d6e417a0f44f4ec7ff01afef43edcb4d2e66cb1943899b66f10bda10386f7"
     },
     {
       "path": ".gitignore",
@@ -1297,14 +1297,14 @@
     {
       "path": "CMakeLists.txt",
       "kind": "source_or_experiment_sample",
-      "bytes": 1166,
-      "sha256": "0b2812463180cc37406d71d5f98333206eef5cacd8d16b6adb348e34ba668289"
+      "bytes": 1288,
+      "sha256": "b1fd0db3f7f73afe03bca2cfa81d5c3dbb8f81be97004599d7030cb75d5afccf"
     },
     {
       "path": "README.md",
       "kind": "source_or_experiment_sample",
-      "bytes": 8504,
-      "sha256": "8a005531af4118828672b7dc366803c7833655337d8a782dbf6828e3d13d635f"
+      "bytes": 8674,
+      "sha256": "e10bbea5fc6cf305a1885a9e17e18bbe7dba9660db4fc353ec05e24c83848300"
     },
     {
       "path": "docker/Dockerfile",
@@ -4104,9 +4104,213 @@
     },
     {
       "path": "SYNC_OTHER_PC.md",
-      "kind": "sync_documentation",
-      "bytes": 4995,
-      "sha256": "bfc700727bdcb6d8bb30d1102390dd317c0645d367be2b9ddc13854971c6f868"
+      "kind": "source_or_experiment_sample",
+      "bytes": 5361,
+      "sha256": "7c27e6d0803a6b491e09846c01f57e277ffcaabe976add85a9d609ca362ed089"
+    },
+    {
+      "path": "adapters/odin1/odin1_adapter/ros1_node.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 8432,
+      "sha256": "25cb36a533118ce8ec7eae804e8033d89677e239a5a878b979168e194fff4257"
+    },
+    {
+      "path": "adapters/odin1/scripts/odin1_ros1_adapter",
+      "kind": "source_or_experiment_sample",
+      "bytes": 72,
+      "sha256": "85d2b78150d5047f6ec05cd6f0a36f6fbcd371b1efe4caa7d4ee84bca7a9d8e3"
+    },
+    {
+      "path": "adapters/odin1/tests/test_synchronization.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 908,
+      "sha256": "f420a9abd761d0d94916bfdc108228c50e1e08a6b9e928f91d3bd8e3a488f6dc"
+    },
+    {
+      "path": "artifacts/wireless/frontend_service_validation.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 755,
+      "sha256": "6f1abae66ef43a3a7d5b8016df98b2d3f5260e51397824c29fb1196d72c1b0c9"
+    },
+    {
+      "path": "artifacts/wireless/motion_20261013_01/backend_rgb_bow_replay.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 967,
+      "sha256": "bf0a70ee3398eca81e2ea4fb26e3f69aa917d33713a4ebf51fa5da8ebdf064ee"
+    },
+    {
+      "path": "artifacts/wireless/motion_20261013_01/backend_validation.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 962,
+      "sha256": "57b2afe5a0ad489128f714c1ac620a8f1ea004795307f2822e605c988d7c4b35"
+    },
+    {
+      "path": "artifacts/wireless/motion_20261013_01/bow_rgb_diagnostic.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 465,
+      "sha256": "c5cb3d1fbb62490e434b06c75da24801ef178553c24eac7f43588942b413b92b"
+    },
+    {
+      "path": "artifacts/wireless/motion_20261013_01/frontend_rgb_bow_service_validation.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 760,
+      "sha256": "79cd2fcf46b38ab5b46102e0fde4d91e90567c7c24f4251bcecae313c2169a36"
+    },
+    {
+      "path": "artifacts/wireless/motion_20261013_01/odin_a/rgb_bow_replay_validation.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 2967,
+      "sha256": "33804dcc2ca728ff3a0247064191ee58da191f283e7380a1f803a014027af439"
+    },
+    {
+      "path": "artifacts/wireless/motion_20261013_01/odin_b/rgb_bow_replay_validation.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 3040,
+      "sha256": "c0786f4db436a1f419e7624bb307afc9425f7def641deb72cd2ec0fbe0ca5cb0"
+    },
+    {
+      "path": "artifacts/wireless/network_probe.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 203,
+      "sha256": "7c323f30afdfb3720a1d788ab114cf69878c867ba65208cff28db1a27ccf2270"
+    },
+    {
+      "path": "artifacts/wireless/validation.json",
+      "kind": "wireless_validation_summary",
+      "bytes": 19208,
+      "sha256": "1ae88f49476f69778dc7879e54480b236f13c2f9b038b5566da441767de0f9f5"
+    },
+    {
+      "path": "docker/Dockerfile.odin1-sdk-update",
+      "kind": "source_or_experiment_sample",
+      "bytes": 379,
+      "sha256": "31e8020e32d1a07308da5301c959becbaf718713e5d4722c9a646a9882b9c71d"
+    },
+    {
+      "path": "docker/Dockerfile.odin1-wireless",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2488,
+      "sha256": "ccf42c127db20584d3d40287b229e04bb04ca6a0e242481fa955d2fc8879a5eb"
+    },
+    {
+      "path": "docker/README.wireless.md",
+      "kind": "source_or_experiment_sample",
+      "bytes": 5928,
+      "sha256": "c6b10fd5779a2dca8d33805b618387b20dbcaee81179f99dcffb157c59084981"
+    },
+    {
+      "path": "docker/configure_wireless.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1016,
+      "sha256": "8f70602254011a17fa2d114ce84f2ceb7892250d55e65fa5b98ed6869e2ae819"
+    },
+    {
+      "path": "docker/find_odin_usb.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 675,
+      "sha256": "173cb2d798966277c7de944bf4b91261e4b46ad446ad5989ca7652d9fe122489"
+    },
+    {
+      "path": "docker/inspect_wireless_capture.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1861,
+      "sha256": "3493e4d71fe54df5a31fc2af6d83cfbc2156a280037f013e866e8dd2aeae3aa0"
+    },
+    {
+      "path": "docker/observe_wireless.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3906,
+      "sha256": "1820a13d7d1484878f42fb2ec2c9ebee36be1e6f2e300ea7a5af7c17158c43b3"
+    },
+    {
+      "path": "docker/observe_wireless_backend.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2934,
+      "sha256": "43972361feb406cbf806a1b227815db64031f0db6623d6d1be016277e58b740d"
+    },
+    {
+      "path": "docker/patch_odin_ros1.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2347,
+      "sha256": "6ea786ff323a852e5d3897a501bc47eba949297aa0e9183e5e60f7436fbf3489"
+    },
+    {
+      "path": "docker/patch_wireless.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1678,
+      "sha256": "5fef028410ef459b3db8a2d05d1cc14dc9513ef86f75f664014332c5ac554b04"
+    },
+    {
+      "path": "docker/patch_wireless_opencv.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 705,
+      "sha256": "b1cbcaae5bee0fbb0513727494d383dd8fcb915c207962096dfbd8a819ce18e5"
+    },
+    {
+      "path": "docker/prepare_wireless.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2797,
+      "sha256": "a2a75aa7c47041bb8730e9930b4ac229d405c8f6d03f70de359a4d5079673400"
+    },
+    {
+      "path": "docker/query_wireless_frontends.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1802,
+      "sha256": "62b92c7bb67a606784c47f3803352ae70b2424ba48fd48746627fd7b07e17989"
+    },
+    {
+      "path": "docker/record_wireless_motion.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2015,
+      "sha256": "6c3cd87f16f95ae43873df79695c487f33bbf53e1f91fa251059e2555be425ad"
+    },
+    {
+      "path": "docker/replay_wireless_raw.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1279,
+      "sha256": "2b468aecd7e0cb09d04f11d592f80aa67721ef30f0cd4e29b3f0bb794e33b395"
+    },
+    {
+      "path": "docker/start_wireless_build.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1167,
+      "sha256": "b54c0768995a952d5c2a050fb53b35b5106268b6a03bf6db0e4d8302a80f2118"
+    },
+    {
+      "path": "docker/start_wireless_robot.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1362,
+      "sha256": "54c0a5401bfd04a6b61dd47824bb5c3e775283a539e0bfdddaa84dcd4e9e036e"
+    },
+    {
+      "path": "docker/wireless.repos",
+      "kind": "source_or_experiment_sample",
+      "bytes": 898,
+      "sha256": "5116dbd28b1c512bb6a48811bb0fe1204028062d3760a4ea515e543fa813a253"
+    },
+    {
+      "path": "docker/wireless_odin1.bash",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2138,
+      "sha256": "43caaeff71751b0c41f9193f294b69102d7a179847c8aed96bb6d85074b45b9d"
+    },
+    {
+      "path": "docker/wireless_probe.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2075,
+      "sha256": "483d612b6cb28f46836277bb6bbfa05e7d6ed20e927ae7f45f444a461fc7d2bd"
+    },
+    {
+      "path": "launch/odin1_wireless_robot.launch",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2643,
+      "sha256": "5436b085594a147fab3f614d75830cf41ec2b35b8d8ab2380823481e1dac75ba"
+    },
+    {
+      "path": "params/Odin1/wireless/robot_names.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 40,
+      "sha256": "3fb727a21cfee1d916a67eab64d845a5689a22438a36b01216b3d381acaf0b1f"
     }
   ],
   "excluded_categories": [
@@ -4116,5 +4320,6 @@
     "Docker images / build context / downloaded dependency caches",
     "Transient logs and process IDs"
   ],
-  "raw_recordings_remain_on_original_PC": true
+  "raw_recordings_remain_on_original_PC": true,
+  "wireless_update": "Native ROS1 SDK + LCD/DPGO, amd64/arm64 builds, WiFi validation, full-RGB BoW; cross-robot fusion remains uninitialized on this capture."
 }

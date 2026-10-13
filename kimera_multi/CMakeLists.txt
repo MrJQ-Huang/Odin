@@ -20,6 +20,8 @@ target_include_directories(odin_sdk_frontend PRIVATE include ${catkin_INCLUDE_DI
 target_link_libraries(odin_sdk_frontend ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(odin_sdk_frontend ${catkin_EXPORTED_TARGETS})
 install(TARGETS odin_sdk_frontend RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+catkin_install_python(PROGRAMS adapters/odin1/scripts/odin1_ros1_adapter
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(DIRECTORY include/ DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION})
 
 install(DIRECTORY launch params adapters

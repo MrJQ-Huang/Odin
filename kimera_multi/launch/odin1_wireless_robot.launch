@@ -1,0 +1,52 @@
+<launch>
+  <arg name="robot_name" />
+  <arg name="robot_id" />
+  <arg name="device_config" />
+  <arg name="adapter_config" />
+  <arg name="params_folder" />
+  <arg name="runtime_dir" />
+  <arg name="backend" default="true" />
+  <arg name="max_submap_size" default="5" />
+  <arg name="driver" default="true" />
+  <arg name="adapter" default="$(arg driver)" />
+  <arg name="frontend" default="true" />
+  <param name="/use_sim_time" value="false" />
+  <group ns="$(arg robot_name)">
+    <node if="$(arg driver)" pkg="odin_ros_driver" type="host_sdk_sample" name="odin_driver" output="screen" required="true">
+      <param name="config_file" value="$(arg device_config)" />
+      <param name="frame_prefix" value="$(arg robot_name)" />
+      <param name="command_file" value="$(arg runtime_dir)/command.txt" />
+      <env name="ODIN_CALIB_DIR" value="$(arg runtime_dir)/calibration" />
+    </node>
+    <node if="$(arg adapter)" pkg="kimera_multi" type="odin1_ros1_adapter" name="rgbd_adapter" output="screen" required="true">
+      <param name="config" value="$(arg adapter_config)" />
+    </node>
+    <group if="$(arg backend)">
+      <include file="$(find kimera_distributed)/launch/kimera_distributed_loop_closure_ros.launch">
+        <arg name="num_robots" value="2" />
+        <arg name="dataset_name" value="Jackal" />
+        <arg name="robot_id" value="$(arg robot_id)" />
+        <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="robot_names_config" value="odin1_dual" />
+        <arg name="max_submap_size" value="$(arg max_submap_size)" />
+        <arg name="frame_id" value="$(arg robot_name)/map" />
+        <arg name="world_frame_id" value="world" />
+        <arg name="odom_frame_id" value="$(arg robot_name)/sdk_odom" />
+        <arg name="latest_kf_frame_id" value="$(arg robot_name)/camera_optical" />
+        <arg name="log_output_path" value="$(arg runtime_dir)/lcd" />
+      </include>
+      <include file="$(find dpgo_ros)/launch/PGOAgent.launch">
+        <arg name="agent_id" value="$(arg robot_id)" />
+        <arg name="num_robots" value="2" />
+        <arg name="robot_names_file" value="$(find kimera_multi)/params/Odin1/wireless/robot_names.yaml" />
+        <arg name="log_directory" value="$(arg runtime_dir)/dpgo" />
+      </include>
+    </group>
+  </group>
+  <include if="$(arg frontend)" file="$(find kimera_multi)/launch/kimera_sdk_odin1.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
+    <arg name="robot_id" value="$(arg robot_id)" />
+    <arg name="params_folder" value="$(arg params_folder)" />
+    <arg name="should_use_sim_time" value="false" />
+  </include>
+</launch>

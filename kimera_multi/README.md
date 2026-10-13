@@ -153,3 +153,5 @@ We have also released some [real-life datasets](https://github.com/MIT-SPARK/Kim
 
 ## Acknowledgements
 Kimera-Multi was supported in part by ARL [DCIST](https://www.dcist.org), [ONR](https://www.nre.navy.mil/), and [MathWorks](https://www.mathworks.com/).
+
+Odin1 双 PC（x86_64 + Jetson ARM64）无线部署、原生 ROS 1 SDK 接入和分布式后端启动说明见 [docker/README.wireless.md](docker/README.wireless.md)。

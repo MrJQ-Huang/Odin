@@ -51,7 +51,7 @@ class SdkFrontend {
       input_child_;
   int robot_id_, queue_capacity_, pose_capacity_, cache_capacity_,
       min_features_;
-  bool camera_ready_ = false, use_mask_, graph_dirty_ = false;
+  bool camera_ready_ = false, use_mask_, bow_all_rgb_, graph_dirty_ = false;
   double max_gap_s_, keyframe_period_, min_interval_, translation_threshold_,
       rotation_threshold_;
   double min_depth_, max_depth_, translation_sigma_, rotation_sigma_,
@@ -74,6 +74,7 @@ class SdkFrontend {
     private_.param("frame_cache_capacity", cache_capacity_, 2000);
     private_.param("min_depth_features", min_features_, 20);
     private_.param("use_measured_mask", use_mask_, true);
+    private_.param("bow_use_all_rgb_features", bow_all_rgb_, true);
     private_.param("max_odom_gap_s", max_gap_s_, .12);
     private_.param("keyframe_period_s", keyframe_period_, 2.0);
     private_.param("min_keyframe_interval_s", min_interval_, .1);
@@ -398,8 +399,12 @@ class SdkFrontend {
     vlc_pub_.publish(visual);
     ++counts_["visual_keyframes"];
     std::vector<cv::Mat> rows;
-    for (int i = 0; i < valid_descriptors.rows; ++i)
-      rows.push_back(valid_descriptors.row(i));
+    // Retrieval should describe the RGB scene, rather than the changing
+    // subset covered by sparse LiDAR returns. Geometry remains depth-backed.
+    const cv::Mat& bow_descriptors = bow_all_rgb_ ? descriptors : valid_descriptors;
+    counts_["bow_rgb_features"] += bow_descriptors.rows;
+    for (int i = 0; i < bow_descriptors.rows; ++i)
+      rows.push_back(bow_descriptors.row(i));
     DBoW2::BowVector bow;
     vocabulary_.transform(rows, bow);
     pose_graph_tools_msgs::BowQuery query;
@@ -451,6 +456,7 @@ class SdkFrontend {
             "\"camera\",\"odom_covariance\":\"configured_initial_model\","
             "\"robot_id\":"
          << robot_id_;
+    json << ",\"bow_feature_source\":\"" << (bow_all_rgb_ ? "rgb" : "measured_depth") << "\"";
     json << ",\"last_keyframe_processing_ms\":" << last_processing_ms_
          << ",\"pending_rgbd\":" << images_.size()
          << ",\"cached_visual_frames\":" << frames_.size() << ",\"counters\":{";

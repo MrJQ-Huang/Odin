@@ -1,0 +1,38 @@
+ARG BASE_IMAGE=kimera-odin1:noetic
+FROM ${BASE_IMAGE}
+ARG BUILD_JOBS=2
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-opencv python3-scipy python3-pytest libyaml-cpp-dev libssl-dev \
+    libusb-1.0-0-dev libsuitesparse-dev libopenblas-dev liblapack-dev \
+    ros-noetic-roslib ros-noetic-interactive-markers && rm -rf /var/lib/apt/lists/*
+COPY deps/ /opt/wireless_deps/
+# nlohmann 3.10.5 is vendored instead of a CMake-time network download.
+RUN cmake -S /opt/wireless_deps/json -B /tmp/json-build \
+    -DJSON_BuildTests=OFF -DJSON_Install=ON && cmake --install /tmp/json-build
+COPY driver/ /opt/kimera_ws/src/odin_ros_driver/
+COPY docker/patch_odin_ros1.py docker/patch_wireless.py /opt/
+RUN python3 /opt/patch_odin_ros1.py /opt/kimera_ws/src/odin_ros_driver
+COPY deps/kimera_multi_lcd/ /opt/kimera_ws/src/kimera_multi_lcd/
+COPY deps/kimera_distributed/ /opt/kimera_ws/src/kimera_distributed/
+COPY deps/dpgo_ros/ /opt/kimera_ws/src/dpgo_ros/
+# patch_wireless operates on both the workspace and standalone DPGO source.
+RUN python3 /opt/patch_wireless.py /opt/wireless_deps
+RUN cp /opt/wireless_deps/kimera_multi_lcd/CMakeLists.txt /opt/kimera_ws/src/kimera_multi_lcd/ && \
+    cp /opt/wireless_deps/kimera_distributed/CMakeLists.txt /opt/kimera_ws/src/kimera_distributed/ && \
+    cp /opt/wireless_deps/dpgo_ros/CMakeLists.txt /opt/kimera_ws/src/dpgo_ros/ && \
+    cp /opt/wireless_deps/kimera_distributed/params/odin1_dual.yaml /opt/kimera_ws/src/kimera_distributed/params/ && \
+    rm -f /opt/kimera_ws/src/pose_graph_tools/pose_graph_tools/CATKIN_IGNORE \
+          /opt/kimera_ws/src/pose_graph_tools/pose_graph_tools_ros/CATKIN_IGNORE
+RUN cmake -S /opt/wireless_deps/dpgo -B /tmp/dpgo-build \
+    -DCMAKE_BUILD_TYPE=Release -DBUILD_DPGO_TESTS=OFF && \
+    cmake --build /tmp/dpgo-build -j${BUILD_JOBS} && cmake --install /tmp/dpgo-build && ldconfig
+COPY kimera_multi/ /opt/kimera_ws/src/kimera_multi/
+ENV PYTHONPATH=/opt/kimera_ws/src/kimera_multi/adapters/odin1
+WORKDIR /opt/kimera_ws
+COPY docker/patch_wireless_opencv.py /opt/
+RUN python3 /opt/patch_wireless_opencv.py /opt/kimera_ws/src
+RUN source /opt/ros/noetic/setup.bash && catkin build odin_ros_driver kimera_multi \
+    kimera_distributed dpgo_ros --no-status --summarize --jobs ${BUILD_JOBS} --parallel-packages 1
+RUN apt-get update && apt-get install -y --no-install-recommends usbutils && \
+    rm -rf /var/lib/apt/lists/* && dpkg-query -W > /opt/wireless-packages.tsv
+WORKDIR /workspace

@@ -1,0 +1,7 @@
+# Refresh only the native SDK frontend after a wireless deployment.
+ARG BASE_IMAGE=kimera-odin1:wireless
+FROM ${BASE_IMAGE}
+ARG BUILD_JOBS=2
+COPY src/odin_sdk_frontend.cpp /opt/kimera_ws/src/kimera_multi/src/odin_sdk_frontend.cpp
+RUN source /opt/ros/noetic/setup.bash && cd /opt/kimera_ws && \
+    catkin build kimera_multi --no-deps --no-status --summarize --jobs ${BUILD_JOBS}

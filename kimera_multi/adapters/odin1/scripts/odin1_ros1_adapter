@@ -1,0 +1,4 @@
+#!/usr/bin/env python3
+from odin1_adapter.ros1_node import main
+
+main()

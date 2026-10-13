@@ -1,0 +1,34 @@
+{
+  "kind": "actual SDK graph / visual geometry service queries from local PC",
+  "robots": [
+    {
+      "robot": "odin_a",
+      "robot_id": 0,
+      "graph_nodes": 124,
+      "graph_edges": 123,
+      "queried_pose_ids": [
+        123
+      ],
+      "queried_ids_in_graph": true,
+      "vlc_frames": 1,
+      "feature_rows": 128,
+      "query_wall_ms": 9.823770262300968,
+      "robot_ids_correct": true
+    },
+    {
+      "robot": "odin_b",
+      "robot_id": 1,
+      "graph_nodes": 117,
+      "graph_edges": 116,
+      "queried_pose_ids": [
+        116
+      ],
+      "queried_ids_in_graph": true,
+      "vlc_frames": 1,
+      "feature_rows": 121,
+      "query_wall_ms": 28.043104335665703,
+      "robot_ids_correct": true
+    }
+  ],
+  "status": "pass"
+}

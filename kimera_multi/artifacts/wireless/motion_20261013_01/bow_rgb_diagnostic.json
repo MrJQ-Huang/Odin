@@ -1,0 +1,11 @@
+{
+  "source": "Both real BoW databases saved by A distributed loop closure node after full-RGB replay; robot B vectors arrived over WiFi",
+  "a_vectors": 124,
+  "b_vectors": 117,
+  "a_median_unique_words": 1175.0,
+  "b_median_unique_words": 1166,
+  "max_cross_score": 0.01430193753913045,
+  "max_cross_to_neighbor_nss_ratio": 0.1897440090534413,
+  "configured_alpha": 0.5,
+  "scope": "Retrieval diagnostic only, no fabricated constraints or estimated fused map."
+}
