@@ -1,0 +1,91 @@
+rosbag2_bagfile_information:
+  version: 5
+  storage_identifier: mcap
+  duration:
+    nanoseconds: 100886125684
+  starting_time:
+    nanoseconds_since_epoch: 1791788614149778132
+  message_count: 76194
+  topics_with_message_count:
+    - topic_metadata:
+        name: /odin1/cloud_raw
+        type: sensor_msgs/msg/PointCloud2
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 1034
+    - topic_metadata:
+        name: /odin1/image/compressed
+        type: sensor_msgs/msg/CompressedImage
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 1035
+    - topic_metadata:
+        name: /odin1/odometry
+        type: nav_msgs/msg/Odometry
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 1034
+    - topic_metadata:
+        name: /odin1/imu
+        type: sensor_msgs/msg/Imu
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 40360
+    - topic_metadata:
+        name: /odin1/odometry_highfreq
+        type: nav_msgs/msg/Odometry
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 29629
+    - topic_metadata:
+        name: /tf
+        type: tf2_msgs/msg/TFMessage
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 3102
+  compression_format: ""
+  compression_mode: ""
+  relative_file_paths:
+    - motion_bag_0.mcap
+    - motion_bag_1.mcap
+    - motion_bag_2.mcap
+    - motion_bag_3.mcap
+    - motion_bag_4.mcap
+    - motion_bag_5.mcap
+  files:
+    - path: motion_bag_0.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791788614149778132
+      duration:
+        nanoseconds: 18650638360
+      message_count: 16035
+    - path: motion_bag_1.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791788632803044589
+      duration:
+        nanoseconds: 17711893587
+      message_count: 15292
+    - path: motion_bag_2.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791788650517090530
+      duration:
+        nanoseconds: 15535646892
+      message_count: 13409
+    - path: motion_bag_3.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791788666053669707
+      duration:
+        nanoseconds: 18277013620
+      message_count: 15777
+    - path: motion_bag_4.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791788684331759077
+      duration:
+        nanoseconds: 19631556422
+      message_count: 10558
+    - path: motion_bag_5.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791788703965015632
+      duration:
+        nanoseconds: 11070888184
+      message_count: 5123

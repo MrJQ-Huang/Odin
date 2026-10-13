@@ -1,0 +1,235 @@
+{
+  "duration_wall_s": 35.00036649592221,
+  "adapted": true,
+  "topics": {
+    "/odin_b/kimera/rgb/image_raw": {
+      "count": 332,
+      "sensor_hz": 9.814422740497644,
+      "arrival_hz": 9.656576118005114,
+      "non_increasing": 0,
+      "max_gap_ms": 292.422196,
+      "gaps_over_20ms": 331,
+      "details": {
+        "frame_id": "odin_b/camera_optical",
+        "width": 640,
+        "height": 518,
+        "encoding": "bgr8"
+      },
+      "first_stamp_ns": 240465946085,
+      "last_stamp_ns": 274191821641,
+      "reception_minus_header_s_median": 1791860322.0798378
+    },
+    "/odin_b/kimera/depth/image_raw": {
+      "count": 332,
+      "sensor_hz": 9.814422740497644,
+      "arrival_hz": 9.662804805608829,
+      "non_increasing": 0,
+      "max_gap_ms": 292.422196,
+      "gaps_over_20ms": 331,
+      "details": {
+        "frame_id": "odin_b/camera_optical",
+        "width": 640,
+        "height": 518,
+        "encoding": "32FC1"
+      },
+      "first_stamp_ns": 240465946085,
+      "last_stamp_ns": 274191821641,
+      "reception_minus_header_s_median": 1791860322.0797238
+    },
+    "/odin_b/kimera/rgb/camera_info": {
+      "count": 332,
+      "sensor_hz": 9.814422740497644,
+      "arrival_hz": 9.670377090374242,
+      "non_increasing": 0,
+      "max_gap_ms": 292.422196,
+      "gaps_over_20ms": 331,
+      "details": {
+        "frame_id": "odin_b/camera_optical",
+        "width": 640,
+        "height": 518
+      },
+      "first_stamp_ns": 240465946085,
+      "last_stamp_ns": 274191821641,
+      "reception_minus_header_s_median": 1791860322.0754583
+    },
+    "/odin_b/kimera/reference/odometry": {
+      "count": 352,
+      "sensor_hz": 10.259185029233961,
+      "arrival_hz": 10.258311674881341,
+      "non_increasing": 0,
+      "max_gap_ms": 97.53151,
+      "gaps_over_20ms": 351,
+      "details": {
+        "frame_id": "odin_b/odin_odom",
+        "child_frame_id": "odin_b/imu"
+      },
+      "first_stamp_ns": 241050790061,
+      "last_stamp_ns": 275264033998,
+      "reception_minus_header_s_median": 1791860321.1371446,
+      "finite": true,
+      "max_position_from_first_m": 0.0008296607740516601
+    },
+    "/odin_a/kimera/reference/odometry": {
+      "count": 352,
+      "sensor_hz": 10.259173297222931,
+      "arrival_hz": 10.281583323011471,
+      "non_increasing": 0,
+      "max_gap_ms": 97.532468,
+      "gaps_over_20ms": 351,
+      "details": {
+        "frame_id": "odin_a/odin_odom",
+        "child_frame_id": "odin_a/imu"
+      },
+      "first_stamp_ns": 243584569356,
+      "last_stamp_ns": 277797852418,
+      "reception_minus_header_s_median": 1791860318.5571404,
+      "finite": true,
+      "max_position_from_first_m": 0.0022185659782841707
+    },
+    "/odin_b/kimera/imu": {
+      "count": 13684,
+      "sensor_hz": 398.23127606997616,
+      "arrival_hz": 399.90294907613884,
+      "non_increasing": 0,
+      "max_gap_ms": 2.779001,
+      "gaps_over_20ms": 0,
+      "details": {
+        "frame_id": "odin_b/imu"
+      },
+      "first_stamp_ns": 241128799035,
+      "last_stamp_ns": 275488229904,
+      "reception_minus_header_s_median": 1791860320.947438,
+      "finite": true,
+      "acceleration_norm_median": 9.779539749136173,
+      "gyro_norm_p95": 0.007674235687477337
+    },
+    "/odin_a/kimera/rgb/camera_info": {
+      "count": 320,
+      "sensor_hz": 9.404235308358784,
+      "arrival_hz": 9.358787792693736,
+      "non_increasing": 0,
+      "max_gap_ms": 389.89262299999996,
+      "gaps_over_20ms": 319,
+      "details": {
+        "frame_id": "odin_a/camera_optical",
+        "width": 640,
+        "height": 518
+      },
+      "first_stamp_ns": 242707317601,
+      "last_stamp_ns": 276628204259,
+      "reception_minus_header_s_median": 1791860319.6125627
+    },
+    "/odin_a/kimera/imu": {
+      "count": 13768,
+      "sensor_hz": 400.81144844002586,
+      "arrival_hz": 402.3373907168676,
+      "non_increasing": 0,
+      "max_gap_ms": 5.040876,
+      "gaps_over_20ms": 0,
+      "details": {
+        "frame_id": "odin_a/imu"
+      },
+      "first_stamp_ns": 243725893003,
+      "last_stamp_ns": 278073714288,
+      "reception_minus_header_s_median": 1791860318.3724723,
+      "finite": true,
+      "acceleration_norm_median": 9.755597768063204,
+      "gyro_norm_p95": 0.007059270136621114
+    },
+    "/odin_a/kimera/depth/image_raw": {
+      "count": 320,
+      "sensor_hz": 9.404235308358784,
+      "arrival_hz": 9.360661941450843,
+      "non_increasing": 0,
+      "max_gap_ms": 389.89262299999996,
+      "gaps_over_20ms": 319,
+      "details": {
+        "frame_id": "odin_a/camera_optical",
+        "width": 640,
+        "height": 518,
+        "encoding": "32FC1"
+      },
+      "first_stamp_ns": 242707317601,
+      "last_stamp_ns": 276628204259,
+      "reception_minus_header_s_median": 1791860319.6145723
+    },
+    "/odin_a/kimera/rgb/image_raw": {
+      "count": 320,
+      "sensor_hz": 9.404235308358784,
+      "arrival_hz": 9.37104111193795,
+      "non_increasing": 0,
+      "max_gap_ms": 389.89262299999996,
+      "gaps_over_20ms": 319,
+      "details": {
+        "frame_id": "odin_a/camera_optical",
+        "width": 640,
+        "height": 518,
+        "encoding": "bgr8"
+      },
+      "first_stamp_ns": 242707317601,
+      "last_stamp_ns": 276628204259,
+      "reception_minus_header_s_median": 1791860319.6096709
+    }
+  },
+  "diagnostics": {
+    "/odin_a/kimera/diagnostics": {
+      "status": "running",
+      "deskew": "odometry",
+      "counters": {
+        "reference_forwarded": 387,
+        "imu_forwarded": 15123,
+        "poses_received": 15123,
+        "rgbd_pose_unavailable": 1,
+        "rgbd_published": 345,
+        "rgbd_processing_ms_last": 154.5971967279911,
+        "rgbd_worker_queue_full": 30
+      },
+      "synchronization": {
+        "cloud_unmatched": 1,
+        "paired": 387
+      },
+      "worker_queue": 10,
+      "last_input_sensor_stamps_ns": {
+        "reference": 277213047151,
+        "imu": 277445073016,
+        "pose": 277443364830
+      }
+    },
+    "/odin_b/kimera/diagnostics": {
+      "status": "running",
+      "deskew": "odometry",
+      "counters": {
+        "imu_forwarded": 15919,
+        "poses_received": 15920,
+        "reference_forwarded": 410,
+        "rgbd_pose_unavailable": 1,
+        "rgbd_published": 382,
+        "rgbd_processing_ms_last": 108.12954884022474,
+        "rgbd_worker_queue_full": 16
+      },
+      "synchronization": {
+        "cloud_unmatched": 1,
+        "paired": 410
+      },
+      "worker_queue": 10,
+      "last_input_sensor_stamps_ns": {
+        "imu": 274925736265,
+        "pose": 274926539037,
+        "reference": 274679241481
+      }
+    }
+  },
+  "expected_topics": [
+    "/odin_a/kimera/rgb/image_raw",
+    "/odin_a/kimera/depth/image_raw",
+    "/odin_a/kimera/rgb/camera_info",
+    "/odin_a/kimera/imu",
+    "/odin_a/kimera/reference/odometry",
+    "/odin_b/kimera/rgb/image_raw",
+    "/odin_b/kimera/depth/image_raw",
+    "/odin_b/kimera/rgb/camera_info",
+    "/odin_b/kimera/imu",
+    "/odin_b/kimera/reference/odometry"
+  ],
+  "missing_topics": []
+}

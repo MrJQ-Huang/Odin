@@ -1,0 +1,13 @@
+{
+  "count": 349,
+  "first_stamp": 1765.198677159,
+  "last_stamp": 1867.741571712,
+  "span_s": 102.542894553,
+  "reference_first": 1765.10123265,
+  "reference_last": 1867.741571712,
+  "reference_span_s": 102.64033906200007,
+  "strict_timestamps": true,
+  "max_odometry_gap_s": 0.48736725699995986,
+  "max_radius_m": 0.8055245188656329,
+  "max_rotation_deg": 175.621016976164
+}

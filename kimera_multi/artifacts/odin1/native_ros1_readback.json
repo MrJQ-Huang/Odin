@@ -1,0 +1,32 @@
+{
+  "motion_rgbd": {
+    "method": "Noetic native rosbag.Bag.read_messages over every message in Docker",
+    "compression": "none",
+    "counts": {
+      "/odin1/kimera/imu": 18198,
+      "/odin1/kimera/rgb/image_raw": 461,
+      "/odin1/kimera/depth/image_raw": 461,
+      "/odin1/kimera/depth/measured_mask": 461,
+      "/odin1/kimera/rgb/camera_info": 461,
+      "/odin1/kimera/reference/odometry": 461
+    },
+    "header_equals_event_stamp": true,
+    "per_topic_stamps_strictly_increasing": true,
+    "result": "passed"
+  },
+  "qos_rgbd": {
+    "method": "Noetic native rosbag.Bag.read_messages over every message in Docker",
+    "compression": "none",
+    "counts": {
+      "/odin1/kimera/imu": 12637,
+      "/odin1/kimera/rgb/image_raw": 322,
+      "/odin1/kimera/depth/image_raw": 322,
+      "/odin1/kimera/depth/measured_mask": 322,
+      "/odin1/kimera/rgb/camera_info": 322,
+      "/odin1/kimera/reference/odometry": 322
+    },
+    "header_equals_event_stamp": true,
+    "per_topic_stamps_strictly_increasing": true,
+    "result": "passed"
+  }
+}

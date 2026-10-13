@@ -1,0 +1,27 @@
+<launch>
+  <arg name="params_folder" />
+  <arg name="robot_name" default="odin1" />
+  <arg name="robot_id" default="0" />
+  <arg name="should_use_sim_time" default="true" />
+  <arg name="path_to_vocab" default="$(find kimera_vio)/vocabulary/ORBvoc.yml" />
+  <arg name="sdk_odom_topic" default="/$(arg robot_name)/kimera/reference/odometry" />
+  <arg name="keyframe_period_s" default="2.0" />
+  <param name="/use_sim_time" value="$(arg should_use_sim_time)" />
+  <!-- Keep the existing distributed frontend topic/service namespace. -->
+  <group ns="$(arg robot_name)/kimera_vio_ros">
+    <node pkg="kimera_multi" type="odin_sdk_frontend" name="odin_sdk_frontend" output="screen" required="true">
+      <param name="robot_id" value="$(arg robot_id)" />
+      <param name="camera_params" value="$(arg params_folder)/LeftCameraParams.yaml" />
+      <param name="vocabulary" value="$(arg path_to_vocab)" />
+      <param name="sdk_odom_topic" value="$(arg sdk_odom_topic)" />
+      <param name="rgb_topic" value="/$(arg robot_name)/kimera/rgb/image_raw" />
+      <param name="depth_topic" value="/$(arg robot_name)/kimera/depth/image_raw" />
+      <param name="measured_mask_topic" value="/$(arg robot_name)/kimera/depth/measured_mask" />
+      <param name="camera_info_topic" value="/$(arg robot_name)/kimera/rgb/camera_info" />
+      <param name="odom_frame_id" value="$(arg robot_name)/sdk_odom" />
+      <param name="body_frame_id" value="$(arg robot_name)/imu" />
+      <param name="camera_frame_id" value="$(arg robot_name)/camera_optical" />
+      <param name="keyframe_period_s" value="$(arg keyframe_period_s)" />
+    </node>
+  </group>
+</launch>

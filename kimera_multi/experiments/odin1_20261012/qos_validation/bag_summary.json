@@ -1,0 +1,97 @@
+{
+  "bag": "/home/uros/kimeramulti/experiments/odin1_20261012/qos_validation_bag",
+  "topics": {
+    "/odin1/cloud_raw": {
+      "count": 323,
+      "span_s": 31.38652948699996,
+      "stamp_hz": 10.259178229098879,
+      "stamp_dt_ms": {
+        "min": 97.42192600003818,
+        "p50": 97.47371800000337,
+        "p95": 97.51662669992243,
+        "max": 97.52625999999509
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    },
+    "/odin1/image/compressed": {
+      "count": 323,
+      "span_s": 31.386491277999994,
+      "stamp_hz": 10.25919071832353,
+      "stamp_dt_ms": {
+        "min": 97.42192600003818,
+        "p50": 97.47371800000337,
+        "p95": 97.51662670003043,
+        "max": 97.52625999999509
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    },
+    "/odin1/odometry": {
+      "count": 324,
+      "span_s": 31.48400799700005,
+      "stamp_hz": 10.259176659807006,
+      "stamp_dt_ms": {
+        "min": 97.42192600003818,
+        "p50": 97.47371800006022,
+        "p95": 97.51661840002726,
+        "max": 97.52625999999509
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    },
+    "/odin1/imu": {
+      "count": 12637,
+      "span_s": 31.52778441800001,
+      "stamp_hz": 400.78934290053655,
+      "stamp_dt_ms": {
+        "min": 2.1638750000647633,
+        "p50": 2.494917000035457,
+        "p95": 2.5389580000592105,
+        "max": 2.829166999958943
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    },
+    "/odin1/odometry_highfreq": {
+      "count": 12637,
+      "span_s": 31.52778441800001,
+      "stamp_hz": 400.78934290053655,
+      "stamp_dt_ms": {
+        "min": 2.1638750000647633,
+        "p50": 2.494917000035457,
+        "p95": 2.5389579999739453,
+        "max": 2.829166999958943
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    },
+    "/odin1/wiwc": {
+      "count": 324,
+      "span_s": 31.48400799700005,
+      "stamp_hz": 10.259176659807006,
+      "stamp_dt_ms": {
+        "min": 97.42192600003818,
+        "p50": 97.47371800006022,
+        "p95": 97.51661840002726,
+        "max": 97.52625999999509
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    }
+  },
+  "nearest_stamp_offsets_ms": {
+    "/odin1/image/compressed->/odin1/cloud_raw": {
+      "min": -95.74912599998697,
+      "p50": 1.6853419999733887,
+      "p95": 1.6853420000870756,
+      "max": 1.6853420000870756
+    },
+    "/odin1/image/compressed->/odin1/odometry": {
+      "min": -97.43446799996036,
+      "p50": 0.0,
+      "p95": 0.0,
+      "max": 0.0
+    }
+  }
+}

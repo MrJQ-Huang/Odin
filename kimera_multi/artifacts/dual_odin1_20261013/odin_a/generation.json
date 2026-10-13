@@ -1,0 +1,8 @@
+{
+  "source_calibration": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_a/runtime/calib.yaml",
+  "source_sha256": "a5cb005ac9e07f7ea18f86c1918c5a98788e68057b78d7c67b88204c3d712aca",
+  "matrix_convention": "p_A = T_A_B p_B; Kimera T_BS = T_imu_camera",
+  "T_imu_lidar_source": "Explicit adapter configuration; default is the vendor wiki section 5.2 fixed matrix",
+  "imu_noise_calibrated": false,
+  "note": "Firmware WIWC matrices are not adopted automatically; local driver TF conventions differ from the wiki."
+}

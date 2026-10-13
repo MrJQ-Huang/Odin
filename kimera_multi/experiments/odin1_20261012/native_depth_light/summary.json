@@ -1,0 +1,32 @@
+{
+  "duration_s": 30.06694949232042,
+  "topics": {
+    "depth_img_competetion": {
+      "count": 269,
+      "arrival_hz": 9.747309194508128,
+      "stamp_hz": 9.647210901907957,
+      "stamp_dt_ms": {
+        "min": 97.42367600006219,
+        "p50": 97.47398949997432,
+        "p95": 194.90286099997434,
+        "max": 389.89454000000023
+      },
+      "arrival_dt_ms": {
+        "min": 53.80938295274973,
+        "p50": 97.91816584765911,
+        "p95": 157.07935960963263,
+        "max": 396.515735425055
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 1,
+      "details": {
+        "width": 1600,
+        "height": 1296,
+        "encoding": "32FC1",
+        "frame_id": "lidar",
+        "step": 6400
+      }
+    }
+  },
+  "callback_errors": {}
+}

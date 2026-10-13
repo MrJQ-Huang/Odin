@@ -1,0 +1,70 @@
+{
+  "duration_s": 30.001568445935845,
+  "topics": {
+    "depth_img_competetion": {
+      "count": 248,
+      "arrival_hz": 8.57127518659659,
+      "stamp_hz": 8.56086665067193,
+      "stamp_dt_ms": {
+        "min": 97.42338500007008,
+        "p50": 97.47396900002059,
+        "p95": 194.98114840000653,
+        "max": 487.41034100009983
+      },
+      "non_increasing_stamps": 0
+    },
+    "image/undistorted": {
+      "count": 243,
+      "arrival_hz": 8.56233830697299,
+      "stamp_hz": 8.561117918209643,
+      "stamp_dt_ms": {
+        "min": 97.42338500007008,
+        "p50": 97.47401000004174,
+        "p95": 194.98492769997142,
+        "max": 389.8953720000691
+      },
+      "non_increasing_stamps": 0
+    },
+    "cloud_raw": {
+      "count": 254,
+      "arrival_hz": 8.993465166913257,
+      "stamp_hz": 8.981229377991536,
+      "stamp_dt_ms": {
+        "min": 97.42496800004119,
+        "p50": 97.47384299998885,
+        "p95": 194.98589439999705,
+        "max": 389.8957059999475
+      },
+      "non_increasing_stamps": 0
+    },
+    "imu": {
+      "count": 11385,
+      "arrival_hz": 399.855424096603,
+      "stamp_hz": 399.99374064608816,
+      "stamp_dt_ms": {
+        "min": 2.2143339999729506,
+        "p50": 2.494917000035457,
+        "p95": 2.5392499999270512,
+        "max": 5.037958999992043
+      },
+      "non_increasing_stamps": 0
+    }
+  },
+  "depth_sample": {
+    "width": 1600,
+    "height": 1296,
+    "encoding": "32FC1",
+    "frame_id": "lidar",
+    "rgb_frame_id": "",
+    "depth_minus_rgb_ms": 1.6853419999733887,
+    "positive_finite_fraction": 0.6379730902777778,
+    "depth_m": {
+      "min": 0.1000218540430069,
+      "p50": 3.0389647483825684,
+      "p95": 5.892613410949707,
+      "max": 12.450111389160156
+    },
+    "orb_keypoints": 2000,
+    "orb_positive_depth": 1736
+  }
+}

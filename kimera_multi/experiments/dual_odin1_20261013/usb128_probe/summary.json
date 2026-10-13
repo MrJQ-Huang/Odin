@@ -1,0 +1,204 @@
+{
+  "duration_wall_s": 360.00002345070243,
+  "adapted": false,
+  "topics": {
+    "/odin_a/odin1/image/compressed": {
+      "count": 3688,
+      "sensor_hz": 10.259175810089666,
+      "arrival_hz": 10.246436515087925,
+      "non_increasing": 0,
+      "max_gap_ms": 97.542677,
+      "gaps_over_20ms": 3687,
+      "details": {
+        "frame_id": "",
+        "format": "jpeg",
+        "first_payload_sha256": "a566ccfbf0198e803d668492432cbad1161429cef26f11492d0ea2ce5a3d80f8"
+      },
+      "first_stamp_ns": 718878179528,
+      "last_stamp_ns": 1078263774263,
+      "reception_minus_header_s_median": 1791860318.8091362
+    },
+    "/odin_a/odin1/cloud_raw": {
+      "count": 3688,
+      "sensor_hz": 10.259175761332363,
+      "arrival_hz": 10.247222412369288,
+      "non_increasing": 0,
+      "max_gap_ms": 97.542677,
+      "gaps_over_20ms": 3687,
+      "details": {
+        "frame_id": "odin_a/lidar",
+        "width": 49152,
+        "height": 1,
+        "fields": [
+          "x",
+          "y",
+          "z",
+          "intensity",
+          "confidence",
+          "offset_time"
+        ],
+        "point_step": 19
+      },
+      "first_stamp_ns": 718782390486,
+      "last_stamp_ns": 1078167986929,
+      "reception_minus_header_s_median": 1791860318.888189
+    },
+    "/odin_a/odin1/imu": {
+      "count": 144044,
+      "sensor_hz": 400.80845321280543,
+      "arrival_hz": 400.2698716041652,
+      "non_increasing": 0,
+      "max_gap_ms": 5.023084,
+      "gaps_over_20ms": 0,
+      "details": {
+        "frame_id": "odin_a/imu"
+      },
+      "first_stamp_ns": 718977980714,
+      "last_stamp_ns": 1078359123615,
+      "reception_minus_header_s_median": 1791860318.7501109,
+      "finite": true,
+      "acceleration_norm_median": 9.765108675531389,
+      "gyro_norm_p95": 0.007059270136621114
+    },
+    "/odin_a/odin1/odometry_highfreq": {
+      "count": 144043,
+      "sensor_hz": 400.8084551184213,
+      "arrival_hz": 400.2670639140772,
+      "non_increasing": 0,
+      "max_gap_ms": 5.023084,
+      "gaps_over_20ms": 0,
+      "details": {
+        "frame_id": "odin_a/odom",
+        "child_frame_id": "odin_a/imu"
+      },
+      "first_stamp_ns": 718978769194,
+      "last_stamp_ns": 1078357415429,
+      "reception_minus_header_s_median": 1791860318.748409,
+      "finite": true,
+      "max_position_from_first_m": 0.0019846276728898043
+    },
+    "/odin_b/odin1/imu": {
+      "count": 143095,
+      "sensor_hz": 398.16886423270614,
+      "arrival_hz": 397.63140859236165,
+      "non_increasing": 0,
+      "max_gap_ms": 2.956625,
+      "gaps_over_20ms": 0,
+      "details": {
+        "frame_id": "odin_b/imu"
+      },
+      "first_stamp_ns": 716404701498,
+      "last_stamp_ns": 1075784886274,
+      "reception_minus_header_s_median": 1791860321.3262074,
+      "finite": true,
+      "acceleration_norm_median": 9.783640941788988,
+      "gyro_norm_p95": 0.007059270136621114
+    },
+    "/odin_a/odin1/odometry": {
+      "count": 3688,
+      "sensor_hz": 10.259175761332363,
+      "arrival_hz": 10.245597750471578,
+      "non_increasing": 0,
+      "max_gap_ms": 97.542677,
+      "gaps_over_20ms": 3687,
+      "details": {
+        "frame_id": "odin_a/odom",
+        "child_frame_id": "odin_a/imu"
+      },
+      "first_stamp_ns": 718780705144,
+      "last_stamp_ns": 1078166301587,
+      "reception_minus_header_s_median": 1791860318.9339492,
+      "finite": true,
+      "max_position_from_first_m": 0.001531594267422022
+    },
+    "/odin_b/odin1/odometry_highfreq": {
+      "count": 143093,
+      "sensor_hz": 398.16890052523854,
+      "arrival_hz": 397.63075236890495,
+      "non_increasing": 0,
+      "max_gap_ms": 2.956625,
+      "gaps_over_20ms": 0,
+      "details": {
+        "frame_id": "odin_b/odom",
+        "child_frame_id": "odin_b/imu"
+      },
+      "first_stamp_ns": 716405541021,
+      "last_stamp_ns": 1075780670046,
+      "reception_minus_header_s_median": 1791860321.3260133,
+      "finite": true,
+      "max_position_from_first_m": 0.002249592185263809
+    },
+    "/odin_b/odin1/odometry": {
+      "count": 3687,
+      "sensor_hz": 10.259176893976493,
+      "arrival_hz": 10.245378410127554,
+      "non_increasing": 0,
+      "max_gap_ms": 97.539135,
+      "gaps_over_20ms": 3686,
+      "details": {
+        "frame_id": "odin_b/odom",
+        "child_frame_id": "odin_b/imu"
+      },
+      "first_stamp_ns": 716225047388,
+      "last_stamp_ns": 1075513130447,
+      "reception_minus_header_s_median": 1791860321.5165005,
+      "finite": true,
+      "max_position_from_first_m": 0.002061269026595025
+    },
+    "/odin_b/odin1/cloud_raw": {
+      "count": 3687,
+      "sensor_hz": 10.25917688329723,
+      "arrival_hz": 10.245369846739532,
+      "non_increasing": 0,
+      "max_gap_ms": 97.539135,
+      "gaps_over_20ms": 3686,
+      "details": {
+        "frame_id": "odin_b/lidar",
+        "width": 49152,
+        "height": 1,
+        "fields": [
+          "x",
+          "y",
+          "z",
+          "intensity",
+          "confidence",
+          "offset_time"
+        ],
+        "point_step": 19
+      },
+      "first_stamp_ns": 716324205907,
+      "last_stamp_ns": 1075612289340,
+      "reception_minus_header_s_median": 1791860321.4739015
+    },
+    "/odin_b/odin1/image/compressed": {
+      "count": 3687,
+      "sensor_hz": 10.259176898745041,
+      "arrival_hz": 10.245177382148917,
+      "non_increasing": 0,
+      "max_gap_ms": 97.539135,
+      "gaps_over_20ms": 3686,
+      "details": {
+        "frame_id": "",
+        "format": "jpeg",
+        "first_payload_sha256": "84b8d502d83d675609deebf30353dc725191f11e25245945513799b519d3166b"
+      },
+      "first_stamp_ns": 716419994074,
+      "last_stamp_ns": 1075708076966,
+      "reception_minus_header_s_median": 1791860321.3889515
+    }
+  },
+  "diagnostics": {},
+  "expected_topics": [
+    "/odin_a/odin1/image/compressed",
+    "/odin_a/odin1/cloud_raw",
+    "/odin_a/odin1/imu",
+    "/odin_a/odin1/odometry",
+    "/odin_a/odin1/odometry_highfreq",
+    "/odin_b/odin1/image/compressed",
+    "/odin_b/odin1/cloud_raw",
+    "/odin_b/odin1/imu",
+    "/odin_b/odin1/odometry",
+    "/odin_b/odin1/odometry_highfreq"
+  ],
+  "missing_topics": []
+}

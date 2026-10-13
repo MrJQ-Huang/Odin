@@ -1,0 +1,83 @@
+{
+  "topics": {
+    "/odin1/cloud_raw": {
+      "count": 1034,
+      "span_s": 100.69035040800003,
+      "stamp_hz": 10.259175738432292,
+      "stamp_dt_ms": {
+        "min": 97.4107179999919,
+        "p50": 97.47363499997164,
+        "p95": 97.51702679999426,
+        "max": 97.53617600000553
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    },
+    "/odin1/image/compressed": {
+      "count": 1035,
+      "span_s": 100.78783212600001,
+      "stamp_hz": 10.259174924085517,
+      "stamp_dt_ms": {
+        "min": 97.4107179999919,
+        "p50": 97.47363500002848,
+        "p95": 97.51702469999373,
+        "max": 97.53617600000553
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    },
+    "/odin1/odometry": {
+      "count": 1034,
+      "span_s": 100.69035765899997,
+      "stamp_hz": 10.259174999639777,
+      "stamp_dt_ms": {
+        "min": 97.4107179999919,
+        "p50": 97.47363500002848,
+        "p95": 97.5170852000133,
+        "max": 97.53617600000553
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 0
+    },
+    "/odin1/imu": {
+      "count": 40360,
+      "span_s": 100.83010584000004,
+      "stamp_hz": 400.2673572915093,
+      "stamp_dt_ms": {
+        "min": 2.165915999967183,
+        "p50": 2.494624999997086,
+        "p95": 2.538754199986215,
+        "max": 147.18843099996093
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 1
+    },
+    "/odin1/odometry_highfreq": {
+      "count": 29629,
+      "span_s": 84.886252904,
+      "stamp_hz": 349.03178060535964,
+      "stamp_dt_ms": {
+        "min": 2.232708000008188,
+        "p50": 2.494624999997086,
+        "p95": 2.538667000010264,
+        "max": 9058.342702000005
+      },
+      "non_increasing_stamps": 0,
+      "gaps_over_3_median": 13
+    }
+  },
+  "nearest_stamp_offsets_ms": {
+    "/odin1/image/compressed->/odin1/cloud_raw": {
+      "min": -95.79637600000979,
+      "p50": 1.6853419999733887,
+      "p95": 1.6853420000302322,
+      "max": 1.6853420000302322
+    },
+    "/odin1/image/compressed->/odin1/odometry": {
+      "min": -194.99439400004803,
+      "p50": 0.0,
+      "p95": 0.0,
+      "max": 0.0
+    }
+  }
+}

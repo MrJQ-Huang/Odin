@@ -1,0 +1,42 @@
+{
+  "duration_wall_s": 38.007563713006675,
+  "topics": {
+    "rgb": {
+      "count": 0,
+      "details": null,
+      "sensor_stamp_hz": null,
+      "max_header_gap_ms": null,
+      "non_increasing_stamps": 0
+    },
+    "depth": {
+      "count": 0,
+      "details": null,
+      "sensor_stamp_hz": null,
+      "max_header_gap_ms": null,
+      "non_increasing_stamps": 0
+    },
+    "imu": {
+      "count": 0,
+      "details": null,
+      "sensor_stamp_hz": null,
+      "max_header_gap_ms": null,
+      "non_increasing_stamps": 0
+    },
+    "info": {
+      "count": 0,
+      "details": null,
+      "sensor_stamp_hz": null,
+      "max_header_gap_ms": null,
+      "non_increasing_stamps": 0
+    }
+  },
+  "adapter_diagnostics": {
+    "status": "running",
+    "deskew": "odometry",
+    "counters": {},
+    "synchronization": {},
+    "worker_queue": 0,
+    "last_input_sensor_stamps_ns": {}
+  },
+  "rgb_depth_common_stamps": 0
+}

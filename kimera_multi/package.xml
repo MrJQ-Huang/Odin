@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>kimera_multi</name>
+  <version>0.0.1</version>
+  <description>Kimera-Multi</description>
+
+  <maintainer email="yunchang@mit.edu">Yun Chang</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>rosunit</depend>
+  <depend>rostest</depend>
+  <depend>roscpp</depend>
+  <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>cv_bridge</depend>
+  <depend>pose_graph_tools_msgs</depend>
+  <depend>dbow2_catkin</depend>
+  <build_depend>eigen</build_depend>
+
+  <exec_depend>kimera_vio_ros</exec_depend>
+</package>

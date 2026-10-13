@@ -1,0 +1,64 @@
+{
+  "duration_wall_s": 42.000494219362736,
+  "topics": {
+    "rgb": {
+      "count": 5,
+      "details": {
+        "frame_id": "odin1/camera_optical",
+        "width": 640,
+        "height": 518,
+        "encoding": "bgr8"
+      },
+      "sensor_stamp_hz": 2.931194756697579,
+      "max_header_gap_ms": 1072.214066,
+      "non_increasing_stamps": 0
+    },
+    "depth": {
+      "count": 5,
+      "details": {
+        "frame_id": "odin1/camera_optical",
+        "width": 640,
+        "height": 518,
+        "encoding": "32FC1"
+      },
+      "sensor_stamp_hz": 2.931194756697579,
+      "max_header_gap_ms": 1072.214066,
+      "non_increasing_stamps": 0
+    },
+    "imu": {
+      "count": 9337,
+      "details": {
+        "frame_id": "odin1/imu"
+      },
+      "sensor_stamp_hz": 297.3670207420369,
+      "max_header_gap_ms": 69.882757,
+      "non_increasing_stamps": 0
+    },
+    "info": {
+      "count": 5,
+      "details": {
+        "frame_id": "odin1/camera_optical"
+      },
+      "sensor_stamp_hz": 2.931194756697579,
+      "max_header_gap_ms": 1072.214066,
+      "non_increasing_stamps": 0
+    }
+  },
+  "adapter_diagnostics": {
+    "status": "running",
+    "deskew": "odometry",
+    "counters": {
+      "imu_forwarded": 8991,
+      "reference_forwarded": 324,
+      "rgbd_worker_queue_full": 288,
+      "rgbd_published": 5,
+      "rgbd_pose_unavailable": 29
+    },
+    "synchronization": {
+      "cloud_unmatched": 1,
+      "paired": 322
+    },
+    "worker_queue": 0
+  },
+  "rgb_depth_common_stamps": 5
+}

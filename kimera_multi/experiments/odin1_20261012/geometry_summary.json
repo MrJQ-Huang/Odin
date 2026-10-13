@@ -1,0 +1,14 @@
+{
+  "sample_scope": "one static frame; factory calibration, confidence >= 35; no depth completion",
+  "width": 640,
+  "height": 518,
+  "raw_points": 49152,
+  "valid_confident_points": 33954,
+  "points_in_camera_view": 19653,
+  "measured_pixel_fraction": 0.059194015444015445,
+  "fraction_with_measurement_within_one_pixel": 0.48771718146718146,
+  "orb_features": 1829,
+  "orb_exact_depth_features": 172,
+  "orb_features_with_measurement_within_one_pixel": 1270,
+  "image_header_frame_id": "empty in observed driver output; adapter must set camera optical frame"
+}

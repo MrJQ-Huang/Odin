@@ -1,0 +1,4120 @@
+{
+  "source_upstream": "https://github.com/MIT-SPARK/Kimera-Multi.git",
+  "source_upstream_revision": "814bfe279b5e7b86be2650af49f122502b84b738",
+  "odin_base_revision": "317a2c03d33e24525ebd6ebd44ee903043919f0d",
+  "snapshot_date": "2026-10-13",
+  "files": [
+    {
+      "path": "adapters/odin1/README.md",
+      "kind": "source_or_experiment_sample",
+      "bytes": 12284,
+      "sha256": "7b9e5925ee57fce26983305fe3a0916676d0843ce16ee7cacb3218dfe985057a"
+    },
+    {
+      "path": "adapters/odin1/config/adapter.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 948,
+      "sha256": "4f1faf65a5cbdd617d4db826cb3252629fd67ef28bc4a1b58fb193de73d1eaf1"
+    },
+    {
+      "path": "adapters/odin1/config/rosbag2_qos.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 156,
+      "sha256": "a793547d6576a85272410a96116bfaa7be89ab665ad67b45e8c4b217ab0864af"
+    },
+    {
+      "path": "adapters/odin1/odin1_adapter/__init__.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 66,
+      "sha256": "583689be79cebfaa03edc2717d00319d29e01954e840e5b96a308ac67bb9963e"
+    },
+    {
+      "path": "adapters/odin1/odin1_adapter/bag.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 11865,
+      "sha256": "8a2ea5e67d7ddb3ce1b2fa40056b34a1133a3b83483bad10b757250b6176ebd1"
+    },
+    {
+      "path": "adapters/odin1/odin1_adapter/calibration.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3051,
+      "sha256": "e1b0107260bcd0d58094c138659bcab752bc3413dc159da3bcf5ffa79f64813f"
+    },
+    {
+      "path": "adapters/odin1/odin1_adapter/geometry.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 8539,
+      "sha256": "38952465f41d379285c90777789235d0ce82e729d3f686e3aa31d0e3ec0b511d"
+    },
+    {
+      "path": "adapters/odin1/odin1_adapter/prepare.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3553,
+      "sha256": "135a13f57994565f453dab88422fde60347cd0a85512fa1b4e46cdeda29f3eca"
+    },
+    {
+      "path": "adapters/odin1/odin1_adapter/ros2_node.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 10014,
+      "sha256": "0e4afc1f398080b4a3ce19527f3f3233feea36ed31768a669e1002dc5c0183ed"
+    },
+    {
+      "path": "adapters/odin1/odin1_adapter/synchronization.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1505,
+      "sha256": "32cd4428b2a38a818612b4d2211dd3f6ccedb8c6f7a8f9265b8e0594998e8b59"
+    },
+    {
+      "path": "adapters/odin1/pyproject.toml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 584,
+      "sha256": "8a795cc95b344a833eb2f7e5f63c4035711444d83b03fb53b0e68e4c40657d19"
+    },
+    {
+      "path": "adapters/odin1/tests/test_bag.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 4589,
+      "sha256": "a2538cbadad43e41083cd2c3ee77e62531664c309150fac261876222604e1989"
+    },
+    {
+      "path": "adapters/odin1/tests/test_geometry.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 4394,
+      "sha256": "8e3543416c48dcc33c254d790f51bcd55f50c82bf3e8e697ef5b53d9136b8a50"
+    },
+    {
+      "path": "adapters/odin1/tests/test_prepare.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1837,
+      "sha256": "0bdf22f68344c4617bd19e1ce795a6ce15f203d8dc0356e407c67bd3e6783b03"
+    },
+    {
+      "path": "adapters/odin1/tools/observe_ros2.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2660,
+      "sha256": "2fb7748f52a4de5174da0c048d9ca9066b615249bee55f89a3d12c74b2230b82"
+    },
+    {
+      "path": "docker/Dockerfile.odin1",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2551,
+      "sha256": "bd2170933f3368a51f64afe9e9603b294fc8880513d53dfdc278f2eca9aacb53"
+    },
+    {
+      "path": "docker/README.odin1.md",
+      "kind": "source_or_experiment_sample",
+      "bytes": 13465,
+      "sha256": "fb72883be9e0f88ca50351e3eddfcd39a91e4d45695d836868f1f183a52f8983"
+    },
+    {
+      "path": "docker/fix_sparse_keypoints.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1627,
+      "sha256": "55531233cee8587a075b9c8a3d150bbcfbda7005527fbcf5d5aecec5096df237"
+    },
+    {
+      "path": "docker/noetic_system_packages/gflags_catkin/CMakeLists.txt",
+      "kind": "source_or_experiment_sample",
+      "bytes": 152,
+      "sha256": "2816d695b3666ec55aa72fb8f7cd1b31a3dc5dd64bcc1b05c62cb70cae3737e0"
+    },
+    {
+      "path": "docker/noetic_system_packages/gflags_catkin/package.xml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 323,
+      "sha256": "f4c8c0c5fb61578c4df0d71a31ab59fe3e9f7eb5ca6e8e595596247d4032b9de"
+    },
+    {
+      "path": "docker/noetic_system_packages/opencv3_catkin/CMakeLists.txt",
+      "kind": "source_or_experiment_sample",
+      "bytes": 204,
+      "sha256": "1c14de35d7b0e89b41199a3e130374724819a9dbfb5b5a9908bf864762370d47"
+    },
+    {
+      "path": "docker/noetic_system_packages/opencv3_catkin/package.xml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 326,
+      "sha256": "28f2dd6194d7573fc80c4c15587ea277e1eb17c2d7fa2a12ed6d4764d197a134"
+    },
+    {
+      "path": "docker/noetic_system_packages/opengv_catkin/CMakeLists.txt",
+      "kind": "source_or_experiment_sample",
+      "bytes": 538,
+      "sha256": "e18d3f3c1f4c5c0f87202b6f074b2f2f1fd4fbee7220a5d4a5c85e30fce5b7e0"
+    },
+    {
+      "path": "docker/noetic_system_packages/opengv_catkin/package.xml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 323,
+      "sha256": "5cdeb7e327311978c9ffd5d335e6271627077d0cadf7c67b3b782c8f91769e2b"
+    },
+    {
+      "path": "docker/odin1.bash",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2599,
+      "sha256": "1e0b7bc45a30e77b3b73562222a1d989cc7c9da0fe33bf565dca693f7fb696ef"
+    },
+    {
+      "path": "docker/odin1.repos",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2265,
+      "sha256": "6aeecfd662a3db042a40e0b88fb77697bf96abe1583c1e67f1498b145c833802"
+    },
+    {
+      "path": "docker/odin1_entrypoint.bash",
+      "kind": "source_or_experiment_sample",
+      "bytes": 310,
+      "sha256": "28414fe2fbb8c1ddf1c409fb418a85232dd6214d6ae113d09a85115360d230cb"
+    },
+    {
+      "path": "docker/patch_noetic.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2530,
+      "sha256": "77549833c5170cc9f1efe3d829e34f70a877798a8b0f421e6b4544d2c4b29fc7"
+    },
+    {
+      "path": "docker/prepare_odin1.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3264,
+      "sha256": "7badd4c585c5e4a38943bbd3c1a4197b27c6a5379f52148b38a3ce12d361f1f1"
+    },
+    {
+      "path": "docker/replay_dual_odin1.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3939,
+      "sha256": "3988be828c7a6254719cf5fcaaa0486572de8b1ffd2767437dcf314324b9cede"
+    },
+    {
+      "path": "docker/replay_odin1.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 21476,
+      "sha256": "cc5a6e417ff308e68276fd2e7aae4dd1173f72b969100cc0d0bfff79c2ada8e1"
+    },
+    {
+      "path": "docker/tests/run_sdk_geometry.bash",
+      "kind": "source_or_experiment_sample",
+      "bytes": 220,
+      "sha256": "7028b174824e84db5c7c30857a51b4dfe4ed7f6d3f4cc5aa6ce04d52e5c37f9a"
+    },
+    {
+      "path": "docker/tests/run_sparse_keypoints.bash",
+      "kind": "source_or_experiment_sample",
+      "bytes": 438,
+      "sha256": "8e704461c876119ecac3967c56453a72ba60cf42e6bd0aa16fc9e3044cd3f858"
+    },
+    {
+      "path": "docker/tests/sdk_geometry.cpp",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3259,
+      "sha256": "4b2e98b342ed383f6ca332ab438acb82eabd0bf433ebca72d2c8b754f9028cf7"
+    },
+    {
+      "path": "docker/tests/sparse_keypoints.cpp",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2291,
+      "sha256": "b0705006c7bb26534fac4a28f226ef4a969aa4b9550f589f5f48595db743e354"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/analyze_dual_bag.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3082,
+      "sha256": "9ebd0c5b7b194b375b36e4fd456e1a734a16c9193fa54052be96bd217e5ffbe9"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/cloud_fusion_preview.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 14623,
+      "sha256": "796867f1aea47c4083500ac123a958a9c3b782872d8e84d542117a92a3cf6d3f"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/devices.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 595,
+      "sha256": "4f4aebdb480651ebfe2f1d4db70a47349359340552713cfbcb748176a9448ea8"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/driver_exit_codes.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 33,
+      "sha256": "edd5bc0432792bec0b3e85bdfc2af7dcf12bc3ced9d40972077487ba83b6dd3c"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/driver_first_exit_codes.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 33,
+      "sha256": "edd5bc0432792bec0b3e85bdfc2af7dcf12bc3ced9d40972077487ba83b6dd3c"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/driver_pids.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 89,
+      "sha256": "195db6af2c77e4653fb65f78cc663fea52908db0cba6e1a0fbd3b2f7ade8de90"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/driver_usb128_static_exit_codes.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 32,
+      "sha256": "02084fb1ac90f04644e20436793b80e434c46fcebd7ee470af29c73dddf2d776"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/launch_drivers.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2155,
+      "sha256": "819f05552d477417cfe3c5d8d065dd08555fa88859fd99a22ca8b76fe799a478"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/live_resources.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 441675,
+      "sha256": "e6f694d5284e83922a5175192186754b04e4423cdfa00b3c56f4dbe8aae04d93"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/monitor_resources.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2093,
+      "sha256": "6a15dd85e18621c251f6cc5c62c8e0aa16ae7c85aa78e51c9ec76c67bc0661a5"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_bag/metadata.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6420,
+      "sha256": "2fc71bbf48cd645ffeb8b160aa27aa2f1dded867e4401751df65571d8c613336"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_bag_summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6035,
+      "sha256": "c104df36cf7765cef1c5c830fe894c337b3d2f76bdc3dba6042f33c18c47b6ae"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_coverage.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 336160,
+      "sha256": "9ca87415bd1827fa945549bdd2a2f088cfc69f4292d098c8d8cff09d235a74df"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_a.jpg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 474423,
+      "sha256": "656479720ddd4da36edd67b6cf97d516919ea4ed75d584a66ff4cb497770e0af"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_a_odin1_cloud_raw_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 30128,
+      "sha256": "9895ecedb3518216b966849b9c8be6ca093b9a2c811b7bde756e4456c7ff0596"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_a_odin1_image_compressed_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 30128,
+      "sha256": "22224822ae630079b11464b46f32a508a0eb130a44803448ed3279008bc41d88"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_a_odin1_imu_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1244672,
+      "sha256": "1ca2390f3e2b08c4ebbff572f9ba94690e240549f58dd3921775e444c528c5e6"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_a_odin1_odometry_highfreq_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1244432,
+      "sha256": "31cfc0752149fd1ca83d054acbf0d4baddc441302a503edcd1e11f1e4efabb7e"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_a_odin1_odometry_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 30416,
+      "sha256": "62b86c0e2fe7d4ea551eef7d5b030b3ead56e05d2148cdd842f8e99abe41d067"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_b.jpg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 513671,
+      "sha256": "c52081da4630e09e222f914a6a3cd7538fbaa513e55215a0688e66e6180a4b6d"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_b_odin1_cloud_raw_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 30608,
+      "sha256": "5c402a1677e7f9237286745ecab2257d4c79177b0c00c92d0b1fb2795211a770"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_b_odin1_image_compressed_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 30656,
+      "sha256": "8ec3eda8e46868611ccc327d66679b7becd6793b66c15efa28c9052e4458dc89"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_b_odin1_imu_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1236512,
+      "sha256": "b1c1e943407cbe9f433110fdf8ecbfea5f6329a68f48bad0d21a1f78f320b73c"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_b_odin1_odometry_highfreq_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1236464,
+      "sha256": "8e07715b6bad5a0b898e9b73e95d0bc0a7bc30f45af019044038d53039e1ebf5"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/odin_b_odin1_odometry_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 30944,
+      "sha256": "189cc174b131c7ab8fca2b58325d05b8b8ddce37d0301d5be4355d352991811c"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_probe/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6084,
+      "sha256": "540089add5b2aa670dcf0dd50dec21b552b294b8bda3a24b12dcd988d98e3bb2"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_bag/metadata.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6439,
+      "sha256": "67ce8c733e8f61a3b5b4e6d5d1ba10b5435bdf9d56ebc8c1037c4a70516415af"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_bag_summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6043,
+      "sha256": "8a6483e041b5b9ade29911f0967d3c37fe0a1afba7f943274e6c31e602e5d6ce"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_a.jpg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 387065,
+      "sha256": "652c2e2dac8167412cb0731b405fe475cc72bb8e80ba0934db431e5893ea0e13"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_a_odin1_cloud_raw_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 39440,
+      "sha256": "429ebd69bd1234c47a0063fa0fd2d560f66801e7ab4fd86b3754080b17d0bb68"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_a_odin1_image_compressed_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 39440,
+      "sha256": "b47f6213d781a251e2f457ca0318a81f377293ad1e269312bb58c888b94efc66"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_a_odin1_imu_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1534352,
+      "sha256": "e88f1200a10005334dc2a8d01d2210e9e939a720fc46b4aaec5cb578bd086b6e"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_a_odin1_odometry_highfreq_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1534304,
+      "sha256": "9a10bf3c179182a5ea46055204e1641ca946e1ff7791d5fc238a4a599c5d2863"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_a_odin1_odometry_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 39392,
+      "sha256": "0f01446c3f58993e9e3f9a90c73627a6716d64576ed362a6ac50c522ca023eed"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_b.jpg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 457634,
+      "sha256": "aef2f7ed7e07d79aa2adf4932cbfb52c08463969f2d7824c18ac2ef3643562aa"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_b_odin1_cloud_raw_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 39392,
+      "sha256": "83cbdff37f1700e8f2fa3e505090eedabfc1024060992582e212418ab33cb5bc"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_b_odin1_image_compressed_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 39392,
+      "sha256": "1a3047397421628d6a2cdad002dcc285301f266d0f6d01b2bc92b6be1c2e5d60"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_b_odin1_imu_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1524176,
+      "sha256": "0976f224afc53208255270f446184c981590b69b31569a7a6f9452530a0a73f9"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_b_odin1_odometry_highfreq_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1524176,
+      "sha256": "85f932dc0403f83bdcb1be3ffb19ec46dc2a59fded3cf797563ccb52fb48e36b"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/odin_b_odin1_odometry_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 39392,
+      "sha256": "ee243c808b99b7002c75f8f681e7e4a57d5cdb2dc5e92fb6b0b4f850dabac3e8"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_probe/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6106,
+      "sha256": "06385c3fd21e023c80c1fc2c76b5bd702c9daf84b2674fa5b614916530f91869"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_resources.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 601165,
+      "sha256": "5942e4c7b6f263fe7ddcec0cf21aeb6e34f2389b85b2da8c9a64a65584cc6b32"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_timeline.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 854099,
+      "sha256": "21aac6527e8eec85e4cedc8906d649d856900719d4af90f318ad1ac2e8ee4f03"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/motion_usb128_window.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 513,
+      "sha256": "02273239b2da3a65fc7aea0d57c5052dd87e8f145398e9a1d72a6f9295757ab2"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/observe_motion.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1839,
+      "sha256": "7de8805bf6601c4c1e4421b7160d1a8e41dbfa7f5186466176d791abb3de18aa"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_a/adapter_template.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 616,
+      "sha256": "411564641996880a45ba3a6c2fdd8029c7abbbf57979ac3e9f4b060c574f4723"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_a/control_command.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1030,
+      "sha256": "d0131db251a49f45070f89163c964d89e7baa4404a145c1daacb372be028fba7"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_a/first_calib.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 687,
+      "sha256": "a5cb005ac9e07f7ea18f86c1918c5a98788e68057b78d7c67b88204c3d712aca"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_a/image/cam_in_ex.txt",
+      "kind": "source_or_experiment_sample",
+      "bytes": 475,
+      "sha256": "c26518acca94d526385dca4d80a29fa1c1c13e551c9dc7703449d4bfbc7f3d36"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_a/runtime/calib.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 687,
+      "sha256": "a5cb005ac9e07f7ea18f86c1918c5a98788e68057b78d7c67b88204c3d712aca"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_b/adapter_template.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 616,
+      "sha256": "5cbca845ef2f4c036f1e67be4f4b66cb175728ec57608578d8a1364adc86993e"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_b/control_command.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1030,
+      "sha256": "d0131db251a49f45070f89163c964d89e7baa4404a145c1daacb372be028fba7"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_b/first_calib.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 689,
+      "sha256": "89c6224973ffc4e68a20183e63e67371c0a1c3eb0f36a035343a6c6a5d488221"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_b/image/cam_in_ex.txt",
+      "kind": "source_or_experiment_sample",
+      "bytes": 477,
+      "sha256": "951565eff19b2cd5f8123bb5b3b8b544c073f3d739edda0b68830b0167deef85"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/odin_b/runtime/calib.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 689,
+      "sha256": "89c6224973ffc4e68a20183e63e67371c0a1c3eb0f36a035343a6c6a5d488221"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/operator_motion.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 82,
+      "sha256": "ca96a1ee9e8d100d1d6d19328a854eb2bccf936c96f6edb9a7adb124f1027e63"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/plot_results.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 7323,
+      "sha256": "2c088707b29cbc8a8ddae4de53a7d48c0c7ac7021189e9dd75c256e097ebc62e"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/probe_dual.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 4939,
+      "sha256": "2d1956419e1eb16f4c85742199ef132a68b6590df75f15e05405b6f7c629916f"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/record_dual.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1137,
+      "sha256": "27049c629032825829e465ae25ebc4ccf737ae7c5f4a9a73e585ee11e7e02fc4"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/render_cloud_preview.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 10156,
+      "sha256": "49ec6360c825c0cd076a2c3cb4f18b77c23d8fed362298b5634eb8ee88034ab2"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/rosbag2_qos.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1006,
+      "sha256": "30b37e969291e808a9ff2059ff4c8e2c4dc7a8dc2398f332e0941af8cf054932"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_bag/metadata.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6409,
+      "sha256": "23a8012c6a8dd7a28c401d3caac6a32830e51ae7677b10ce83345a2b54664cb4"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_bag_summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 5982,
+      "sha256": "1a1768d0807b426757f1da1c758a4037a1c010cf4aa34c7a1c8efbd54117f77d"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_a.jpg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 477259,
+      "sha256": "1cb115fbdf630d890721ec6e8e21be5cbb0c4800cce831d549c66f5014602c86"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_a_odin1_cloud_raw_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16976,
+      "sha256": "c173a9457cac49c7ef52a74e5c4d609b3ab0dfbf5a075272809e79ce388078dc"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_a_odin1_image_compressed_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16976,
+      "sha256": "43592ff73f5547fa30f6a81c8d45aa5c5ef6653088b4e9c0f5e10074db94e915"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_a_odin1_imu_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 657728,
+      "sha256": "9c798bc17bf8acda1f6f4c5dbbd00197f18eaa6f80b2de4c90c630c260bd2027"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_a_odin1_odometry_highfreq_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 656720,
+      "sha256": "9e976c7554f6cda0ddf1998d8dcc8a32704b937c1995aa7c19f9298b6dccc1db"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_a_odin1_odometry_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16928,
+      "sha256": "392b7c171ce2910d5b4cc84023f3149f14fb2fbd37eea51128615c95531404e3"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_b.jpg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 511473,
+      "sha256": "7ae592c14e0f17f8185871f590e9143179fdfc82258509937cdb3d96709b59ce"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_b_odin1_cloud_raw_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16928,
+      "sha256": "6b89a993bb34baeaf4f26992b7c6d03e74801038bdd0c1e14ceb346db9712a00"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_b_odin1_image_compressed_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16928,
+      "sha256": "091370ec2bb066038627c8dffe6297e03506e04e01d6b65a514c37e301b4d07d"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_b_odin1_imu_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 652640,
+      "sha256": "9a0d17c876e1932287855006a0ffe082f864aa040272b69fdf32e1b46b0a1b2b"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_b_odin1_odometry_highfreq_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 652640,
+      "sha256": "e5a4a9d470968d5fbc95d715ef734417ba0cb353cba3b4f9b47676fe93da5f9c"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/odin_b_odin1_odometry_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16928,
+      "sha256": "f85395a87d4b0eda8e4a881aabf3f9e23df5de2e7949b3cb2e8f4516963e80e7"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/static_probe/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6099,
+      "sha256": "6efef32e067b960af068fdd6160696385659bc91a6e504631bd5cf1fbf0b9fec"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_a.jpg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 383377,
+      "sha256": "a566ccfbf0198e803d668492432cbad1161429cef26f11492d0ea2ce5a3d80f8"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_a_odin1_cloud_raw_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 177152,
+      "sha256": "4bebe56fbe2e89e207636f7f0291e1a30b877b8a5e61f2fbfadbcc341e649570"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_a_odin1_image_compressed_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 177152,
+      "sha256": "1cc061494336973e66301e47b42a964e344afd767ff427ed3c621770c9248547"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_a_odin1_imu_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6914240,
+      "sha256": "08180b550c09b9f031f20e4069d2cfe1ca5c30342e98c9b4aca347e53c8600a5"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_a_odin1_odometry_highfreq_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6914192,
+      "sha256": "80674899d68e46990cea6567de50f2891a174e93937a390a5c65b6e9fa54a592"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_a_odin1_odometry_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 177152,
+      "sha256": "e8084368a8ba6568d69ff942d23e7b5cc27350a122e97136266b273c33a4aa3d"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_b.jpg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 457519,
+      "sha256": "84b8d502d83d675609deebf30353dc725191f11e25245945513799b519d3166b"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_b_odin1_cloud_raw_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 177104,
+      "sha256": "f0c91694e712ed267667b07872fffa34ccee88488fc71840f273a9e11fc7a015"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_b_odin1_image_compressed_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 177104,
+      "sha256": "29ab824e6584c8a865a05f68dbdcf9d1ce24f6d41ccf5a6fec9c10adf05181c8"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_b_odin1_imu_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6868688,
+      "sha256": "a1fe4821a1a251e8358019e06b09dd24793eb31e40636bd3e9191078e43a242f"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_b_odin1_odometry_highfreq_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6868592,
+      "sha256": "44bf3169d737aa928bb712dd2e4e16d64e058424873dfee3ed00da98b099787c"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/odin_b_odin1_odometry_times.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 177104,
+      "sha256": "7170693164ffa6dd7202b657861cdcd37c2cdb8876c223452d05dd994f881373"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_probe/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 6125,
+      "sha256": "e61ac95a11a697dd2d8a48922e9abfe24310451f6e91de101d591a7d7c295bd3"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usb128_resources.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1098861,
+      "sha256": "7ba2be5cad15a09bb0116947a47f484641e3314ed4087ac8b1b52ddebd1cf0df"
+    },
+    {
+      "path": "experiments/dual_odin1_20261013/usbfs_adjustment.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 194,
+      "sha256": "f074bc7c877c8e1fb559d447db0d91b5153120e63799133fe305b1cd80803f7e"
+    },
+    {
+      "path": "experiments/odin1_20261012/analyze_bag.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2340,
+      "sha256": "2a5fe1977f9d4ccb4c4bdd5f723e988961f3cafa2dd40f18b7ef29a1b56d32af"
+    },
+    {
+      "path": "experiments/odin1_20261012/analyze_geometry.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2787,
+      "sha256": "6e47a14b7afa6f99c5c35840efd71a732c4acbd7302c7b3407c7299d7351bae2"
+    },
+    {
+      "path": "experiments/odin1_20261012/assessment.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 4471,
+      "sha256": "9ab0ccddb49d2a8ee787c7ef2d5f8872bdd8203ca94c549fd87914d0dd4fb02c"
+    },
+    {
+      "path": "experiments/odin1_20261012/bag_cloud_raw_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 51739,
+      "sha256": "9ea03ef10fe306c87b98f84a6a78689d70399122fdabe2ba572c70465858e2cc"
+    },
+    {
+      "path": "experiments/odin1_20261012/bag_compressed_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 51789,
+      "sha256": "78a2f79952b85bf36867d9cadb64a9c79026c641a0a6edf0e6b06bb8d328d1fb"
+    },
+    {
+      "path": "experiments/odin1_20261012/bag_imu_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2018039,
+      "sha256": "bbd26b511fe19ae90db3bf2e5911b78bbd3bba7e90a04f5be1818c75bf032741"
+    },
+    {
+      "path": "experiments/odin1_20261012/bag_odometry_highfreq_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1481489,
+      "sha256": "7ab27aa4f8e6b2f141d21bc2152fb6e60b0fa12b7fd8676a0e6f8f3f4ee9ebed"
+    },
+    {
+      "path": "experiments/odin1_20261012/bag_odometry_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 51739,
+      "sha256": "40b9007b5d126f50721b832cd5ff3db779922beedf162c2132b3fa559cf8477f"
+    },
+    {
+      "path": "experiments/odin1_20261012/bag_summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2185,
+      "sha256": "1fde75852a94e070a3a47b8fa955d498d440f0d80751808cd6d0029c809a23aa"
+    },
+    {
+      "path": "experiments/odin1_20261012/config_restore.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 110,
+      "sha256": "0b472633c186b4977c30775eb78b33e32e58d3571eb0beb28b6bdff782f37bb6"
+    },
+    {
+      "path": "experiments/odin1_20261012/control_command.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1055,
+      "sha256": "94eb0579bda3e020de44affc84203ad8c68e45228dbf9afa6154c67540807fef"
+    },
+    {
+      "path": "experiments/odin1_20261012/geometry_summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 563,
+      "sha256": "45620f5f3c90399ed6ade95b6211d319be6bbf3ee1a413e7d4a160b037f6a472"
+    },
+    {
+      "path": "experiments/odin1_20261012/lidar_rgb_projection.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 948184,
+      "sha256": "f4f0271b90a9507e6752563ada94234e80c58e2abdccbfbc95b3b7d1c7b145e0"
+    },
+    {
+      "path": "experiments/odin1_20261012/measured_depth_640.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1326208,
+      "sha256": "fcbe7b6b43f633cdf62be7f5c13b2d0ecaf2bf9038d70770c92c132ead35dd6b"
+    },
+    {
+      "path": "experiments/odin1_20261012/motion/imu_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1320785,
+      "sha256": "cde0efccd2aa1eb9d243d2f0397951444f2dde0ae4aab09d083c5a2b358ce51d"
+    },
+    {
+      "path": "experiments/odin1_20261012/motion/imu_values.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 5833266,
+      "sha256": "0744049095fd3db4a44d045bae13218430a4ddc6f52ced9a6de928e2d6a6c168"
+    },
+    {
+      "path": "experiments/odin1_20261012/motion/odometry_highfreq_poses.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3896902,
+      "sha256": "383f84638e0f72ad0367365336015d1fcbf4a84b5ad1888b223f76d609b07737"
+    },
+    {
+      "path": "experiments/odin1_20261012/motion/odometry_highfreq_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1317137,
+      "sha256": "5aacb0c6b388c8db2dd25e858b207c298784c85d9ea9424d5274b1b1e82a94ae"
+    },
+    {
+      "path": "experiments/odin1_20261012/motion/odometry_poses.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 100156,
+      "sha256": "ed7e53a503a0518a0f216044a438242ee8ea1a2cdad5e911e7ec30ca9f4dfb84"
+    },
+    {
+      "path": "experiments/odin1_20261012/motion/odometry_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 33870,
+      "sha256": "4ebc9e5f513c84b497e929b1506486930239a60fc59ebe8b301dbb53fc3bf24d"
+    },
+    {
+      "path": "experiments/odin1_20261012/motion/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 7091,
+      "sha256": "1e0061341f1a1777fd79c4b4e4a8830b86d7d156a51b30ef4eab50205d56bb03"
+    },
+    {
+      "path": "experiments/odin1_20261012/motion_bag/metadata.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 4435,
+      "sha256": "30ceec309bb5421ddb497f16fb6c4ca8ebbf6c1b278f3ebd7e98146ea1cf0afc"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/cloud_raw_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 12735,
+      "sha256": "1d3a55b8fa0df801a2aef3e702c17100268006334d97adc7368969e083252cb9"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/depth_img_competetion_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 12435,
+      "sha256": "a00984ce674964e67b88b28a4939ad981ef5a82067e685a08ba7502c18349a29"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/depth_preview.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 353323,
+      "sha256": "a7b275b3dc66e54b659028a75a1274cd5fb98a2948ae726a5b1c29b06eebde6d"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/depth_sample.npy",
+      "kind": "source_or_experiment_sample",
+      "bytes": 8294528,
+      "sha256": "2d6713cb808f82c4da7be6a8531d80a112d5cc9d8ed2f2f5a71e37c433ca7759"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/image_undistorted_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 12185,
+      "sha256": "aff071d89d3dc7c61c017c6ff4f05e42e1ecd75d9d6254286dd6b63a80280f37"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/imu_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 569285,
+      "sha256": "35ff31f39077cb3fb1a2a9d9fb5b49e891c73191fdced70fa01a4776d2a70096"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/rgb_depth_preview.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 840433,
+      "sha256": "246b7a43a03f35a28e610fc497c569bc98499bda565bc95e3fd464ed847a2e31"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/rgb_sample.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1881913,
+      "sha256": "f09cd686e8f207b74a88cf1603fc1624b87a1f36c878383df20730568dd4f03f"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1811,
+      "sha256": "5fd7cfcb6b30de2bd859d1fb0d93a42014b8cbeb35e4b06d75133c9d474eeaf8"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth_light/depth_img_competetion_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 9003,
+      "sha256": "0f7e8859a5d727ac0a14d04d03f274a501dabb65b49fb5dd901e5e8b83d0d775"
+    },
+    {
+      "path": "experiments/odin1_20261012/native_depth_light/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 770,
+      "sha256": "9e4e16921de0074b1325206a755fbba7a3688d6127916a038cc54526c3d17a0a"
+    },
+    {
+      "path": "experiments/odin1_20261012/original_control_command.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 5613,
+      "sha256": "6da59cbe6cd29cbcb8ee16e32c3839e71e77342734d064612c725b2029f5b1d0"
+    },
+    {
+      "path": "experiments/odin1_20261012/probe.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 9127,
+      "sha256": "1c985aed9ab48770fdfadb2330973665883d1877b7c065b33d48872069ffec26"
+    },
+    {
+      "path": "experiments/odin1_20261012/probe_depth.py",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3792,
+      "sha256": "e836e8b76219ff2db2f77a9589130ff17a08ef1f962990bd98f29d12a0feda61"
+    },
+    {
+      "path": "experiments/odin1_20261012/qos_validation/bag_cloud_raw_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16189,
+      "sha256": "8735774956403c4c994f6c0e46ccd10341c7837217f3f5821532e4525ccc91e5"
+    },
+    {
+      "path": "experiments/odin1_20261012/qos_validation/bag_compressed_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16189,
+      "sha256": "af87377be9b127a79c590e92f6df10a1f01c4368ccc7e9fe67a7f14d831ae25f"
+    },
+    {
+      "path": "experiments/odin1_20261012/qos_validation/bag_imu_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 631889,
+      "sha256": "3baa1dbd0c518b00a56209361bc17a6312846298f4516bd33f936680ff913f0b"
+    },
+    {
+      "path": "experiments/odin1_20261012/qos_validation/bag_odometry_highfreq_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 631889,
+      "sha256": "38f6427fced6362ad77462a846ba48c9e9dca1813ab9c6269e2caf6d75b42759"
+    },
+    {
+      "path": "experiments/odin1_20261012/qos_validation/bag_odometry_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16239,
+      "sha256": "d0c862b6425d380349733a050aee327b1c8c8b8590acc3caac84d76a87a55967"
+    },
+    {
+      "path": "experiments/odin1_20261012/qos_validation/bag_summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2622,
+      "sha256": "089bc091c18b919c9b178db33a76ece5433b6f5c28d521e883f279a9a1414bba"
+    },
+    {
+      "path": "experiments/odin1_20261012/qos_validation/bag_wiwc_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16239,
+      "sha256": "80fb01ca05462dd3a65673e1c3e614a9fb9cc51e85dac5ed453e134670e22ac0"
+    },
+    {
+      "path": "experiments/odin1_20261012/qos_validation_bag/metadata.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 4086,
+      "sha256": "defc21423be3c79a37aadf03591ce0d79e385da4a08e0fad3671a85eff270d14"
+    },
+    {
+      "path": "experiments/odin1_20261012/record_odin.sh",
+      "kind": "source_or_experiment_sample",
+      "bytes": 561,
+      "sha256": "a5210e9f39ebabba4017ea00dfe2734d118ee865c0ac065978c1a9de17ea2489"
+    },
+    {
+      "path": "experiments/odin1_20261012/rosbag2_qos.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 224,
+      "sha256": "321e2b2bec386ee67ff5fdc590177102e6c2bab6ec3bcbd0d769907b0d8d75a1"
+    },
+    {
+      "path": "experiments/odin1_20261012/runtime/calib.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 687,
+      "sha256": "a5cb005ac9e07f7ea18f86c1918c5a98788e68057b78d7c67b88204c3d712aca"
+    },
+    {
+      "path": "experiments/odin1_20261012/runtime/extrinsics_wiwc.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 18593,
+      "sha256": "a7bfa7a036ff84416f183116d1ada09ffc96033412f26a308c7fa96be7cce50b"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/cloud_raw_sample.npz",
+      "kind": "source_or_experiment_sample",
+      "bytes": 479666,
+      "sha256": "b67ff6c9c0e733608307d60dcd7cf2f4cd742105987fba1afb59374336db5a54"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/cloud_raw_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 9998,
+      "sha256": "c11170ceee54c96f9f8ca6c889d73fb6c328f0b0e89d7a19101fd6a56849a048"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_00.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2179411,
+      "sha256": "61f14c1c28f7bbae80da13dbedbcb8c6afe7a2b01e3cad4b4d71b26d181822d6"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_01.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2180686,
+      "sha256": "bb249e44c3a63176071983b9147b9fd25567af730d5bd55c2e10a1aad75d139e"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_02.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2178941,
+      "sha256": "157a2930a755d42635cdaabdf5f8f2e4d41a15cf43706b45561b52fab935787c"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_03.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2181003,
+      "sha256": "79a64bc5535a7ec8eef3490a4b3b1a30eaf3b17b8933a05abd7a4963a694449c"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 9967,
+      "sha256": "7ed7c97c5adee4eed0fc687bcd55d2dc8ef54d13a0e6233d6d8a68af8c581815"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_undistorted_00.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1948718,
+      "sha256": "928e6253077c0e8103608cc2c643d96a574116606f8d4f457c6775abd47d7769"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_undistorted_01.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1947101,
+      "sha256": "97188c6e26a021523bb77926403975a87ef385f420eb5702c142cc7cd10b337d"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_undistorted_02.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1947988,
+      "sha256": "bf9ff3ae822acdd8d53f53bc610930a9950253edaffe4a65eb5021beb18c876b"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/image_undistorted_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 9441,
+      "sha256": "249a2af0bef86bd081fa2c78f47a5b80250c52dc34c86ebaea3bfac608a11fbd"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/imu_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 344516,
+      "sha256": "558a7403b04e0314cd7e0a3f2c3d5fd9930cb6ee9ef548555d927921f4531460"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/imu_values.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1465928,
+      "sha256": "22cf70e53b30e778e761ec7880c8f80c0ca0c7fc092fbf076129dad9ef71101f"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/odometry_highfreq_poses.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 991903,
+      "sha256": "2854d6f77bbb23d16e9f6d2531d800d7c99c52717b30b995c5ceb7d51efad4bf"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/odometry_highfreq_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 341997,
+      "sha256": "159b9764c021849abe6ffb4f509d5cb4466928af52abd78f797f36af631eb1d3"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/odometry_poses.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 29280,
+      "sha256": "6560aca317c5003e284992fde7ec454f0f06c5b8955a175ee2e44a7355b5e261"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/odometry_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 10136,
+      "sha256": "5efce05392c1d5b46bebfef4f9de5f8cd8d1e9f36a4874ccc5e87e4f3b7540a0"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_baseline/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 9850,
+      "sha256": "c7252bbd4e76d6ce2bb3f4ba07484b7db0806388572b061ee2335759c9b26421"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_light/imu_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 400377,
+      "sha256": "9eb4436af0c948df36c0740b99e26b81f3a14efae5345ef0f29e16701a5e22fa"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_light/imu_values.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1714311,
+      "sha256": "b2f28fdf7cd5adc05e58b46ac975c1f2c59730a155fa8788c635053da5f03e79"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_light/odometry_highfreq_poses.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1156217,
+      "sha256": "beeb99a2a76cdd821a7b18232732792c903dc30337fc3b4555eadb19756a8dc5"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_light/odometry_highfreq_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 399417,
+      "sha256": "4e20dc299f26959bab25546dc0d8c8ef020d712977521aa61b774a3380bb6af7"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_light/odometry_poses.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 29646,
+      "sha256": "68f25e9b9367e0f138c08c9299225fc3bbe7e5875aafde8a1ebc39736eaa062c"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_light/odometry_timestamps.csv",
+      "kind": "source_or_experiment_sample",
+      "bytes": 10265,
+      "sha256": "08308d176ddcce364921b477fca67c8e0f8aedd5ea43b9c2ae19f2483e7058fb"
+    },
+    {
+      "path": "experiments/odin1_20261012/static_light/summary.json",
+      "kind": "source_or_experiment_sample",
+      "bytes": 7172,
+      "sha256": "890c0224812e3311bed34d1526f57539d2012bbbcd8535473d12c5db386c51dc"
+    },
+    {
+      "path": "image/cam_in_ex.txt",
+      "kind": "source_or_experiment_sample",
+      "bytes": 475,
+      "sha256": "c26518acca94d526385dca4d80a29fa1c1c13e551c9dc7703449d4bfbc7f3d36"
+    },
+    {
+      "path": "include/kimera_multi/sdk_geometry.h",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2927,
+      "sha256": "1150b6f8b11eb12257aa7e769c1b081dd4ce083a7b6329a9cf5348f3a8774c3c"
+    },
+    {
+      "path": "launch/kimera_sdk_odin1.launch",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1650,
+      "sha256": "fde82928f73e8136d505b6b753da47ef8f13806c8077a422c7fe194865d38893"
+    },
+    {
+      "path": "launch/kimera_vio_odin1.launch",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3223,
+      "sha256": "4314e7499f6051e40ebaad13d44b036def63705979e680b975d8c92b68cceabd"
+    },
+    {
+      "path": "params/Odin1/BackendParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2935,
+      "sha256": "e00710b16b3b183939b197a49a1ea504709eb2309c1394d42cf4636f31e051e4"
+    },
+    {
+      "path": "params/Odin1/DisplayParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 120,
+      "sha256": "1bd23036478a36ff1a4251b93a09ca1dc990fee7523e1a67ce54be6fc1a4370b"
+    },
+    {
+      "path": "params/Odin1/FrontendParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2176,
+      "sha256": "037365c769f7e23d60bd103796ca87f4ac451bb6cae6f7a19ecf9bc511a03be2"
+    },
+    {
+      "path": "params/Odin1/ImuParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1030,
+      "sha256": "aa9063f8dfc372d8380364f1e97928771281ecbfef00c158389ce6fd78c912ae"
+    },
+    {
+      "path": "params/Odin1/LcdParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1556,
+      "sha256": "47f939a938ec5a11ed4e86894f5bacaba2e0d7bec58d301d957ea47219f9eb78"
+    },
+    {
+      "path": "params/Odin1/PipelineParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 189,
+      "sha256": "349580e6ea3e1cb887926f5f39dbfd2305a68bf321c394597b4066d65644c97c"
+    },
+    {
+      "path": "params/Odin1/flags/Mesher.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1493,
+      "sha256": "38290b6ea940149d74e3d14ad62c756d565f3ae4168bdd00c2557f169a617671"
+    },
+    {
+      "path": "params/Odin1/flags/RegularVioBackend.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 458,
+      "sha256": "5d5691612b21556591389dc132854436849576e11391673bec48a041d5ed18ae"
+    },
+    {
+      "path": "params/Odin1/flags/VioBackend.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 109,
+      "sha256": "5d1a38f580b4f10f0225a4927e7962c02ec988f0e7e975ce22ffc2a21da75405"
+    },
+    {
+      "path": "params/Odin1/flags/Visualizer3D.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 210,
+      "sha256": "d9573989882599409aedc7e810573cd10b691b40f427cfac1fa54032471bbea4"
+    },
+    {
+      "path": "src/odin_sdk_frontend.cpp",
+      "kind": "source_or_experiment_sample",
+      "bytes": 19040,
+      "sha256": "0866e1a30040c735bf3cd5c8b931633d8a83fcb4f7f373eb196bfdd32b358aa4"
+    },
+    {
+      "path": ".gitignore",
+      "kind": "source_or_experiment_sample",
+      "bytes": 536,
+      "sha256": "1b0ca85405dc44fdb323a7c0a77b25890e92e7cb26ce5d6dd88b0c5e35ff9bbc"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1166,
+      "sha256": "0b2812463180cc37406d71d5f98333206eef5cacd8d16b6adb348e34ba668289"
+    },
+    {
+      "path": "README.md",
+      "kind": "source_or_experiment_sample",
+      "bytes": 8504,
+      "sha256": "8a005531af4118828672b7dc366803c7833655337d8a782dbf6828e3d13d635f"
+    },
+    {
+      "path": "docker/Dockerfile",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2849,
+      "sha256": "767294bd481a6542e39af8c4ea91fd5821253a9f61e6e785ba3d6b27e87cf75e"
+    },
+    {
+      "path": "docker/README.md",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1637,
+      "sha256": "7dce90f40cb94a3185baaa357ac19135df04d26384e6c180d6ed5b41adf63914"
+    },
+    {
+      "path": "docker/build.bash",
+      "kind": "source_or_experiment_sample",
+      "bytes": 76,
+      "sha256": "0f241af8b5a7ecd8651056f540974ea1bf696d3c85522fe5e27c1cfb416e8f7b"
+    },
+    {
+      "path": "docker/copy/entrypoint.bash",
+      "kind": "source_or_experiment_sample",
+      "bytes": 166,
+      "sha256": "343ef3e66038c1ffd3d89ab7edffb695bb5d6253670b72e879c6a8adbdeffc97"
+    },
+    {
+      "path": "docker/copy/kimera_multi_https.repos",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3362,
+      "sha256": "3976857ed6cffab787850e023cb2ffe92009872fe9628f39cec7c1b28aa98745"
+    },
+    {
+      "path": "docker/copy/kimera_multi_lcd.patch",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1215,
+      "sha256": "11cd8c1f31d0c01f26ec34dd8285c6c3d60cd86446ed43d3f5962dee30bd5b41"
+    },
+    {
+      "path": "docker/copy/kimera_semantics.patch",
+      "kind": "source_or_experiment_sample",
+      "bytes": 701,
+      "sha256": "2cfc917853d3dc4a90048d638632d8d2e10cb9e9f6108633afa6db4c1ca5d985"
+    },
+    {
+      "path": "docker/run.bash",
+      "kind": "source_or_experiment_sample",
+      "bytes": 477,
+      "sha256": "afad59985f6c429f6a952930709d6dcb23ec3b3054672f0fd691bacf637e6204"
+    },
+    {
+      "path": "docker/volume/.gitignore",
+      "kind": "source_or_experiment_sample",
+      "bytes": 85,
+      "sha256": "864449b74cd5250ce149fe6d2789a5bbcd61a35aa01237e5c4563777d7b6a261"
+    },
+    {
+      "path": "docker/volume/1014-example-docker.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 5955,
+      "sha256": "2981216fc835b2524741c15961652b14eeb9e5ecb0db00a0e1e6bf7ba36aec02"
+    },
+    {
+      "path": "examples/1014-example.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 5684,
+      "sha256": "c24da84ee9d9e6087db500a4b868b24f6fe9f38f9a98c20e914bf590ede0b96a"
+    },
+    {
+      "path": "images/acl_logo.jpeg",
+      "kind": "source_or_experiment_sample",
+      "bytes": 8231,
+      "sha256": "57b1ebc19624224030ea8e00e02395e62fc06e9c011d100171593bcffbf9a93e"
+    },
+    {
+      "path": "images/kimera_multi.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 4846045,
+      "sha256": "e296615c341ddc40f60da90766a0915d0898f11b6d78198b4de48f631459a3b1"
+    },
+    {
+      "path": "images/mit_logo.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 16898,
+      "sha256": "c01cf1077244469270abdeefe8bf22cb5a8009fb51e170454564ec204c681d15"
+    },
+    {
+      "path": "images/spark_logo.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 209402,
+      "sha256": "a6c10ef3056bca7c5e96bd393173e949e6a0c946e655c81c1d46002be8a95e05"
+    },
+    {
+      "path": "images/system_arch.png",
+      "kind": "source_or_experiment_sample",
+      "bytes": 124372,
+      "sha256": "f65ef8bd2be5ccb8f54be2db92956015ad00eb1c8ed2a7b5f301dc2aa987e21d"
+    },
+    {
+      "path": "install/dependencies.sh",
+      "kind": "source_or_experiment_sample",
+      "bytes": 963,
+      "sha256": "152c9194ac628e5f10c09ccc48c353b43fca2f8e73723a12f650ad81e793b0b9"
+    },
+    {
+      "path": "kimera_multi.repos",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3238,
+      "sha256": "e264c83602fbf135d17d54938993442c5a7ab82909efdd890fc6163c99265c0a"
+    },
+    {
+      "path": "launch/kimera_vio_jackal.launch",
+      "kind": "source_or_experiment_sample",
+      "bytes": 3800,
+      "sha256": "c014873a9d22574f21e1bce5b913b3d8c04816b50f6c4bfe30182a1ce9e8c509"
+    },
+    {
+      "path": "logs/.gitignore",
+      "kind": "source_or_experiment_sample",
+      "bytes": 116,
+      "sha256": "1174af94ce274f037568c8c88a85538455a426c6fc35b5ddbccf15ac3737163b"
+    },
+    {
+      "path": "package.xml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 672,
+      "sha256": "8c479ef4f0d5b2ba1d5cb1156163d7090abd012635f1bd6c428352c53c7adafc"
+    },
+    {
+      "path": "params/D455/BackendParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2935,
+      "sha256": "e00710b16b3b183939b197a49a1ea504709eb2309c1394d42cf4636f31e051e4"
+    },
+    {
+      "path": "params/D455/DisplayParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 120,
+      "sha256": "1bd23036478a36ff1a4251b93a09ca1dc990fee7523e1a67ce54be6fc1a4370b"
+    },
+    {
+      "path": "params/D455/ExternalOdometryParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 460,
+      "sha256": "df2f0b907fa7d4eb2d2def37644248dfdf1ef96e504801327094a03454042197"
+    },
+    {
+      "path": "params/D455/FrontendParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 2030,
+      "sha256": "5122674a40c4f40ad1ae5352af6eef7aacb8f09b7374d52dd8f2322f8bf24f59"
+    },
+    {
+      "path": "params/D455/ImuParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 986,
+      "sha256": "75f04d9f6edfc878f7e9f55b23882597ec0d5900ee12039557c7783a4c959743"
+    },
+    {
+      "path": "params/D455/LcdParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1556,
+      "sha256": "47f939a938ec5a11ed4e86894f5bacaba2e0d7bec58d301d957ea47219f9eb78"
+    },
+    {
+      "path": "params/D455/LeftCameraParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 692,
+      "sha256": "9abaad52681dc34d9fa46d8455fc405903c1626be90bbd1b049da67fa7f3a5e4"
+    },
+    {
+      "path": "params/D455/PipelineParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 321,
+      "sha256": "d63737be85d4d92712ed140c3e2b2c16ae3579a28f5dd36e29a485776af5511c"
+    },
+    {
+      "path": "params/D455/RightCameraParams.yaml",
+      "kind": "source_or_experiment_sample",
+      "bytes": 693,
+      "sha256": "0fc3fc37deb67618c13c998c1b97d9073217812d9353b3dc48012fb46fafff7b"
+    },
+    {
+      "path": "params/D455/flags/Mesher.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1493,
+      "sha256": "38290b6ea940149d74e3d14ad62c756d565f3ae4168bdd00c2557f169a617671"
+    },
+    {
+      "path": "params/D455/flags/RegularVioBackend.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 458,
+      "sha256": "5d5691612b21556591389dc132854436849576e11391673bec48a041d5ed18ae"
+    },
+    {
+      "path": "params/D455/flags/VioBackend.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 109,
+      "sha256": "5d1a38f580b4f10f0225a4927e7962c02ec988f0e7e975ce22ffc2a21da75405"
+    },
+    {
+      "path": "params/D455/flags/Visualizer3D.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 210,
+      "sha256": "d9573989882599409aedc7e810573cd10b691b40f427cfac1fa54032471bbea4"
+    },
+    {
+      "path": "params/D455/flags/stereoVIOEuroc.flags",
+      "kind": "source_or_experiment_sample",
+      "bytes": 1046,
+      "sha256": "377f7fac73204d01d7974e0d46000c2ab56c7d6c69f00d59b881dbee90750c8e"
+    },
+    {
+      "path": "artifacts/odin1/adapter.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 580,
+      "sha256": "41b32b55d6e0c8e976a26c1a99048b2fb59eea468d0bad4673885df01a42243c"
+    },
+    {
+      "path": "artifacts/odin1/live_bounded_cpu_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1655,
+      "sha256": "0b92cc249c8a9ed8e765d45655dbb08a917672e29021990b4c111b4420dab9cf"
+    },
+    {
+      "path": "artifacts/odin1/native_ros1_readback.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1058,
+      "sha256": "f02e0e21b8f2362df5f6a8f74dfdc54dcdbfaa8f119879668ee1bfd6e873f36f"
+    },
+    {
+      "path": "artifacts/odin1/live_v2_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1694,
+      "sha256": "e7f80023b6416d6a941264dfa4825c3f5dca0d62657e54af61e5e9cbc095e1d2"
+    },
+    {
+      "path": "artifacts/odin1/generation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 516,
+      "sha256": "aedfdff2947c3f4184b7f96544cf72387b00528479d9542ba38180a7079afcdb"
+    },
+    {
+      "path": "artifacts/odin1/ros1_roundtrip_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1243,
+      "sha256": "ff3d55567b4e3a6171b7d52b646cc6242672b639e1156f5ac96fcb3ef370a7ef"
+    },
+    {
+      "path": "artifacts/odin1/live_verified_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1694,
+      "sha256": "c03e0f6df3584056a3cf40e403889bc951dd6c3eab6f004361241d22c685bf74"
+    },
+    {
+      "path": "artifacts/odin1/motion_rgbd.native-repack.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 980,
+      "sha256": "e943f53bf65eb9c4be30b6b984359ca7eff295cd4a70dcac20f5e93285ed6713"
+    },
+    {
+      "path": "artifacts/odin1/motion_rgbd.preview.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 697487,
+      "sha256": "3f6b0fe855148ecdbc5fdfbfb4ee2a19bb6b00c980fc6b5cf5f8889805751845"
+    },
+    {
+      "path": "artifacts/odin1/live_optimized_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1694,
+      "sha256": "d7cb8edb6ac64b7ce625d714176cc59878ba1c5357e57100f5114f16075a00b4"
+    },
+    {
+      "path": "artifacts/odin1/qos_rgbd.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1264,
+      "sha256": "975888f015d9f9f0f8ac64044256bbb05d5e27f2847a146727dd0b8ba596d591"
+    },
+    {
+      "path": "artifacts/odin1/motion_rgbd.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1262,
+      "sha256": "ef762dd90016757a7cbcd8bd168ff6a07f9b446818b2119a8af60a997a610523"
+    },
+    {
+      "path": "artifacts/odin1/calibration.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 687,
+      "sha256": "a5cb005ac9e07f7ea18f86c1918c5a98788e68057b78d7c67b88204c3d712aca"
+    },
+    {
+      "path": "artifacts/odin1/live_final_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1658,
+      "sha256": "366355f0a4e55168756e0590f320170d92ef1dea4c8761152256913dbac8be13"
+    },
+    {
+      "path": "artifacts/odin1/qos_rgbd.native-repack.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 977,
+      "sha256": "3515ffa054283d6fceee296d647573be04bdeee371522657488c74d592794f7b"
+    },
+    {
+      "path": "artifacts/odin1/qos_rgbd.preview.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 666993,
+      "sha256": "0b80347760926b07b97ce1ffe29be4a5f402d90d06d846956aeeea32bdebbc30"
+    },
+    {
+      "path": "artifacts/odin1/validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 14427,
+      "sha256": "2b8471cefc11efa6f24fdb5bba385a0b63da390d321e81b5996f65f70089dd89"
+    },
+    {
+      "path": "artifacts/odin1/live_replay_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1508,
+      "sha256": "93888b4e6b7d9d8d2cd466db51f857f8e9bddec53496003da68fc1ef7272ee19"
+    },
+    {
+      "path": "artifacts/odin1/live_replay_repeat_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 919,
+      "sha256": "6497efb748e1651ca6628a861804e4cf1af00f50fce6f4a126d887c12e1beb95"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 82381,
+      "sha256": "b6299c6e9d00232e50257a407673b49a098b507b21fafc4c87265ad539d9a7b3"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 20242,
+      "sha256": "cc8efd0891c92acddc2a272a6a20e7f1c2239b4454226715124983ba3881a593"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5712,
+      "sha256": "05223082252bcfdd9c0f92e193422b13ed1f8622ee911569da310d61b414451d"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 19683,
+      "sha256": "14d461a4948f5726951ad327a4af092e66cb13f2c7345882f62748fc96b35904"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2337,
+      "sha256": "06b254e5c6ec98620a25fafc89517345f02cfca1e7d7b5366f7797edd59eeae7"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3909,
+      "sha256": "a74ee57337dbaebe055552391706a2fa6c2c9c59f55adad8a971344b24c1eb22"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2632,
+      "sha256": "a69a2d141cba009f855375c179a0d4084211b0600fd3dafc9c16b8dba699c5c0"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1087,
+      "sha256": "dd2694201299c74802208342ccc01de2bd18b8ce54063f723fa037fafe64e076"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 44774,
+      "sha256": "6ea7ad3dac91a33521a27641cb9ee2c166e22d76c1c27d118540014096609191"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5004,
+      "sha256": "1960006bffaa4f5cb119c746c62cf360a63b940c860b9fa367f913387605aa4a"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1045,
+      "sha256": "eaf64514466ccf025d956250a25be356f0bbb671bcce224751088f056c0c6871"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 20362,
+      "sha256": "07e0b0ae239053b86178fca17584d77a925a622ee50ad0337b26463754f8a447"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 6769,
+      "sha256": "89b3d8e82e987b5715bb6b646abe4e55bcd5e04853f9f4a54e02fe39e18f6940"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 28708,
+      "sha256": "bf6789e413f259eeff4fd5772fcb5361cb324c9f3a52da9595b4dcb57255f725"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/odin1/docker_static_native/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 10035,
+      "sha256": "2b07b4f0377108418eeaabd9d3fc89e66c376b4cf7cd813ee8c09c5af8d2dd08"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 114350,
+      "sha256": "44cf114edc4be81f8bd18d4a71a8ce65cf8a18dab272f94daf1880d08070cc1b"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 28264,
+      "sha256": "52f6d08396abd587bed46e53614a4918cc5aba191f0be36550e1bb69ecea6e93"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 12626,
+      "sha256": "de42954ce20066525a82aaf4ac5e77092c4b5d6c3ac9c9e96d359c532e823cc1"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27780,
+      "sha256": "b350e350b825b6ede864546e7a74356ed7abdbdc09bd57269eb04b5290039a35"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3744,
+      "sha256": "b6951540313f5a486efb0e1c578265a28c844a9c9e29fa9ada036860e8e35806"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4060,
+      "sha256": "3dfb36ee9f8c84c392dbb4d149c593c10b2699fa05882ad24458bd45c82beef5"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3760,
+      "sha256": "6de0507c44edfbd09eb8014f0f1342a21b30d26304560ace60df4b94c6a86a0f"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 254,
+      "sha256": "695890004077c40f662efcf173597f9cc2efcecd211c9fc589a3ba2c6fbaa826"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 61988,
+      "sha256": "eda764299dd98aa16c5d2d39246b254c05ad31e5422ee156f74134741ae5dffe"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5974,
+      "sha256": "5bf7b250b111500581ff980e45c969566414e80c0a931933887ca54aa052c40a"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 247,
+      "sha256": "8bc18d74972b8f6fc69ef4a9b8237b0ebb10a3583a4d78ea17d21b4ea0336c29"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27540,
+      "sha256": "9566cbde482075d1fea9eaf8653e2ecc8585b23cc1da9baa4f15d322581ce0a1"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 9961,
+      "sha256": "71260da13d390a0cf01d892da9cb796a7d1fec61feddec3e15743018d12803b0"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 38761,
+      "sha256": "7d251909d394b21bf660a5265dc00681e4ca01e0ffedcd30e2297f558e533dbe"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_native/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 13376,
+      "sha256": "17f94847638b00608a0380e26f8804f1d0286b901d48ab23f5f4f32482a6f968"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4140,
+      "sha256": "7c2d4e5d41b2f59e9c0564e29b7d6d9e525e9502a70d953e2db6e55cef901992"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v1/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4146,
+      "sha256": "65e193134fc0024dd8a27c3a0350576f65a5f2768cfa6c07a025afb03b1a97e9"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/odin1/params/LeftCameraParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 665,
+      "sha256": "23c6e2defe675125b89b1694342980da6060b805c40c498b749786ab788de0e3"
+    },
+    {
+      "path": "artifacts/odin1/params/FrontendParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2176,
+      "sha256": "037365c769f7e23d60bd103796ca87f4ac451bb6cae6f7a19ecf9bc511a03be2"
+    },
+    {
+      "path": "artifacts/odin1/params/DisplayParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 120,
+      "sha256": "1bd23036478a36ff1a4251b93a09ca1dc990fee7523e1a67ce54be6fc1a4370b"
+    },
+    {
+      "path": "artifacts/odin1/params/BackendParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2935,
+      "sha256": "e00710b16b3b183939b197a49a1ea504709eb2309c1394d42cf4636f31e051e4"
+    },
+    {
+      "path": "artifacts/odin1/params/PipelineParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 189,
+      "sha256": "349580e6ea3e1cb887926f5f39dbfd2305a68bf321c394597b4066d65644c97c"
+    },
+    {
+      "path": "artifacts/odin1/params/LcdParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1556,
+      "sha256": "47f939a938ec5a11ed4e86894f5bacaba2e0d7bec58d301d957ea47219f9eb78"
+    },
+    {
+      "path": "artifacts/odin1/params/ImuParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 518,
+      "sha256": "698b78082ccfc75f23ac255e892b99219c3b72f0d00f2c04f12abf7ff93e1ba4"
+    },
+    {
+      "path": "artifacts/odin1/params/flags/Mesher.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1493,
+      "sha256": "38290b6ea940149d74e3d14ad62c756d565f3ae4168bdd00c2557f169a617671"
+    },
+    {
+      "path": "artifacts/odin1/params/flags/Visualizer3D.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 210,
+      "sha256": "d9573989882599409aedc7e810573cd10b691b40f427cfac1fa54032471bbea4"
+    },
+    {
+      "path": "artifacts/odin1/params/flags/RegularVioBackend.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 458,
+      "sha256": "5d5691612b21556591389dc132854436849576e11391673bec48a041d5ed18ae"
+    },
+    {
+      "path": "artifacts/odin1/params/flags/VioBackend.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 109,
+      "sha256": "5d1a38f580b4f10f0225a4927e7962c02ec988f0e7e975ce22ffc2a21da75405"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 114350,
+      "sha256": "eed0a87f8a03d8574894772a663e15f41eba02bc5045545f74e43d4640537129"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 28264,
+      "sha256": "52f6d08396abd587bed46e53614a4918cc5aba191f0be36550e1bb69ecea6e93"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 12626,
+      "sha256": "de42954ce20066525a82aaf4ac5e77092c4b5d6c3ac9c9e96d359c532e823cc1"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27780,
+      "sha256": "b350e350b825b6ede864546e7a74356ed7abdbdc09bd57269eb04b5290039a35"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3744,
+      "sha256": "b6951540313f5a486efb0e1c578265a28c844a9c9e29fa9ada036860e8e35806"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4066,
+      "sha256": "bd5ea5409a1b3ed835fbe300dfbed20df62302166d9d475d711c5ef39a7715a7"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3760,
+      "sha256": "6de0507c44edfbd09eb8014f0f1342a21b30d26304560ace60df4b94c6a86a0f"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 254,
+      "sha256": "695890004077c40f662efcf173597f9cc2efcecd211c9fc589a3ba2c6fbaa826"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 61988,
+      "sha256": "eda764299dd98aa16c5d2d39246b254c05ad31e5422ee156f74134741ae5dffe"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5974,
+      "sha256": "5bf7b250b111500581ff980e45c969566414e80c0a931933887ca54aa052c40a"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 247,
+      "sha256": "8bc18d74972b8f6fc69ef4a9b8237b0ebb10a3583a4d78ea17d21b4ea0336c29"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27540,
+      "sha256": "9566cbde482075d1fea9eaf8653e2ecc8585b23cc1da9baa4f15d322581ce0a1"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 9961,
+      "sha256": "58e5ec5e4655684e1021ed41000556d5e606d6bfc3ebf2ad0975348bc740a2d3"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 38761,
+      "sha256": "7d251909d394b21bf660a5265dc00681e4ca01e0ffedcd30e2297f558e533dbe"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_1x/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 13377,
+      "sha256": "b77da6228d24dafbaccad623cbbab9575a1feef02be014cd43ee406fbb907ba2"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4131,
+      "sha256": "20be930054a7648913ca674d165edc28c8f423482e0b0141738453fb50020150"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/odin1/docker_motion_v2/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/image-inspect.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5417,
+      "sha256": "e603bd311e9c5f43d998357fd45831cc386c4604e5c38433742ff1d1b568ad88"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/sdk_pair_resources.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 258169,
+      "sha256": "3ed2bcb9c7338b0fb476f27fd1a3186d25948e25f602826b13dd7e47f0f3cdae"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/sdk_rigid_pair_resources.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 269635,
+      "sha256": "f3ffbbdeeedef2b13c07aff790414496e3c9afca13a6764acf9eb53ea6286383"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/motion_usb128_pair_resources.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 438747,
+      "sha256": "2db318f19d8f271b62a2aa0d7efdd1f50c468f5eb5bab010bd9559aad2b2c83c"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/motion_usb128_fixed_pair_resources.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 673649,
+      "sha256": "fea755ad04148c23449ba606cfdca2ad60254102d124fef53228ebb224b70219"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/image-runtime-sha256.txt",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 87,
+      "sha256": "c9ca5a6ff15a94c2ae89219dc163646aa2d5a82e31cbbc84efd77a1897148228"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 64137,
+      "sha256": "0ea4b5370b62da8f9cdd1f7276bddf2e067c2ffd243976974da826e4ad7d9730"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/sdk_frontend_validation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 16113,
+      "sha256": "a682365efdc6f7db121f4c1045485fab275bc190b768e49cb213d575434a977b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/motion_pair_resources.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 527964,
+      "sha256": "a327dd358519019910fc9a7b00b81a3441cd193dbd1c03f6be3f871b1bbf29f1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 78721,
+      "sha256": "81c8e7da7ea036c4a64c9daf7a156ee210727a723441c6d15da6bb30bd35e35a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 18933,
+      "sha256": "e6684a0da77828eb54e75d10196662c243082d5247c8436505387ed910329678"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5394,
+      "sha256": "5a75bae576a57311221eebf3cef600823bff85266147e7b4dc188896e310b8bc"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 18599,
+      "sha256": "3c4f5816a5ab096c77080d3ddde111abcccafe5b79692967905a8ca856912fa7"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2205,
+      "sha256": "0a72e7a847a7762a593bae3b062a199961b7dfc4cb730ca3b9fb44619fa25114"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3945,
+      "sha256": "c7881e8971c076811ff949437a828316007ce3e8bd6f7a9b9f17a633c1eacccf"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2488,
+      "sha256": "f9f19283298e817255e97c640d09d1a73ee52a18e71a65646b771a351cd05d43"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 42163,
+      "sha256": "53a98e6b84e29d4740847792863e6ef2a339b3f7c2786ce2e149a6a798d83c55"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3828,
+      "sha256": "5c8d21500619c5c0d5679a835d89e2c47950406ba67ee3f4587018245e20f6f7"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 19021,
+      "sha256": "7c5f8d5e8954d189d2d57ac20da6f8d7de24e2f240341a159a9d7a9fbe07fbc2"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 6412,
+      "sha256": "dc0d2432782898cf611168309308417b3d56cd743aaab5c790af77f3b9bd3aac"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27060,
+      "sha256": "2db806eb8ba3d0710515425afd0c15a3901f2516c1886651d79dbb57c0349a96"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_b/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 9512,
+      "sha256": "50cb922cf47509e8aeeeb3f0352d03129fec3fa9605409e03f7497464efd02d1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4402,
+      "sha256": "56e1c4dfedcb83102e1b6297c3c9bf3362dd9f6e4ad11e751f2e9c4fee0a05bc"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 257787,
+      "sha256": "26d6452578c7b2752902b6f46c4883f87652dffe161370fa773c9ff2c3390dcf"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 66628,
+      "sha256": "24702880a35642ed902b366821f919ec46697d715bfa2e9a4bb7c56e752396bb"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 21593,
+      "sha256": "f3da4023f16018588ffa2b1413a4bde28d2b748ddf9c6bfbbfbdb7481e9f3a4a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 65109,
+      "sha256": "b3798caaa833d0e375d7802472d6d80f206dd07b574512b99f75b0f7085c8eea"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 8100,
+      "sha256": "8c4abb0ca170161b402df76127c9e2140e51b46699133aeae35e3fdee3507cd6"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3906,
+      "sha256": "e5326662b8f978fc34f6409f6d2b6b13ba31ad7ff022595dbe5d5b85a830f469"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 8488,
+      "sha256": "062f6d87e7cf0a3fb05882f41e9d41b9d595c9a7fcbef201ecd2780f9b349d3f"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1089,
+      "sha256": "38d1b7016a8927df3867fcbc31cf8e8d8d22fe246f47beb1d5b473b40d5a5136"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 144594,
+      "sha256": "bdd2af299ba5980884ad24c06ca355b02a4318253bc0975557ad8f13d51edb8c"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 14401,
+      "sha256": "8827f6ac0337077216c547046cf808e3b38e5676dda8e0a8eb26d3cbfabd5306"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1059,
+      "sha256": "ecfdcf87e511341b6077cc44dcedaa7c58caf703bf44bba2034fe9e4230ac67a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 63638,
+      "sha256": "20eed93a35f2e28d7183a5e9a608d9d47daa29aaa7f2e58072d379e743ca1556"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23678,
+      "sha256": "490af97dfaa8119d8a5207212da9b1c7558cf077ac06f29e412472575c9900f4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 90302,
+      "sha256": "53517a11176ec7cacd642e68f14482f2f3463166468849500c8fbaaf2fb32e47"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 32154,
+      "sha256": "1106c4d7d77c6bc5607d424946290bf198496a4fc2d79898fff5d50691f5f7b7"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 26900,
+      "sha256": "34cb68c52e32e75be343c5a96d7dd20dfd27ae18cada37f0f3745e733486b7a5"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4949,
+      "sha256": "b5edba4dc9fe2eeec3787c2a188790638713f550dfe0ee57c10ac03aa289ccb4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1687,
+      "sha256": "8b79bf738e586db3146000866016753d4d20e04719aacd2b8fd40c54a2ab03e9"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4859,
+      "sha256": "fdaa13a8413bcf6eeb6c34290ce0dfdefd58c1ea6276b75611fea46b6151d214"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 681,
+      "sha256": "4f5474829202a29b73a091d6d063e22a8c57297b69b42010497e777c2ca408cf"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 785,
+      "sha256": "8d363faf3937b5f405ab746fbe00468da12dd4319ef4fdb201ca757dd50994eb"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 11136,
+      "sha256": "b601ddf9186859a49903899e5066d95278ebcd6a4762e626057a38e4efc0047a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1117,
+      "sha256": "daae292ea39a54a2ed2f74f96ad7026d70f1024fff25a42a49117b4adad7dcac"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4973,
+      "sha256": "439d3ae6d87842b8cd318d49455c9053a622796512e91aa2d20d5cd4fdb43aa3"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1834,
+      "sha256": "f3b3cade382a348421f343939ba5c6b1810197046f84d78df2d07b9280da4c0f"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 7025,
+      "sha256": "0e6705232f64b4da5b8e0cac4b55480a5e1c9acac6522978a0c3715866862954"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2750,
+      "sha256": "eeef4024eafc7affe1dba94c6290d64a9523c17b4b500c98743f0e24023784fc"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4357,
+      "sha256": "c78366c5984511aa660d0ddf3d2440224e3589e002dc6c0ce8feba678f61e834"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 153449,
+      "sha256": "326e99319be155526951e7dc0500f7eb9f3457f238eea5eda26b8b6eb765177d"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 38656,
+      "sha256": "fba723df4260dff298170db314fb7290f121a1d97539ff8065e8a54f57c8c2de"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 10906,
+      "sha256": "59a62014dab85fd370f049498b2ff1192a75da9c322f2e998207ba23cf17a3ff"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 37911,
+      "sha256": "8443d7d0a8abb85b53f3fb5512c4347868ee3e1283b336eefa79e2637e2ef671"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4493,
+      "sha256": "3641dd257522535c479cfcd776956595be46d952a00c79156eff5d86e7e19637"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4098,
+      "sha256": "e13901fd4c532820e413c27fe9b3c6f96a29b9f8eefd2f7b961fe835e54fb59e"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4984,
+      "sha256": "97d62291349fc201289f29f66c865ff32a7b6d4a702c840dc0022fe4346af033"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 21349,
+      "sha256": "aa5a6ce152fd1241d4e4c526bfd644dcfde03f0571b328e9e722f5e50dfdaed5"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 85296,
+      "sha256": "0a5da85b83994e473bb413da37009f0b6df45c14113de8b7efd847e818d89572"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27291,
+      "sha256": "ad5138d612c2b1ed16b2ccca04fe4078b7559cfecfc0ffd7b29b0988390e3f57"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 20488,
+      "sha256": "f69c1905144592787b69b25a22b71c8a7d39fe3599abea277e57e30ad141aaca"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 38473,
+      "sha256": "ea330342d458b58427656ba9a528b310532183901e6327392e4ee4ade82252bb"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 12934,
+      "sha256": "b32059199bd797cd2afd8a090b8eb54c590af44741bd2054dfc9a3a1a94e2cde"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 54753,
+      "sha256": "88b9942391bfb1c178d1b2bcf81d4a70f0e9c5f3643b7e2ecf283b03bd0a6083"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_b/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 18945,
+      "sha256": "3dd525666456222518e8065684cb4f03dbf441a172b24661d7e33cbd81e53380"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 154056,
+      "sha256": "9263f3788dc5d0d4ada28f305e0dea00c8f4bbe41e405883a40e23b0085bb47d"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 38782,
+      "sha256": "d3175eeec9bc5ede41bb50ef021a40e327ef23b9e24a2c9e6c8e4c9e0462faf2"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 10906,
+      "sha256": "82028df49991c745cc5548fd037a6c7180eb2b0593bed47ac17052c8a5b15940"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 37929,
+      "sha256": "7b0361491155a6b3cefae715f68d886403af23d1c5cc96e133b5884a9770b178"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4493,
+      "sha256": "c89ac5b03cbcc46958775efd1337d4868ab6cea055dacd1b5ea51a8f79851d51"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4099,
+      "sha256": "68d3c2b223ab6a6e15c127a458080f121377aff9a217b49f876a9aecc055b658"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4984,
+      "sha256": "97d62291349fc201289f29f66c865ff32a7b6d4a702c840dc0022fe4346af033"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 21364,
+      "sha256": "a2cb2b79b678070a40e7826a1a386d97b75c8efe61bbdb3144644c2cec59308e"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 85744,
+      "sha256": "bd78b86132419a1fbf40d362a158388f9a05793417c2315436513954b5c1370f"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27375,
+      "sha256": "7f1bed84010d1380ebb5a478b8f703f13025488a175b321aa3f7bab40ed846b0"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 20511,
+      "sha256": "d6f731f69ed0d72a50940a2beddb005310ea30afcf8c5945dd7b19a54f755df5"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 38871,
+      "sha256": "23f8a5572e38dd9bdee8931fc05facf3c2fc9a8f7f0ceb8252bbd2750e2e3ca7"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 12926,
+      "sha256": "b48429a5ceae231cbd9a4d742de93a3f198701e77a4b0031f6616089b0425350"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 55132,
+      "sha256": "e3e9cc320adab95725e46fef4474f93e8f1ae9a91a48e3c4972f7a01f5ffe12e"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_pair/odin_a/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 18953,
+      "sha256": "58cf45a37994ac16a313ab8a5c08a3325f1e4b942675643008f1fda825ce3fc8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_pair/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 6111,
+      "sha256": "8b009831635c2d7768d0296dfb68e63121a03b5277f9cc72ba4d29ae593cd741"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_pair/odin_b/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 565847,
+      "sha256": "404ddc9af0abd05309dff8a8921d3ba2c5d75150b6a8a4569cd06b2d035320b8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_pair/odin_b/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_pair/odin_a/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 569684,
+      "sha256": "91291a29175e4abd2eb09ba857c543c94a45203cad55d547bbdabc98e2c52c71"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_pair/odin_a/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 25323,
+      "sha256": "aa95531dec3be8379d423752fdbe334cd10b6499d6be0c7a3fe1f8c434eb4179"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4949,
+      "sha256": "b5edba4dc9fe2eeec3787c2a188790638713f550dfe0ee57c10ac03aa289ccb4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1687,
+      "sha256": "8b79bf738e586db3146000866016753d4d20e04719aacd2b8fd40c54a2ab03e9"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4859,
+      "sha256": "fdaa13a8413bcf6eeb6c34290ce0dfdefd58c1ea6276b75611fea46b6151d214"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 681,
+      "sha256": "4f5474829202a29b73a091d6d063e22a8c57297b69b42010497e777c2ca408cf"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 785,
+      "sha256": "8d363faf3937b5f405ab746fbe00468da12dd4319ef4fdb201ca757dd50994eb"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 11136,
+      "sha256": "b601ddf9186859a49903899e5066d95278ebcd6a4762e626057a38e4efc0047a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1117,
+      "sha256": "daae292ea39a54a2ed2f74f96ad7026d70f1024fff25a42a49117b4adad7dcac"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4973,
+      "sha256": "439d3ae6d87842b8cd318d49455c9053a622796512e91aa2d20d5cd4fdb43aa3"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1834,
+      "sha256": "50dcfd639489abeb6f09324e1aecf2fd4f4fe7ab4a8535caf48ea54bdeaafe5e"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 7025,
+      "sha256": "0e6705232f64b4da5b8e0cac4b55480a5e1c9acac6522978a0c3715866862954"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2750,
+      "sha256": "fa57a9a9a6785f17b15a18fa370e4ba852aba7441430d4c7a9b1b25800b5d801"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/fused_vio_candidate.ply",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 6310920,
+      "sha256": "e3886a28a56ee942d5c40b505eec94a259f99703f2c5f2414349dd7af2281eef"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/odin_a_sdk.ply",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2381250,
+      "sha256": "e39ff724a905c14043eb752ae64079293ebd0c569cbeef3358212c3a55914579"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/registration.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 136722,
+      "sha256": "d170ef0e0522c49cfd5940cd9b54979453b845bac8f34d511a57590610f5d7fc"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/fused_vio_candidate.npz",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 9579735,
+      "sha256": "2bb7539259fb91ba0ff822f16a6896ae6d78cb90d4c6d768ab909bd9c709235a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/odin_a_sdk.npz",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3590821,
+      "sha256": "6a7c289e9e8b97575e3fd38e7f6dd3abc39d41bcf1e054bfbe60f107c2956ffd"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/odin_a_vio.npz",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5023315,
+      "sha256": "2fb7d1c6c4f3f5c903c949c3c9c6d0b3c7febee1fca097c47da5b31231d2fa65"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/viewer_controls_check.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 113588,
+      "sha256": "fca32458b7d3603ec8cd61e76cc7f9ebd1a6e0e792742015ff47922543845baf"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/viewer.html",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 11341956,
+      "sha256": "eb62d49a716a604c26f0a49f97db68c01069c237f6ee5addec73c180b3896bbc"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/fusion_comparison.pdf",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 190846,
+      "sha256": "2ab9fb9797287f11f406f2b429bb8194dff9cf6f5fcad6532a8ad5ea3e2cc77c"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/viewer_check.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 159844,
+      "sha256": "016092c9b879114a25a80f555a74739b4893c23edb0b3a5fd8923d7824deb824"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/odin_b_sdk.npz",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2811367,
+      "sha256": "341ba8b31fbda2927761a0e7cbd3d7cee004b703282c06cd880f2f33f91c01c4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/fused_sdk_candidate.npz",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 6439642,
+      "sha256": "d92f2e911a46d21cf09e499367a77d2717b5033783fd69fa528c4319edbc6b27"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/fusion_comparison.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 753030,
+      "sha256": "9b9f9d4144834b233b4b235b9292bde5890666dc46107d6ce69a70f74068415d"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/odin_a_vio.ply",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3326415,
+      "sha256": "98b8ceac64038731119366e02366e283e52364aa069d4cfe2eb681d7334328b3"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/odin_b_vio.npz",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4505220,
+      "sha256": "56f0ae185bf89ef74185a613f1992466f7cf87a4501dd78892e7f25a4b4009c1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/odin_b_vio.ply",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2984685,
+      "sha256": "06a211e7ff57c2b0adf51328b72ab65fe0441fd7df0a4a05eb4df8e65cec59d9"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/odin_b_sdk.ply",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1864710,
+      "sha256": "3fbb3b08e0c91c9bc214e59da6127423a6b31dfe5cfa48518ea6c1232f5c892a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/accumulation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1232,
+      "sha256": "7ff83c583005b9b1e9c1fb2425767af9e833e78825ada3fb9f948f05a0219fba"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/cloud_fusion_preview/fused_sdk_candidate.ply",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4245780,
+      "sha256": "19231758031e58e0462cc9044af84159af60319cd40602ef1aaec387cf0a7af0"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 25323,
+      "sha256": "aa95531dec3be8379d423752fdbe334cd10b6499d6be0c7a3fe1f8c434eb4179"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4949,
+      "sha256": "b5edba4dc9fe2eeec3787c2a188790638713f550dfe0ee57c10ac03aa289ccb4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1687,
+      "sha256": "8b79bf738e586db3146000866016753d4d20e04719aacd2b8fd40c54a2ab03e9"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4859,
+      "sha256": "fdaa13a8413bcf6eeb6c34290ce0dfdefd58c1ea6276b75611fea46b6151d214"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 681,
+      "sha256": "4f5474829202a29b73a091d6d063e22a8c57297b69b42010497e777c2ca408cf"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 785,
+      "sha256": "8d363faf3937b5f405ab746fbe00468da12dd4319ef4fdb201ca757dd50994eb"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 11136,
+      "sha256": "b601ddf9186859a49903899e5066d95278ebcd6a4762e626057a38e4efc0047a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1117,
+      "sha256": "daae292ea39a54a2ed2f74f96ad7026d70f1024fff25a42a49117b4adad7dcac"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4973,
+      "sha256": "439d3ae6d87842b8cd318d49455c9053a622796512e91aa2d20d5cd4fdb43aa3"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1834,
+      "sha256": "d98e8ef7c88ecb1ade0cf69f7a0d4cbd7ce40e83636e075177a64af51fb54697"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 7025,
+      "sha256": "0e6705232f64b4da5b8e0cac4b55480a5e1c9acac6522978a0c3715866862954"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/diagnostic_cv_a/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2748,
+      "sha256": "45bdd0db8d0f5679852ebace6288f0d368d5484bdcf94bd7a31ac65d4d196ad0"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/adapter.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 616,
+      "sha256": "5cbca845ef2f4c036f1e67be4f4b66cb175728ec57608578d8a1364adc86993e"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/generation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 528,
+      "sha256": "f3c226defee9b21d264222ca6ca5e9c3f784301935d54b8d7309eaefe0f4ecc0"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/static_rgbd.preview.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 741337,
+      "sha256": "31fa8f2f65fdba1b30b4115cc8290b5ac33b140419278d07e8ac2452542c9ce0"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/motion_rgbd.preview.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 741949,
+      "sha256": "d351ba7f4d9d1b26345164ff9366d290b51969b89d801584bbcb6480decd030f"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/static_rgbd.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1221,
+      "sha256": "c704e0ddc4db61cc2839e7c094120c01fb9b296f45c4c848276bbd5bca8989f2"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/motion_rgbd.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1223,
+      "sha256": "babbbbaed0ca942245f98bb7e0505f816dad50366dd2cd4090bad8d9a97aec53"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/calibration.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 689,
+      "sha256": "89c6224973ffc4e68a20183e63e67371c0a1c3eb0f36a035343a6c6a5d488221"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1321,
+      "sha256": "0b7cc91d9f53265021e597179d3d11be481b53de0036e2f53f8b94f6971b8bd4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.preview.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 645682,
+      "sha256": "b6e4e95d0e60561807b28dcef5e5676454116bb1d175c57f7bbd0f46142a6a14"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/LeftCameraParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 665,
+      "sha256": "4089686dc6b54bbc83b4a45ab11d399c8c72ffbd91c1fac38536d5b396d95762"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/FrontendParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2176,
+      "sha256": "037365c769f7e23d60bd103796ca87f4ac451bb6cae6f7a19ecf9bc511a03be2"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/DisplayParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 120,
+      "sha256": "1bd23036478a36ff1a4251b93a09ca1dc990fee7523e1a67ce54be6fc1a4370b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/BackendParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2935,
+      "sha256": "e00710b16b3b183939b197a49a1ea504709eb2309c1394d42cf4636f31e051e4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/PipelineParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 189,
+      "sha256": "349580e6ea3e1cb887926f5f39dbfd2305a68bf321c394597b4066d65644c97c"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/LcdParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1556,
+      "sha256": "47f939a938ec5a11ed4e86894f5bacaba2e0d7bec58d301d957ea47219f9eb78"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/ImuParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 595,
+      "sha256": "04e053758d6cb644929add2aee99ece767235fd1b042387fadd84c0ae30970e3"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/flags/Mesher.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1493,
+      "sha256": "38290b6ea940149d74e3d14ad62c756d565f3ae4168bdd00c2557f169a617671"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/flags/Visualizer3D.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 210,
+      "sha256": "d9573989882599409aedc7e810573cd10b691b40f427cfac1fa54032471bbea4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/flags/RegularVioBackend.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 458,
+      "sha256": "5d5691612b21556591389dc132854436849576e11391673bec48a041d5ed18ae"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_b/params/flags/VioBackend.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 109,
+      "sha256": "5d1a38f580b4f10f0225a4927e7962c02ec988f0e7e975ce22ffc2a21da75405"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 125528,
+      "sha256": "a353e8e7e3ec4098164c5fef65b586cda0ed497e947c3766e6ffbab03421c0ff"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/replay_script.py",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 21476,
+      "sha256": "cc5a6e417ff308e68276fd2e7aae4dd1173f72b969100cc0d0bfff79c2ada8e1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 19455,
+      "sha256": "fc8a4127910d61602f12dae41310be21c958b112caff905155c1b7ac0e311a93"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5500,
+      "sha256": "b75f4ae6d6a9146db4d05c07622925ee4b5c9e53f187637d2af01300f7a9eae8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 18965,
+      "sha256": "55b6bbfb2f709eb8b5931fe433f394fce64d1ff08cc444f1c931616462223faf"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2249,
+      "sha256": "659da029a1c90e12c1809b45b50f67d54573080d7f950d632d9f87b3b0ec31a6"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3895,
+      "sha256": "4d929bab77436e65ab6aa7a5692561df353ca794c001cdc1d40d6de564ec0d04"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2536,
+      "sha256": "e0d87422ecca2441ba0f5d82ddfae8212c63180fa66dc69f870b37d7838de7d2"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 260,
+      "sha256": "fccccc50d5a3ee917537531e127329ef829c6a3a7e2ba86d4d8985910ccda272"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 42816,
+      "sha256": "09577b8c49a0b42e5ad440edd580cefb85697bd2e78e1c80a0eb164f856045a1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4091,
+      "sha256": "a1f2cd7f5313d086c2398636847eefaf6f59971555630e523f23e41a3874a7c6"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 249,
+      "sha256": "d3f8deaa1aa157fafb51c02e8b687c9517a82902ea4faef8e70c9d239479c08a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 19292,
+      "sha256": "55900a86d0439396371335635ff3592bc992b6bb5d97a8bcab08d3f463b345c0"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 6525,
+      "sha256": "dd99eda2a7103b8bb5dd6f1901e4e3128bccdc3daae5bb3ef0ef1702ceca04fa"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27406,
+      "sha256": "bb9f96f3890a23f81a8a8ee2e1d74de7e542a7b1e05a9a6d7c82fc8c58efc428"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 9670,
+      "sha256": "e98cd3be571b74481f5b3a59d1827d43d2a174fae871109af6ed7fc0fae8934d"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/visualization/plotted_metrics.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 624,
+      "sha256": "bfac04c00a9d1277427dfb97b712b0e0ed29adfd748e7c6d6d38360f8f3f404b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/visualization/dual_odin1_results.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 413207,
+      "sha256": "b334a183ce7376520cf656aade140cd897dddec81611d7d7a9a9fa4959a6c051"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/visualization/dual_odin1_3d.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 336102,
+      "sha256": "d814511f53dc26e2bd7d6ac1e7faf510912d5e615972c020621fba136afb378b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/visualization/dual_odin1_results.pdf",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 135418,
+      "sha256": "3d0b3506d12bc22044777cf04fd9856926517d8275d6d8ec463ae8dbb366e114"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4418,
+      "sha256": "e69ae56f9ca4dffa057ef37cd7f29bf8171be8ab132a8d58ffed77fcfbac2978"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 256834,
+      "sha256": "8cab80c5eb3e06cfa1be14e68e8faa17733aa620722c0960c480c2d6ce35c392"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/motion_coverage.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 384,
+      "sha256": "9632950e466ba7b3d21a8b45c80b1d20f61303883d08f21af6c4945301eb9b34"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 66525,
+      "sha256": "7ce3e73c4ac487c0c7e0b0ad38eaef294c6d5e312065e784789c6b834dce8ae0"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 21507,
+      "sha256": "2e713d5a62c1594b10505640cedcdb8868af5518ea647555af800278aa1cdbd2"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 64876,
+      "sha256": "6e698f9001bebe0d62eaa251a680843dd05f8b91774335fbad464885768df36c"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 8079,
+      "sha256": "8c91e506e98c8d3c8ba07a84f5f3f4da8fae72bf11a232498e7d757b0235aa21"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3910,
+      "sha256": "97bdd5f525703d79c94708040daf468499352df675d10e83f8d0d699abc1042b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 8464,
+      "sha256": "e46de270db8a5d9afa6c614e7a0d9e2f32b34d95d970a3b130dac88cf374d43d"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1511,
+      "sha256": "74c1622de0e5386be11d99018f961ef9a09aa567d3d59d1d8ac4e9291b10fb25"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 143192,
+      "sha256": "1d0e332b6e377425b13e24af063a0725de1741ef8fdf14716d8f19e5449d5340"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 14747,
+      "sha256": "c52a2f3a64e51fdb654096ffc8938d5da1e61c945cdcb13297fdd8e29cabbe36"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1466,
+      "sha256": "ce4a3789089584e94c7ed4b53b4e269306585a1c72ae34d39531f016e86a21c4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 62892,
+      "sha256": "9121749f6c8a054c56765c51aeeaf05ab22401c9efbd4a249a04e64f91d4ae14"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23593,
+      "sha256": "fd1f355777c5548256ea6780df7179ee3a69470c3413e0d6cee6957fac016ac9"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 89958,
+      "sha256": "2e9b7194103013f452020ef2b3f887a10354ebc65ab66f5aa0c3a7e007f59798"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 32054,
+      "sha256": "ee2449428fa3c4c811f97bf4de8f76e525bb759b52c1998f1b2b0030cce71d82"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 258435,
+      "sha256": "f2f146bdbc4999c7faec7ff7a292577b94f05a0d56bc5d8a1f7a956054a7c212"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/motion_coverage.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 377,
+      "sha256": "af30f1618b2b114b94c1a62b9c90103a85dcc17f7e49b4ee22853be303465e3b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 65443,
+      "sha256": "2c59be0137d514f0fd35573f2e9f920bbbd3e64f5515c99684d8308cf7dac66c"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 21953,
+      "sha256": "5cc6666a64ad8f54c21a97ebfc240a4ac48d9c1e664eb7374501de91b13cb18f"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 64391,
+      "sha256": "bd50f4555599886a96d94f6f5e00df5e05ade4e81b70d9de66f26aa5c54d734f"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 8142,
+      "sha256": "22712bbf97ab115557a286e8efac6e97e8e1d089d0f86765c728190ce2413747"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 4107,
+      "sha256": "a3e79a8fe67036eab3d5e0610db762948b47063f995212f2bd5c9a88e7f5698a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 8440,
+      "sha256": "6a5244257ea9f294d716463e9f8bb87786cdbe63dca88545d5edfe31ce6ba337"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27662,
+      "sha256": "caf52b4dda935a4aee41832d42224f0c03c019fee31e6f46da285ea97dcf0c22"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 142465,
+      "sha256": "021e64b8955d230accda2faf0ac6e6478c56eb519e85a1c7808a7792d239462b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 38919,
+      "sha256": "c83893414f683279b1a60e4e28b028265c291e30182ff9bc08447b6323a34cf1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 26490,
+      "sha256": "4a365c75586c43eae895783202f5c667cc86915c81028b279bc5f26082ffca83"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 63446,
+      "sha256": "2ab592f09bf33f2a0165d633faec5177d71be0ef3a48272ca9d9b06f5361aaba"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 22600,
+      "sha256": "254b8136b8ae0b06471c44d12ccb835241164c0f727b1b4849391a01b5ee5df3"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 91056,
+      "sha256": "4f7e65020e25bc959b2ea9e457b2a98ec1c955c2e4e2dc573a85e88b9b3bd895"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 31715,
+      "sha256": "cb228693bc64de81d1f91caa2d287ed2d831f29a7a699dc19a99a8fc3dff1c73"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 78943,
+      "sha256": "008c20a2fa51e20e18e9b1033aedbc1c3e897144f6f8569a81102fe49ca3adf4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_frontend_ransac_stereo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 19193,
+      "sha256": "a213f18fdfd7aa73318ce96dd0791bc844f2204f459e01283c4ca6107b9de329"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_smartFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 5447,
+      "sha256": "3a9681986614845ba65479199add96ae5379f395a58b1d96481a45f944395601"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_frontend_ransac_mono.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 18791,
+      "sha256": "3d74674ea5f707fa73261f710ac9b1a3765774d8f52935f6ccfdd31a7fbdfceb"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_backendFactors.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2227,
+      "sha256": "16ec4bd2dfc4b8665956f89c86f04d9ac58b4bb40a94b4f249ad6863a1ae1f13"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/StatisticsVIO.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3967,
+      "sha256": "ecf6ade4586a3ec3c6aff1eb181c60c6c26ec2f794629ccb408b1739b5915be7"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_backendTiming.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2512,
+      "sha256": "ff02338aa80a33d49dc89a1347c1cf6b9b8f590b64de1c386cf0adcfe0221993"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_lcd_pose_recovery.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/traj_vio.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 42375,
+      "sha256": "4708f444272d241ca8524c66c75b9e670a9befe935e20d6fb5b3a22e018fe128"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_lcd_result.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 3865,
+      "sha256": "ce213ca9123d3542814d8d49a109f861e8e3d4692c76c46149de1342676e959e"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_lcd_geom_verif.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_frontend_temporal_cal.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/traj_pgo.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 19027,
+      "sha256": "2c92ab62ff2e573d293d0b40098d1b9d58c29d4099feb00cc9d509aaf32b3c31"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_backend_external_odometry.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_lcd_status.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 6464,
+      "sha256": "c27376547fabc487584aea5aa7128d2e2849c5dbc2150d9bed6d5d8411f4cf42"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_pim_navstates.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 27065,
+      "sha256": "8bdf3684c13017f4ed6a2fbd4a6cbb99b3d6757838d8daae6c9213732c5c6d35"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_timingOverall.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 23,
+      "sha256": "56a4a6d62e3dc2a055c160f5b2b260906c29f971c1fa16f6c3ed816a11cbc2a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_static_a/vio_logs/output_frontend_stats.csv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 9591,
+      "sha256": "06b5f0231e0f9484ec414d8fdaa83ce7c657c37f39a09741f5feb432b668baa6"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 7015,
+      "sha256": "2caad9e56ec160b2fc64c48e4e022c3f21d297043acc7a40c974d62634d5b8b0"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_a_kimera_rgb_image_raw_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 15488,
+      "sha256": "0a8f79f3fcc1ed670337cefda99c0fb36745ad2db76dc3d2774666affde3c78c"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_b_kimera_reference_odometry_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 17024,
+      "sha256": "172d6e8cd7d3afc2c408f4483dec2112eb070e5cc2d44df7d0beb9e34c6201ab"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_b_kimera_rgb_image_raw_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 16064,
+      "sha256": "a6f53e4d167967bd522dd2373bb8f2020716df6ea03b909c749c0ab6494ce8e8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_a_kimera_imu_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 660992,
+      "sha256": "bec669a8d440f435bc38eae9a8f6ea9698b79f99499992afcf6c78d7ae8dba69"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_b_kimera_imu_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 656960,
+      "sha256": "2f46ad7591c760cbc16a7d8298fa9c7dbc4e3e75a35db32bf74e99b694af0078"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_b_kimera_rgb_camera_info_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 16064,
+      "sha256": "d210963c97e9f3185ef5abdf70ec4aa3dd06d4ed457417fd6099512fb70f464d"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_b_kimera_depth_image_raw_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 16064,
+      "sha256": "276c9d4022002c84b8c689a16464801e14187bc52ddd435af6fbbd536ec05f4f"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_a_kimera_reference_odometry_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 17024,
+      "sha256": "e55d1769884f27b72571d99a8d4e2130104b0e7cfd39eae20dd05aeabdbc4c42"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_a_kimera_depth_image_raw_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 15488,
+      "sha256": "9fae0c81d5d3c075618448c0556eb95a31bd88b42b3e73d26affdeef33448d16"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/live_probe/odin_a_kimera_rgb_camera_info_times.npy",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 15488,
+      "sha256": "0fcd406a51e58a0c1c8422538dacdcf68f94dac3a80f8a880fae7530b83c74d7"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_rigid_pair/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 7322,
+      "sha256": "14637f5834f24ba28f043bf1ae2c7aae011c2f8f4c75efc4adccedeb9e73407a"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_rigid_pair/odin_b/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 601193,
+      "sha256": "359bd4124d6599ea42c7f887331ebf7bf3e20f4f7e439fe337a64a70c66f3b7b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_rigid_pair/odin_b/replay_script.py",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 21476,
+      "sha256": "cc5a6e417ff308e68276fd2e7aae4dd1173f72b969100cc0d0bfff79c2ada8e1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_rigid_pair/odin_b/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_rigid_pair/odin_a/summary.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 605000,
+      "sha256": "87a82860c0f8e65eb1ceb8a8b0a6d5000d8734eabb69fb239a86fef115adf0a8"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_rigid_pair/odin_a/replay_script.py",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 21476,
+      "sha256": "cc5a6e417ff308e68276fd2e7aae4dd1173f72b969100cc0d0bfff79c2ada8e1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/docker_sdk_rigid_pair/odin_a/noetic-packages.tsv",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 41825,
+      "sha256": "55b3bc1c1119c6107d1a45a37c8f426fca539cb762b43caca4398eee44e4c689"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/adapter.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 616,
+      "sha256": "411564641996880a45ba3a6c2fdd8029c7abbbf57979ac3e9f4b060c574f4723"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/generation.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 528,
+      "sha256": "21b4bf4698486d45dbc8b7b0eb7e49257eeac6b891728d6c2c1a7d9b02870eef"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/static_rgbd.preview.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 732614,
+      "sha256": "264bb69fbb15c61128248a8c432d5ffaca529f8e22bf288edeae0bbbeb6245ba"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/motion_rgbd.preview.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 730339,
+      "sha256": "ebe351fcd67112c2e0b5e92a34cfb895b47fb46d0502f0685c5aa4bb0db3bbab"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/static_rgbd.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1222,
+      "sha256": "492d51fb8a54af78ac692126a9ec2e53204bd571996cf04455db9620973a12d1"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/motion_rgbd.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1222,
+      "sha256": "a8280ab45c6bc62c865d8b9f1c1b9957ad68cf7f0aa0871024312757dafb059e"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/calibration.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 687,
+      "sha256": "a5cb005ac9e07f7ea18f86c1918c5a98788e68057b78d7c67b88204c3d712aca"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.json",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1242,
+      "sha256": "50db6e7d69813d1e052f84c31f378c9888316aab3d6da25ac4706402c93636f7"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.preview.png",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 566366,
+      "sha256": "8a2b4dea7f6c4b3f975b714bc1e6eb01f37ed7f9f29f9f813151fb42c016c784"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/LeftCameraParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 665,
+      "sha256": "23c6e2defe675125b89b1694342980da6060b805c40c498b749786ab788de0e3"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/FrontendParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2176,
+      "sha256": "037365c769f7e23d60bd103796ca87f4ac451bb6cae6f7a19ecf9bc511a03be2"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/DisplayParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 120,
+      "sha256": "1bd23036478a36ff1a4251b93a09ca1dc990fee7523e1a67ce54be6fc1a4370b"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/BackendParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 2935,
+      "sha256": "e00710b16b3b183939b197a49a1ea504709eb2309c1394d42cf4636f31e051e4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/PipelineParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 189,
+      "sha256": "349580e6ea3e1cb887926f5f39dbfd2305a68bf321c394597b4066d65644c97c"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/LcdParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1556,
+      "sha256": "47f939a938ec5a11ed4e86894f5bacaba2e0d7bec58d301d957ea47219f9eb78"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/ImuParams.yaml",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 595,
+      "sha256": "04e053758d6cb644929add2aee99ece767235fd1b042387fadd84c0ae30970e3"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/flags/Mesher.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 1493,
+      "sha256": "38290b6ea940149d74e3d14ad62c756d565f3ae4168bdd00c2557f169a617671"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/flags/Visualizer3D.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 210,
+      "sha256": "d9573989882599409aedc7e810573cd10b691b40f427cfac1fa54032471bbea4"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/flags/RegularVioBackend.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 458,
+      "sha256": "5d5691612b21556591389dc132854436849576e11391673bec48a041d5ed18ae"
+    },
+    {
+      "path": "artifacts/dual_odin1_20261013/odin_a/params/flags/VioBackend.flags",
+      "kind": "archived_validation_or_prepared_config",
+      "bytes": 109,
+      "sha256": "5d1a38f580b4f10f0225a4927e7962c02ec988f0e7e975ce22ffc2a21da75405"
+    },
+    {
+      "path": "SYNC_OTHER_PC.md",
+      "kind": "sync_documentation",
+      "bytes": 4995,
+      "sha256": "bfc700727bdcb6d8bb30d1102390dd317c0645d367be2b9ddc13854971c6f868"
+    }
+  ],
+  "excluded_categories": [
+    "Git metadata",
+    "Raw MCAP / ROS bag / DB3 recordings",
+    "Python virtual environment and caches",
+    "Docker images / build context / downloaded dependency caches",
+    "Transient logs and process IDs"
+  ],
+  "raw_recordings_remain_on_original_PC": true
+}

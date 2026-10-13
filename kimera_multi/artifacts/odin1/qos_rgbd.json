@@ -1,0 +1,52 @@
+{
+  "source": "/home/uros/kimeramulti/experiments/odin1_20261012/qos_validation_bag",
+  "destination": "/home/uros/kimeramulti/artifacts/odin1/qos_rgbd.bag",
+  "clock": "Device header timestamps preserved; bag event timestamps use the same clock",
+  "deskew": "odometry",
+  "T_imu_lidar": [
+    1.0,
+    0.0,
+    0.0,
+    -0.02663,
+    0.0,
+    1.0,
+    0.0,
+    0.03447,
+    0.0,
+    0.0,
+    1.0,
+    0.02174,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "input_image_count_in_interval": 323,
+  "output_counts": {
+    "imu": 12637,
+    "rgb": 322,
+    "depth": 322,
+    "mask": 322,
+    "camera_info": 322,
+    "reference": 322
+  },
+  "sync": {
+    "paired": 322
+  },
+  "frames_skipped_for_pose_coverage": {},
+  "unpaired_at_end": {
+    "image": 1,
+    "cloud": 0
+  },
+  "max_input_imu_gap_ms": 2.829167,
+  "imu_gap_override": false,
+  "cloud_minus_rgb_ms": {
+    "min": 1.685342,
+    "max": 1.685342
+  },
+  "positive_depth_fraction_mean": 0.4129466440292333,
+  "direct_measured_pixel_fraction_mean": 0.05348572320379385,
+  "note": "Splatted depth pixels are not independent measurements. Reference odometry is not ground truth and is not enabled as an external VIO factor.",
+  "compression": "none",
+  "repacked_from": "artifacts/odin1/qos_rgbd.rosbags_lz4.bag"
+}

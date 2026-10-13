@@ -1,0 +1,406 @@
+{
+  "status": "Odin1 sensor adaptation and Docker Noetic Kimera VIO/LCD bag execution validated",
+  "unit_tests": {
+    "count": 12,
+    "log": "../docker/adapter-tests.log"
+  },
+  "ros2_live_replay": {
+    "duration_wall_s": 38.029468330554664,
+    "topics": {
+      "rgb": {
+        "count": 322,
+        "details": {
+          "frame_id": "odin1/camera_optical",
+          "width": 640,
+          "height": 518,
+          "encoding": "bgr8"
+        },
+        "sensor_stamp_hz": 10.259177895621585,
+        "max_header_gap_ms": 97.52626,
+        "non_increasing_stamps": 0
+      },
+      "depth": {
+        "count": 322,
+        "details": {
+          "frame_id": "odin1/camera_optical",
+          "width": 640,
+          "height": 518,
+          "encoding": "32FC1"
+        },
+        "sensor_stamp_hz": 10.259177895621585,
+        "max_header_gap_ms": 97.52626,
+        "non_increasing_stamps": 0
+      },
+      "imu": {
+        "count": 12637,
+        "details": {
+          "frame_id": "odin1/imu"
+        },
+        "sensor_stamp_hz": 400.7893429005367,
+        "max_header_gap_ms": 2.829167,
+        "non_increasing_stamps": 0
+      },
+      "info": {
+        "count": 322,
+        "details": {
+          "frame_id": "odin1/camera_optical"
+        },
+        "sensor_stamp_hz": 10.259177895621585,
+        "max_header_gap_ms": 97.52626,
+        "non_increasing_stamps": 0
+      }
+    },
+    "adapter_diagnostics": {
+      "status": "running",
+      "deskew": "odometry",
+      "counters": {
+        "poses_received": 12637,
+        "imu_forwarded": 12637,
+        "reference_forwarded": 324,
+        "rgbd_published": 322,
+        "rgbd_processing_ms_last": 82.08542596548796
+      },
+      "synchronization": {
+        "cloud_unmatched": 1,
+        "paired": 322
+      },
+      "worker_queue": 0,
+      "last_input_sensor_stamps_ns": {
+        "pose": 695919073378,
+        "imu": 695920781564,
+        "reference": 695687212282
+      }
+    },
+    "rgb_depth_common_stamps": 322
+  },
+  "ros1_exports": {
+    "static": {
+      "source": "/home/uros/kimeramulti/experiments/odin1_20261012/qos_validation_bag",
+      "destination": "/home/uros/kimeramulti/artifacts/odin1/qos_rgbd.bag",
+      "clock": "Device header timestamps preserved; bag event timestamps use the same clock",
+      "deskew": "odometry",
+      "T_imu_lidar": [
+        1.0,
+        0.0,
+        0.0,
+        -0.02663,
+        0.0,
+        1.0,
+        0.0,
+        0.03447,
+        0.0,
+        0.0,
+        1.0,
+        0.02174,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "input_image_count_in_interval": 323,
+      "output_counts": {
+        "imu": 12637,
+        "rgb": 322,
+        "depth": 322,
+        "mask": 322,
+        "camera_info": 322,
+        "reference": 322
+      },
+      "sync": {
+        "paired": 322
+      },
+      "frames_skipped_for_pose_coverage": {},
+      "unpaired_at_end": {
+        "image": 1,
+        "cloud": 0
+      },
+      "max_input_imu_gap_ms": 2.829167,
+      "imu_gap_override": false,
+      "cloud_minus_rgb_ms": {
+        "min": 1.685342,
+        "max": 1.685342
+      },
+      "positive_depth_fraction_mean": 0.4129466440292333,
+      "direct_measured_pixel_fraction_mean": 0.05348572320379385,
+      "note": "Splatted depth pixels are not independent measurements. Reference odometry is not ground truth and is not enabled as an external VIO factor."
+    },
+    "motion_45s": {
+      "source": "/home/uros/kimeramulti/experiments/odin1_20261012/motion_bag",
+      "destination": "/home/uros/kimeramulti/artifacts/odin1/motion_rgbd.bag",
+      "clock": "Device header timestamps preserved; bag event timestamps use the same clock",
+      "deskew": "odometry",
+      "T_imu_lidar": [
+        1.0,
+        0.0,
+        0.0,
+        -0.02663,
+        0.0,
+        1.0,
+        0.0,
+        0.03447,
+        0.0,
+        0.0,
+        1.0,
+        0.02174,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "input_image_count_in_interval": 461,
+      "output_counts": {
+        "imu": 18198,
+        "rgb": 461,
+        "depth": 461,
+        "mask": 461,
+        "camera_info": 461,
+        "reference": 461
+      },
+      "sync": {
+        "paired": 461
+      },
+      "frames_skipped_for_pose_coverage": {},
+      "unpaired_at_end": {
+        "image": 0,
+        "cloud": 0
+      },
+      "max_input_imu_gap_ms": 4.987959,
+      "imu_gap_override": false,
+      "cloud_minus_rgb_ms": {
+        "min": 1.685342,
+        "max": 1.685342
+      },
+      "positive_depth_fraction_mean": 0.5951273147178786,
+      "direct_measured_pixel_fraction_mean": 0.07480262476025762,
+      "note": "Splatted depth pixels are not independent measurements. Reference odometry is not ground truth and is not enabled as an external VIO factor."
+    }
+  },
+  "ros1_readback": {
+    "qos_rgbd.bag": {
+      "/odin1/kimera/imu": {
+        "count": 12637,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/rgb/image_raw": {
+        "count": 322,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/depth/image_raw": {
+        "count": 322,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/depth/measured_mask": {
+        "count": 322,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/rgb/camera_info": {
+        "count": 322,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/reference/odometry": {
+        "count": 322,
+        "strictly_increasing": true
+      }
+    },
+    "motion_rgbd.bag": {
+      "/odin1/kimera/imu": {
+        "count": 18198,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/rgb/image_raw": {
+        "count": 461,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/depth/image_raw": {
+        "count": 461,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/depth/measured_mask": {
+        "count": 461,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/rgb/camera_info": {
+        "count": 461,
+        "strictly_increasing": true
+      },
+      "/odin1/kimera/reference/odometry": {
+        "count": 461,
+        "strictly_increasing": true
+      }
+    }
+  },
+  "limits": [
+    "Noetic VIO/LCD has been executed in Docker; live ROS 2 to ROS 1 bridging and distributed multi-robot consumers are not yet validated.",
+    "Default IMU-LiDAR transform follows vendor documentation; independent extrinsic and IMU noise calibration remain necessary.",
+    "Live rate verification used a recorded raw stream, not a new physical movement run.",
+    "Motion export selected a continuous 45-second interval; the original full motion recording has known recorder-side gaps."
+  ],
+  "math_library_threads": 1,
+  "source_sha256": {
+    "adapters/odin1/odin1_adapter/__init__.py": "583689be79cebfaa03edc2717d00319d29e01954e840e5b96a308ac67bb9963e",
+    "adapters/odin1/odin1_adapter/geometry.py": "38952465f41d379285c90777789235d0ce82e729d3f686e3aa31d0e3ec0b511d",
+    "adapters/odin1/odin1_adapter/synchronization.py": "32cd4428b2a38a818612b4d2211dd3f6ccedb8c6f7a8f9265b8e0594998e8b59",
+    "adapters/odin1/odin1_adapter/prepare.py": "135a13f57994565f453dab88422fde60347cd0a85512fa1b4e46cdeda29f3eca",
+    "adapters/odin1/odin1_adapter/bag.py": "8a2ea5e67d7ddb3ce1b2fa40056b34a1133a3b83483bad10b757250b6176ebd1",
+    "adapters/odin1/odin1_adapter/calibration.py": "e1b0107260bcd0d58094c138659bcab752bc3413dc159da3bcf5ffa79f64813f",
+    "adapters/odin1/odin1_adapter/ros2_node.py": "0e4afc1f398080b4a3ce19527f3f3233feea36ed31768a669e1002dc5c0183ed",
+    "launch/kimera_vio_odin1.launch": "4314e7499f6051e40ebaad13d44b036def63705979e680b975d8c92b68cceabd",
+    "docker/README.md": "7dce90f40cb94a3185baaa357ac19135df04d26384e6c180d6ed5b41adf63914",
+    "docker/prepare_odin1.py": "21a991d03b10c60a5031d63c2ce7ffc7c6edb4560db2a32f8baf16d51d9b1334",
+    "docker/README.odin1.md": "67dcd68d95e28148c19fdfa78959df76272183aa42e179cf125d79a015d45241",
+    "docker/odin1.bash": "11a662b0b282ee80d8aa56098e9ff57b5773a5b90480dca6196a82a79c77a22c",
+    "docker/Dockerfile.odin1": "b5bad001446ea13392b62dc4701950a73cbff9a2142891227685818101c37a87",
+    "docker/patch_noetic.py": "f68aff85c3277ac4dd2929b5308a0d3efca12defaf489d30fdbdb85c04533f5c",
+    "docker/odin1.repos": "6aeecfd662a3db042a40e0b88fb77697bf96abe1583c1e67f1498b145c833802",
+    "docker/run.bash": "afad59985f6c429f6a952930709d6dcb23ec3b3054672f0fd691bacf637e6204",
+    "docker/build.bash": "0f241af8b5a7ecd8651056f540974ea1bf696d3c85522fe5e27c1cfb416e8f7b",
+    "docker/odin1_entrypoint.bash": "28414fe2fbb8c1ddf1c409fb418a85232dd6214d6ae113d09a85115360d230cb",
+    "docker/Dockerfile": "767294bd481a6542e39af8c4ea91fd5821253a9f61e6e785ba3d6b27e87cf75e",
+    "docker/replay_odin1.py": "229c83a702bdf13404faea653ed3e735727a16a1037c8e2e367a454c90523800"
+  },
+  "native_ros1_readback": {
+    "motion_rgbd": {
+      "method": "Noetic native rosbag.Bag.read_messages over every message in Docker",
+      "compression": "none",
+      "counts": {
+        "/odin1/kimera/imu": 18198,
+        "/odin1/kimera/rgb/image_raw": 461,
+        "/odin1/kimera/depth/image_raw": 461,
+        "/odin1/kimera/depth/measured_mask": 461,
+        "/odin1/kimera/rgb/camera_info": 461,
+        "/odin1/kimera/reference/odometry": 461
+      },
+      "header_equals_event_stamp": true,
+      "per_topic_stamps_strictly_increasing": true,
+      "result": "passed"
+    },
+    "qos_rgbd": {
+      "method": "Noetic native rosbag.Bag.read_messages over every message in Docker",
+      "compression": "none",
+      "counts": {
+        "/odin1/kimera/imu": 12637,
+        "/odin1/kimera/rgb/image_raw": 322,
+        "/odin1/kimera/depth/image_raw": 322,
+        "/odin1/kimera/depth/measured_mask": 322,
+        "/odin1/kimera/rgb/camera_info": 322,
+        "/odin1/kimera/reference/odometry": 322
+      },
+      "header_equals_event_stamp": true,
+      "per_topic_stamps_strictly_increasing": true,
+      "result": "passed"
+    }
+  },
+  "docker": {
+    "image": "kimera-odin1:noetic",
+    "image_id": "sha256:ab6518ed76a57761e70e7b5fa91f191d1bee169e1a63ffc434b592613e5878e4",
+    "source_revisions": "../../docker/odin1.repos",
+    "replays": {
+      "docker_motion_native": {
+        "bag": "/workspace/artifacts/odin1/motion_rgbd.bag",
+        "bag_sha256": "827b1220c73f121af193c2823315bb97b31020cba6312f3b8f33e3e4c2053306",
+        "docker_image_id": "sha256:8dac8f79912ec1b93b41e5641ebbc3f7f5db19aef6654c37c47cd5f807cbdce5",
+        "params": "/workspace/artifacts/odin1/params",
+        "rate": 0.5,
+        "odometry_count": 154,
+        "pose_graph_messages": 154,
+        "last_pose_graph": {
+          "nodes": 154,
+          "edges": 155
+        },
+        "bow_messages": 46,
+        "bow_queries": 154,
+        "vlc_messages": 3,
+        "vlc_frames": 153,
+        "reference_odometry_count": 461,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": null,
+        "success": true
+      },
+      "docker_static_native": {
+        "bag": "/workspace/artifacts/odin1/qos_rgbd.bag",
+        "bag_sha256": "143937c806fb051d35be649db1eeeae47636ada0f8b550ae934c3e1c9c51b5cb",
+        "docker_image_id": "sha256:8dac8f79912ec1b93b41e5641ebbc3f7f5db19aef6654c37c47cd5f807cbdce5",
+        "params": "/workspace/artifacts/odin1/params",
+        "rate": 1.0,
+        "odometry_count": 107,
+        "pose_graph_messages": 107,
+        "last_pose_graph": {
+          "nodes": 107,
+          "edges": 115
+        },
+        "bow_messages": 32,
+        "bow_queries": 107,
+        "vlc_messages": 2,
+        "vlc_frames": 103,
+        "reference_odometry_count": 322,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": null,
+        "success": true
+      },
+      "docker_motion_1x": {
+        "bag": "/workspace/artifacts/odin1/motion_rgbd.bag",
+        "bag_sha256": "827b1220c73f121af193c2823315bb97b31020cba6312f3b8f33e3e4c2053306",
+        "docker_image_id": "sha256:8dac8f79912ec1b93b41e5641ebbc3f7f5db19aef6654c37c47cd5f807cbdce5",
+        "params": "/workspace/artifacts/odin1/params",
+        "rate": 1.0,
+        "odometry_count": 154,
+        "pose_graph_messages": 154,
+        "last_pose_graph": {
+          "nodes": 154,
+          "edges": 155
+        },
+        "bow_messages": 46,
+        "bow_queries": 154,
+        "vlc_messages": 3,
+        "vlc_frames": 153,
+        "reference_odometry_count": 461,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": null,
+        "success": true
+      }
+    },
+    "trajectory_metrics": {
+      "docker_motion_native": {
+        "max_displacement_from_first_pose_m": 1.215961026620731,
+        "end_displacement_from_first_pose_m": 0.14672179576944597,
+        "note": "No ground truth; displacement is not an accuracy/drift estimate.",
+        "frontend_keyframes_with_statistics": 153
+      },
+      "docker_static_native": {
+        "max_displacement_from_first_pose_m": 0.0016161039112458293,
+        "end_displacement_from_first_pose_m": 0.0005503826913888507,
+        "note": "No ground truth; displacement is not an accuracy/drift estimate.",
+        "frontend_keyframes_with_statistics": 106
+      },
+      "docker_motion_1x": {
+        "max_displacement_from_first_pose_m": 1.215961026620731,
+        "end_displacement_from_first_pose_m": 0.14672179576944597,
+        "note": "No ground truth; displacement is not an accuracy/drift estimate.",
+        "frontend_keyframes_with_statistics": 153
+      },
+      "comparisons": {
+        "motion_pose_count_equal_at_half_and_normal_speed": true
+      }
+    },
+    "final_image_note": "The final image synchronizes the host bag export module as source data. Compiled Kimera libraries and runtime replay scripts match the images used by the recorded successful replays; each replay preserves its actual image ID.",
+    "final_source_check": "../docker/final-source-check.txt"
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "slot": "odin_a",
+    "usb_bus": 2,
+    "usb_addr": 28,
+    "usb_serial": "276fe96f99321c78",
+    "config": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_a/control_command.yaml",
+    "calib_dir": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_a/runtime"
+  },
+  {
+    "slot": "odin_b",
+    "usb_bus": 2,
+    "usb_addr": 29,
+    "usb_serial": "952033c87532e832",
+    "config": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_b/control_command.yaml",
+    "calib_dir": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_b/runtime"
+  }
+]

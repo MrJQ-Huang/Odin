@@ -1,0 +1,7 @@
+{
+  "supervisor": 644077,
+  "drivers": {
+    "odin_a": 644152,
+    "odin_b": 644153
+  }
+}

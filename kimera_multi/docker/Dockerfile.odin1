@@ -1,0 +1,49 @@
+# ROS 1 is isolated from the host's ROS 2 Humble installation.
+ARG BASE_IMAGE=ros:noetic-ros-base-focal@sha256:72b8bc59035dc0a5b8e07aae28c16caa84192971d72d207c72ed734fb1d5e97d
+FROM ${BASE_IMAGE}
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ARG BUILD_JOBS=2
+ENV DEBIAN_FRONTEND=noninteractive TZ=Asia/Shanghai \
+    WORKSPACE=/opt/kimera_ws OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake git ca-certificates curl unzip pkg-config \
+    python3-catkin-tools python3-numpy python3-yaml \
+    libboost-all-dev libeigen3-dev libgflags-dev libgoogle-glog-dev \
+    libtbb-dev libopencv-dev libopencv-contrib-dev \
+    ros-noetic-cv-bridge ros-noetic-image-geometry ros-noetic-image-transport \
+    ros-noetic-pcl-ros ros-noetic-rviz ros-noetic-tf2-eigen \
+    ros-noetic-camera-info-manager ros-noetic-rostest \
+    && rm -rf /var/lib/apt/lists/*
+RUN dpkg-query -W > /opt/noetic-packages.tsv
+
+# This directory is populated from the exact commits in odin1.repos.
+COPY deps/ ${WORKSPACE}/src/
+COPY docker/noetic_system_packages/ ${WORKSPACE}/src/
+COPY docker/patch_noetic.py /opt/patch_noetic.py
+COPY docker/fix_sparse_keypoints.py /opt/fix_sparse_keypoints.py
+COPY docker/odin1.repos /opt/odin1.repos
+COPY vocabulary/ ${WORKSPACE}/src/kimera_vio/vocabulary/
+RUN python3 /opt/patch_noetic.py ${WORKSPACE}/src
+WORKDIR ${WORKSPACE}
+RUN source /opt/ros/noetic/setup.bash && catkin init && \
+    catkin config --extend /opt/ros/noetic --merge-devel --cmake-args \
+    -DCMAKE_BUILD_TYPE=Release -DCATKIN_ENABLE_TESTING=OFF \
+    -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF \
+    -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_TANGENT_PREINTEGRATION=OFF \
+    -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF -DGTSAM_USE_SYSTEM_EIGEN=ON \
+    -DGTSAM_BUILD_PYTHON=OFF -DKIMERA_BUILD_TESTS=OFF \
+    -DUSE_SYSTEM_EIGEN=ON -DUSE_SYSTEM_GLOG=ON && \
+    catkin build kimera_vio_ros --no-status --summarize \
+    --jobs ${BUILD_JOBS} --parallel-packages 1
+
+# Local Odin1 changes are copied after the expensive dependencies build.
+COPY kimera_multi/ ${WORKSPACE}/src/kimera_multi/
+RUN source /opt/ros/noetic/setup.bash && catkin build kimera_multi \
+    --no-deps --no-status --summarize --jobs ${BUILD_JOBS}
+COPY docker/odin1_entrypoint.bash /opt/odin1_entrypoint.bash
+COPY docker/replay_odin1.py /opt/replay_odin1.py
+RUN chmod +x /opt/odin1_entrypoint.bash && \
+    test -x devel/lib/kimera_vio_ros/kimera_vio_ros_node
+WORKDIR /workspace
+ENTRYPOINT ["/opt/odin1_entrypoint.bash"]
+CMD ["bash"]

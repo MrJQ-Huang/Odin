@@ -1,0 +1,93 @@
+{
+  "device_serial": "O1-P070100505",
+  "test_date_local": "2026-10-12",
+  "status": "Sensor acquisition and native depth conversion tested; Kimera execution not yet tested",
+  "validated_recording_rates_hz": {
+    "/odin1/cloud_raw": 10.259178229098879,
+    "/odin1/image/compressed": 10.25919071832353,
+    "/odin1/odometry": 10.259176659807006,
+    "/odin1/imu": 400.78934290053655,
+    "/odin1/odometry_highfreq": 400.78934290053655,
+    "/odin1/wiwc": 10.259176659807006
+  },
+  "validated_recording_max_header_gap_ms": {
+    "/odin1/cloud_raw": 97.52625999999509,
+    "/odin1/image/compressed": 97.52625999999509,
+    "/odin1/odometry": 97.52625999999509,
+    "/odin1/imu": 2.829166999958943,
+    "/odin1/odometry_highfreq": 2.829166999958943,
+    "/odin1/wiwc": 97.52625999999509
+  },
+  "initial_motion_recording_limitations": {
+    "highfreq_live_comparison": {
+      "overlap_duration_s": 83.818559005,
+      "bag_highfreq_samples": 29201,
+      "live_highfreq_samples": 33483,
+      "live_samples_absent_from_bag": 4380
+    },
+    "note": "Motion bag has recorder-side highfreq loss and one IMU gap. Use QoS override for subsequent acquisition. User only performed short movement and rotations; endpoint displacement is not an accuracy/drift measurement."
+  },
+  "static_30s_pose_change": {
+    "end_displacement_m": 0.0010605908730514332,
+    "max_displacement_m": 0.0012480472747456335,
+    "position_axis_span_m": [
+      0.0009109999999999999,
+      0.0014270000000000012,
+      0.000901
+    ],
+    "max_rotation_from_first_deg": 0.016378180449641313,
+    "max_consecutive_position_step_m": 0.0002818403803573931
+  },
+  "native_depth": {
+    "sample": {
+      "width": 1600,
+      "height": 1296,
+      "encoding": "32FC1",
+      "frame_id": "lidar",
+      "rgb_frame_id": "",
+      "depth_minus_rgb_ms": 1.6853419999733887,
+      "positive_finite_fraction": 0.6379730902777778,
+      "depth_m": {
+        "min": 0.1000218540430069,
+        "p50": 3.0389647483825684,
+        "p95": 5.892613410949707,
+        "max": 12.450111389160156
+      },
+      "orb_keypoints": 2000,
+      "orb_positive_depth": 1736
+    },
+    "observed_light_probe_hz": 9.647210901907957,
+    "limitations": [
+      "Positive depth includes neighboring-pixel fill and nearest-neighbor enlargement; it is not independent measured coverage or validated accuracy.",
+      "Output frame_id is lidar while pixels encode camera optical depth; RGB frame_id is empty. Fix frames in adapter.",
+      "Converter discards per-point confidence and offset_time when converting to PointXYZ; assess filtering, occlusion and motion compensation before VIO use.",
+      "Depth timing measured from device headers. Approximately 1.685 ms RGB/cloud offset does not establish absolute sensor synchronization accuracy."
+    ]
+  },
+  "route_recommendation": {
+    "first": "Verify offline RGB-D+IMU Kimera frontend with calibrated rectified RGB, registered metric depth, checked camera-IMU extrinsics and consistent timestamps. Use Odin odometry as reference, not ground truth.",
+    "fallback": "If the original frontend cannot initialize or track reliably, integrate Odin odometry through a custom frontend adapter supplying keyframe descriptors, depth-supported geometric verification, pose graph and mesh inputs.",
+    "remaining": [
+      "ROS 2 Humble sensor streams must be converted or bridged into the ROS 1 Kimera environment.",
+      "This test has no ground truth, long trajectory or second device; it does not validate absolute accuracy, inter-robot loop closures or distributed communication."
+    ]
+  },
+  "files": {
+    "motion_bag": "motion_bag/metadata.yaml",
+    "validated_qos_bag": "qos_validation_bag/metadata.yaml",
+    "record_command": "record_odin.sh",
+    "native_depth_preview": "native_depth/rgb_depth_preview.png"
+  },
+  "configuration_restoration": {
+    "restored_exactly": true,
+    "sha256": "6da59cbe6cd29cbcb8ee16e32c3839e71e77342734d064612c725b2029f5b1d0"
+  },
+  "task_owned_driver_and_depth_nodes_stopped": true,
+  "driver_shutdown_issue": {
+    "exit_code": 134,
+    "log": "driver.log",
+    "message": "malloc_consolidate(): invalid chunk size",
+    "when": "After SIGINT, USB cancellation and sdk deinit complete; all recordings already stopped and flushed.",
+    "impact": "Driver shutdown stability issue remains unresolved; no equivalent error was observed during acquisition. Do not infer a firmware/SDK version mismatch cause without further debugging."
+  }
+}

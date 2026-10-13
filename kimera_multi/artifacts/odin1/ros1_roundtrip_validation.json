@@ -1,0 +1,54 @@
+{
+  "qos_rgbd.bag": {
+    "/odin1/kimera/imu": {
+      "count": 12637,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/rgb/image_raw": {
+      "count": 322,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/depth/image_raw": {
+      "count": 322,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/depth/measured_mask": {
+      "count": 322,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/rgb/camera_info": {
+      "count": 322,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/reference/odometry": {
+      "count": 322,
+      "strictly_increasing": true
+    }
+  },
+  "motion_rgbd.bag": {
+    "/odin1/kimera/imu": {
+      "count": 18198,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/rgb/image_raw": {
+      "count": 461,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/depth/image_raw": {
+      "count": 461,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/depth/measured_mask": {
+      "count": 461,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/rgb/camera_info": {
+      "count": 461,
+      "strictly_increasing": true
+    },
+    "/odin1/kimera/reference/odometry": {
+      "count": 461,
+      "strictly_increasing": true
+    }
+  }
+}

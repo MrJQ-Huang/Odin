@@ -1,0 +1,6 @@
+{
+  "previous_mb": 16,
+  "test_mb": 128,
+  "persistent": false,
+  "reason": "Both devices reported LIBUSB_ERROR_NO_MEM and then stopped delivering data; official driver mitigation is 128 MB."
+}

@@ -1,0 +1,48 @@
+/odin_a/odin1/cloud_raw:
+  depth: 100
+  history: keep_last
+  reliability: reliable
+/odin_a/odin1/image/compressed:
+  depth: 100
+  history: keep_last
+  reliability: reliable
+/odin_a/odin1/imu:
+  depth: 4000
+  history: keep_last
+  reliability: reliable
+/odin_a/odin1/odometry:
+  depth: 100
+  history: keep_last
+  reliability: reliable
+/odin_a/odin1/odometry_highfreq:
+  depth: 4000
+  history: keep_last
+  reliability: reliable
+/odin_a/odin1/wiwc:
+  depth: 100
+  history: keep_last
+  reliability: reliable
+/odin_b/odin1/cloud_raw:
+  depth: 100
+  history: keep_last
+  reliability: reliable
+/odin_b/odin1/image/compressed:
+  depth: 100
+  history: keep_last
+  reliability: reliable
+/odin_b/odin1/imu:
+  depth: 4000
+  history: keep_last
+  reliability: reliable
+/odin_b/odin1/odometry:
+  depth: 100
+  history: keep_last
+  reliability: reliable
+/odin_b/odin1/odometry_highfreq:
+  depth: 4000
+  history: keep_last
+  reliability: reliable
+/odin_b/odin1/wiwc:
+  depth: 100
+  history: keep_last
+  reliability: reliable

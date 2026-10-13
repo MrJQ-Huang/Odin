@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kimera-odin1-adapter"
+version = "0.1.0"
+description = "Odin1 RGB-D and IMU input adapter for Kimera-Multi"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.21,<2", "PyYAML>=5.3"]
+
+[project.optional-dependencies]
+bag = ["rosbags==0.11.3"]
+test = ["pytest>=6"]
+
+[project.scripts]
+odin1-prepare = "odin1_adapter.prepare:main"
+odin1-export-bag = "odin1_adapter.bag:main"
+odin1-adapter = "odin1_adapter.ros2_node:main"
+
+[tool.setuptools.packages.find]
+include = ["odin1_adapter*"]

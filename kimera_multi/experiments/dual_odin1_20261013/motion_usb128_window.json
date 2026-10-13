@@ -1,0 +1,16 @@
+{
+  "odin_a": {
+    "start": 215.8149497783977,
+    "duration": 102.78850364685059,
+    "max_position_from_timeline_first_m": 0.8229236681898267,
+    "max_rotation_from_timeline_first_deg": 179.83648023277922,
+    "first_image_stamp_s": 1549.196963998
+  },
+  "odin_b": {
+    "start": 215.8802045075779,
+    "duration": 102.78850364685059,
+    "max_position_from_timeline_first_m": 0.8338274521710112,
+    "max_rotation_from_timeline_first_deg": 119.67674332143656,
+    "first_image_stamp_s": 1546.547996691
+  }
+}

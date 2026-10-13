@@ -1,0 +1,19 @@
+{
+  "destination": "artifacts/odin1/qos_rgbd.bag",
+  "counts": {
+    "/odin1/kimera/imu": 12637,
+    "/odin1/kimera/rgb/image_raw": 322,
+    "/odin1/kimera/depth/image_raw": 322,
+    "/odin1/kimera/depth/measured_mask": 322,
+    "/odin1/kimera/rgb/camera_info": 322,
+    "/odin1/kimera/reference/odometry": 322
+  },
+  "serialized_payload_sha256": {
+    "/odin1/kimera/imu": "e5e559e65f0c06d2e91582ef503c6bf8a540ff6e9cfe53f17b46c97a9398dada",
+    "/odin1/kimera/rgb/image_raw": "4a36ec726fd16b06ab34859ef75b7d27c892aa2d345bb025075a336fe6efe036",
+    "/odin1/kimera/depth/image_raw": "9aef68cdd688eb0019676bd16d6e9f85fc8ce13a2cc9f71bc1bdfd1d0af934a9",
+    "/odin1/kimera/depth/measured_mask": "777de418f899c670453ee8a85c5344f65234f8167e7f22fc462695560ac6b2de",
+    "/odin1/kimera/rgb/camera_info": "7c8dbb0ec692a62404f1ca0b7b3637b402840effbb0210bb34dbe495f4323451",
+    "/odin1/kimera/reference/odometry": "9cb8b2b8e4b611cf22968af6c88094abc7164046c9b6f58f9ad872d3de595977"
+  }
+}

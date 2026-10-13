@@ -1,0 +1,8 @@
+/odin1/imu:
+  reliability: reliable
+  history: keep_last
+  depth: 4000
+/odin1/odometry_highfreq:
+  reliability: reliable
+  history: keep_last
+  depth: 4000

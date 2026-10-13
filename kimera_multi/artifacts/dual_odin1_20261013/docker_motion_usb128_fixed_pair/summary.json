@@ -1,0 +1,141 @@
+{
+  "success": true,
+  "error": null,
+  "rate": 1.0,
+  "runs": {
+    "a": {
+      "started_unix_s": 1791863458.6416929,
+      "command": [
+        "/home/uros/kimeramulti/docker/odin1.bash",
+        "replay",
+        "--bag",
+        "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+        "--params",
+        "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+        "--robot-name",
+        "odin_a",
+        "--robot-id",
+        "0",
+        "--rate",
+        "1.0",
+        "--output",
+        "/workspace/artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a"
+      ],
+      "ended_unix_s": 1791863706.363715,
+      "exit_code": 0
+    },
+    "b": {
+      "started_unix_s": 1791863458.6663978,
+      "command": [
+        "/home/uros/kimeramulti/docker/odin1.bash",
+        "replay",
+        "--bag",
+        "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+        "--params",
+        "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+        "--robot-name",
+        "odin_b",
+        "--robot-id",
+        "1",
+        "--rate",
+        "1.0",
+        "--output",
+        "/workspace/artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b"
+      ],
+      "ended_unix_s": 1791863706.1634805,
+      "exit_code": 0
+    }
+  },
+  "summaries": {
+    "a": {
+      "bag": "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+      "bag_sha256": "522e02f2aa0c79bd75d125606366488968eb9976b901c1dc7b3889218e2daeda",
+      "docker_image_id": "sha256:b069417657ae50bc94130242077d2e9c5c4f2afaefedd9fddb158e0e450d703d",
+      "params": "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+      "rate": 1.0,
+      "robot_name": "odin_a",
+      "robot_id": 0,
+      "bag_duration_s": 103.18496861699987,
+      "playback_wall_s": 128.383804009296,
+      "effective_clock_rate_middle_80_percent": 0.999976712604861,
+      "published_robot_ids": {
+        "pose_graph": [
+          0
+        ],
+        "bow": [
+          0
+        ],
+        "vlc": [
+          0
+        ]
+      },
+      "replay_script_sha256": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+      "odometry_count": 349,
+      "pose_graph_messages": 349,
+      "last_pose_graph": {
+        "nodes": 349,
+        "edges": 611
+      },
+      "bow_messages": 19,
+      "bow_queries": 349,
+      "vlc_messages": 2,
+      "vlc_frames": 349,
+      "reference_odometry_count": 1054,
+      "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+      "process_exit_codes": {
+        "roscore": 0,
+        "kimera": 0,
+        "record": 0,
+        "play": 0
+      },
+      "error": null,
+      "success": true
+    },
+    "b": {
+      "bag": "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+      "bag_sha256": "df3bb306586b2246d882ea9533aac9ad7972cc72cf1c77bba6558d96aaea55d0",
+      "docker_image_id": "sha256:b069417657ae50bc94130242077d2e9c5c4f2afaefedd9fddb158e0e450d703d",
+      "params": "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+      "rate": 1.0,
+      "robot_name": "odin_b",
+      "robot_id": 1,
+      "bag_duration_s": 103.18674336800018,
+      "playback_wall_s": 127.87381112575531,
+      "effective_clock_rate_middle_80_percent": 0.9999960566314556,
+      "published_robot_ids": {
+        "pose_graph": [
+          1
+        ],
+        "bow": [
+          1
+        ],
+        "vlc": [
+          1
+        ]
+      },
+      "replay_script_sha256": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+      "odometry_count": 350,
+      "pose_graph_messages": 350,
+      "last_pose_graph": {
+        "nodes": 350,
+        "edges": 363
+      },
+      "bow_messages": 60,
+      "bow_queries": 700,
+      "vlc_messages": 5,
+      "vlc_frames": 350,
+      "reference_odometry_count": 1055,
+      "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+      "process_exit_codes": {
+        "roscore": 0,
+        "kimera": 0,
+        "record": 0,
+        "play": 0
+      },
+      "error": null,
+      "success": true
+    }
+  },
+  "scope": "Two concurrent independent VIO/LCD frontends with robot IDs 0 and 1. No inter-robot loop closure or distributed optimization is launched.",
+  "orchestrator_sha256": "c03b5253b027e34f77a159bc123641483de14ebdab2034d8e69a6d6e167a2a41"
+}

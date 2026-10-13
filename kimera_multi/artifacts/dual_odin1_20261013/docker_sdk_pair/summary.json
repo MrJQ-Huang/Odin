@@ -1,0 +1,189 @@
+{
+  "success": false,
+  "error": null,
+  "rate": 1.0,
+  "frontend": "sdk",
+  "runs": {
+    "a": {
+      "started_unix_s": 1791868247.295924,
+      "command": [
+        "/home/uros/kimeramulti/docker/odin1.bash",
+        "replay",
+        "--bag",
+        "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+        "--params",
+        "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+        "--robot-name",
+        "odin_a",
+        "--robot-id",
+        "0",
+        "--frontend",
+        "sdk",
+        "--rate",
+        "1.0",
+        "--output",
+        "/workspace/artifacts/dual_odin1_20261013/docker_sdk_pair/odin_a"
+      ],
+      "ended_unix_s": 1791868481.3687541,
+      "exit_code": 1
+    },
+    "b": {
+      "started_unix_s": 1791868247.2963843,
+      "command": [
+        "/home/uros/kimeramulti/docker/odin1.bash",
+        "replay",
+        "--bag",
+        "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+        "--params",
+        "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+        "--robot-name",
+        "odin_b",
+        "--robot-id",
+        "1",
+        "--frontend",
+        "sdk",
+        "--rate",
+        "1.0",
+        "--output",
+        "/workspace/artifacts/dual_odin1_20261013/docker_sdk_pair/odin_b"
+      ],
+      "ended_unix_s": 1791868480.1677136,
+      "exit_code": 1
+    }
+  },
+  "summaries": {
+    "a": {
+      "bag": "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+      "bag_sha256": "522e02f2aa0c79bd75d125606366488968eb9976b901c1dc7b3889218e2daeda",
+      "docker_image_id": "sha256:2f702abf62f67df7b3b0e256271c767db0cbdbb150a60f5cbfdb394dda1cefe1",
+      "params": "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+      "rate": 1.0,
+      "robot_name": "odin_a",
+      "robot_id": 0,
+      "frontend": "sdk",
+      "trajectory_source": "odin_sdk",
+      "sdk_verification": null,
+      "sdk_diagnostics": {
+        "trajectory_source": "odin_sdk",
+        "graph_pose_frame": "camera",
+        "odom_covariance": "configured_initial_model",
+        "robot_id": 0,
+        "last_keyframe_processing_ms": 12.4379,
+        "pending_rgbd": 0,
+        "cached_visual_frames": 102,
+        "counters": {
+          "bow_queries": 102,
+          "depth_supported_features": 7292,
+          "keyframes": 104,
+          "keyframes_without_visual_support": 2,
+          "rgbd_not_selected": 950,
+          "rgbd_pairs": 1054,
+          "sdk_odometry_forwarded": 1054,
+          "visual_keyframes": 102
+        }
+      },
+      "bag_duration_s": 103.18496861699987,
+      "playback_wall_s": 145.15751295164227,
+      "effective_clock_rate_middle_80_percent": 1.0000155885250903,
+      "published_robot_ids": {
+        "pose_graph": [
+          0
+        ],
+        "bow": [
+          0
+        ],
+        "vlc": [
+          0
+        ]
+      },
+      "replay_script_sha256": "2539d33e02ab7d1f12286e69de2f61b7d4f4ee75b6ee673807e9c38e0658addf",
+      "odometry_count": 1054,
+      "pose_graph_messages": 60,
+      "last_pose_graph": {
+        "nodes": 104,
+        "edges": 103
+      },
+      "bow_messages": 102,
+      "bow_queries": 102,
+      "vlc_messages": 102,
+      "vlc_frames": 102,
+      "reference_odometry_count": 1054,
+      "reference_note": "Odin SDK owns the local trajectory in SDK mode. In VIO mode it is a reference, not ground truth, and is not an external VIO factor.",
+      "process_exit_codes": {
+        "roscore": 0,
+        "kimera": 0,
+        "record": 0,
+        "play": 0
+      },
+      "error": "SDK graph camera orientation does not match calibrated extrinsics",
+      "success": false
+    },
+    "b": {
+      "bag": "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+      "bag_sha256": "df3bb306586b2246d882ea9533aac9ad7972cc72cf1c77bba6558d96aaea55d0",
+      "docker_image_id": "sha256:2f702abf62f67df7b3b0e256271c767db0cbdbb150a60f5cbfdb394dda1cefe1",
+      "params": "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+      "rate": 1.0,
+      "robot_name": "odin_b",
+      "robot_id": 1,
+      "frontend": "sdk",
+      "trajectory_source": "odin_sdk",
+      "sdk_verification": null,
+      "sdk_diagnostics": {
+        "trajectory_source": "odin_sdk",
+        "graph_pose_frame": "camera",
+        "odom_covariance": "configured_initial_model",
+        "robot_id": 1,
+        "last_keyframe_processing_ms": 21.2193,
+        "pending_rgbd": 0,
+        "cached_visual_frames": 87,
+        "counters": {
+          "bow_queries": 174,
+          "depth_supported_features": 7618,
+          "keyframes": 87,
+          "rgbd_not_selected": 967,
+          "rgbd_pairs": 1054,
+          "sdk_odometry_forwarded": 1055,
+          "visual_keyframes": 87
+        }
+      },
+      "bag_duration_s": 103.18674336800018,
+      "playback_wall_s": 122.33524254802614,
+      "effective_clock_rate_middle_80_percent": 1.0000002424338084,
+      "published_robot_ids": {
+        "pose_graph": [
+          1
+        ],
+        "bow": [
+          1
+        ],
+        "vlc": [
+          1
+        ]
+      },
+      "replay_script_sha256": "2539d33e02ab7d1f12286e69de2f61b7d4f4ee75b6ee673807e9c38e0658addf",
+      "odometry_count": 1055,
+      "pose_graph_messages": 60,
+      "last_pose_graph": {
+        "nodes": 87,
+        "edges": 86
+      },
+      "bow_messages": 174,
+      "bow_queries": 174,
+      "vlc_messages": 87,
+      "vlc_frames": 87,
+      "reference_odometry_count": 1055,
+      "reference_note": "Odin SDK owns the local trajectory in SDK mode. In VIO mode it is a reference, not ground truth, and is not an external VIO factor.",
+      "process_exit_codes": {
+        "roscore": 0,
+        "kimera": 0,
+        "record": 0,
+        "play": 0
+      },
+      "error": "SDK graph camera orientation does not match calibrated extrinsics",
+      "success": false
+    }
+  },
+  "scope": "Two concurrent independent sdk frontends with robot IDs 0 and 1. No inter-robot loop closure or distributed optimization is launched.",
+  "orchestrator_sha256": "3988be828c7a6254719cf5fcaaa0486572de8b1ffd2767437dcf314324b9cede"
+}

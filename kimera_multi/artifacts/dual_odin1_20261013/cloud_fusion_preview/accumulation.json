@@ -1,0 +1,36 @@
+{
+  "scope": "Raw DTOF points accumulated independently; VIO uses SDK scan deskew and one rigid anchor into each local SDK world. No inter-robot factor or PGO.",
+  "sampling_interval_s": 0.45,
+  "voxel_m": 0.05,
+  "minimum_voxel_observations": 2,
+  "range_m": [
+    0.3,
+    8
+  ],
+  "confidence_threshold": 35,
+  "sdk_max_pose_gap_ms": 10,
+  "vio_interpolation_max_gap_ms": 500,
+  "notes": [
+    "The 500 ms VIO gap limit only interpolates sparse (~3.4 Hz) output poses for this preview; SDK deskew retains the 10 ms gap guard.",
+    "Odin SDK poses are a reference and not ground truth.",
+    "Initial IMU-to-LiDAR extrinsics are not independently calibrated."
+  ],
+  "devices": {
+    "odin_a": {
+      "clouds_in_window": 1054,
+      "skipped:Odometry does not bracket requested 1765.102918..1765.102918 s": 1,
+      "scans_used": 210,
+      "filtered_points_accumulated": 6924255,
+      "sdk_map_points": 158738,
+      "vio_map_points": 221749
+    },
+    "odin_b": {
+      "clouds_in_window": 1055,
+      "skipped:Odometry does not bracket requested 1762.453886..1762.453886 s": 1,
+      "scans_used": 210,
+      "filtered_points_accumulated": 7415873,
+      "sdk_map_points": 124302,
+      "vio_map_points": 198967
+    }
+  }
+}

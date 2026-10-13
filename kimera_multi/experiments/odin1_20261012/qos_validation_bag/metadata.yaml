@@ -1,0 +1,77 @@
+rosbag2_bagfile_information:
+  version: 5
+  storage_identifier: mcap
+  duration:
+    nanoseconds: 31528512225
+  starting_time:
+    nanoseconds_since_epoch: 1791789015832185728
+  message_count: 26568
+  topics_with_message_count:
+    - topic_metadata:
+        name: /odin1/cloud_raw
+        type: sensor_msgs/msg/PointCloud2
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 323
+    - topic_metadata:
+        name: /odin1/image/compressed
+        type: sensor_msgs/msg/CompressedImage
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 323
+    - topic_metadata:
+        name: /odin1/odometry
+        type: nav_msgs/msg/Odometry
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 324
+    - topic_metadata:
+        name: /odin1/imu
+        type: sensor_msgs/msg/Imu
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 12637
+    - topic_metadata:
+        name: /odin1/odometry_highfreq
+        type: nav_msgs/msg/Odometry
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 12637
+    - topic_metadata:
+        name: /odin1/wiwc
+        type: nav_msgs/msg/Odometry
+        serialization_format: cdr
+        offered_qos_profiles: "- history: 3\n  depth: 0\n  reliability: 1\n  durability: 2\n  deadline:\n    sec: 9223372036\n    nsec: 854775807\n  lifespan:\n    sec: 9223372036\n    nsec: 854775807\n  liveliness: 1\n  liveliness_lease_duration:\n    sec: 9223372036\n    nsec: 854775807\n  avoid_ros_namespace_conventions: false"
+      message_count: 324
+  compression_format: ""
+  compression_mode: ""
+  relative_file_paths:
+    - qos_validation_bag_0.mcap
+    - qos_validation_bag_1.mcap
+    - qos_validation_bag_2.mcap
+    - qos_validation_bag_3.mcap
+  files:
+    - path: qos_validation_bag_0.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791789015832185728
+      duration:
+        nanoseconds: 9589296064
+      message_count: 8089
+    - path: qos_validation_bag_1.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791789025423607421
+      duration:
+        nanoseconds: 9650212719
+      message_count: 8130
+    - path: qos_validation_bag_2.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791789035075913328
+      duration:
+        nanoseconds: 9648917630
+      message_count: 8130
+    - path: qos_validation_bag_3.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1791789044727330296
+      duration:
+        nanoseconds: 2633367657
+      message_count: 2219

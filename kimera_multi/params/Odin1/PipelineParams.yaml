@@ -1,0 +1,7 @@
+%YAML:1.0
+# Odin supplies one rectified color camera and registered optical-Z depth.
+# 0: MonoImu, 1: StereoImu, 2: RgbdImu
+frontend_type: 2
+backend_type: 0
+display_type: 0
+parallel_run: 1
