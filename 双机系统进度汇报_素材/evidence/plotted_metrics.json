@@ -1,0 +1,20 @@
+{
+  "odin_a": {
+    "vio_count": 349,
+    "vio_span_s": 102.542894553,
+    "vio_max_radius_m": 0.805524518865633,
+    "vio_max_rotation_deg": 175.621016976164,
+    "reference_max_radius_m": 0.8230831515576054,
+    "vio_end_radius_m": 0.7893479945469997,
+    "reference_end_radius_m": 0.6140533768207777
+  },
+  "odin_b": {
+    "vio_count": 350,
+    "vio_span_s": 102.44489062700018,
+    "vio_max_radius_m": 1.2685306458682988,
+    "vio_max_rotation_deg": 118.11940631819526,
+    "reference_max_radius_m": 0.8340885382439924,
+    "vio_end_radius_m": 0.31773603211248963,
+    "reference_end_radius_m": 0.3111295086953342
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "kind": "ROS1 TCP bidirectional WiFi echo",
+  "payload_bytes": 65536,
+  "sent": 100,
+  "received": 100,
+  "rtt_median_ms": 8.034902159124613,
+  "rtt_p95_ms": 12.789804488420486,
+  "status": "pass"
+}

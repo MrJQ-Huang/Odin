@@ -1,0 +1,1846 @@
+{
+  "status": "PASS: SDK-owned trajectory frontend adaptation and concurrent dynamic double-Odin1 replay; independent VIO comparison preserved. Inter-robot LCD/PGO and live bridge not validated.",
+  "devices": [
+    {
+      "slot": "odin_a",
+      "usb_bus": 2,
+      "usb_addr": 28,
+      "usb_serial": "276fe96f99321c78",
+      "config": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_a/control_command.yaml",
+      "calib_dir": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_a/runtime"
+    },
+    {
+      "slot": "odin_b",
+      "usb_bus": 2,
+      "usb_addr": 29,
+      "usb_serial": "952033c87532e832",
+      "config": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_b/control_command.yaml",
+      "calib_dir": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/odin_b/runtime"
+    }
+  ],
+  "usb_pool_adjustment": {
+    "previous_mb": 16,
+    "test_mb": 128,
+    "persistent": false,
+    "reason": "Both devices reported LIBUSB_ERROR_NO_MEM and then stopped delivering data; official driver mitigation is 128 MB."
+  },
+  "raw_static_recording": {
+    "bag": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/static_bag",
+    "topics": {
+      "/odin_b/odin1/odometry": {
+        "count": 401,
+        "sensor_hz": 10.259163372874122,
+        "span_s": 38.989534084000006,
+        "first_stamp_ns": 189682090733,
+        "last_stamp_ns": 228671624817,
+        "max_gap_ms": 97.527593,
+        "median_gap_ms": 97.4737595,
+        "non_increasing": 0,
+        "gaps_over_20ms": 400,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860321.1165924,
+        "finite": true,
+        "max_position_from_first_m": 0.0010444108387028545,
+        "max_rotation_from_first_deg": 0.010860214359937281
+      },
+      "/odin_b/odin1/imu": {
+        "count": 15542,
+        "sensor_hz": 398.2196757977605,
+        "span_s": 39.026198213,
+        "first_stamp_ns": 189883839720,
+        "last_stamp_ns": 228910037933,
+        "max_gap_ms": 5.023084,
+        "median_gap_ms": 2.510958,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/imu",
+        "reception_minus_header_s_median": 1791860320.9247925
+      },
+      "/odin_a/odin1/imu": {
+        "count": 15642,
+        "sensor_hz": 400.85769301903173,
+        "span_s": 39.018834545000004,
+        "first_stamp_ns": 192466309270,
+        "last_stamp_ns": 231485143815,
+        "max_gap_ms": 4.990709,
+        "median_gap_ms": 2.494334,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/imu",
+        "reception_minus_header_s_median": 1791860318.3496432
+      },
+      "/odin_b/odin1/odometry_highfreq": {
+        "count": 15542,
+        "sensor_hz": 398.2196757977605,
+        "span_s": 39.026198213,
+        "first_stamp_ns": 189882131534,
+        "last_stamp_ns": 228908329747,
+        "max_gap_ms": 5.023084,
+        "median_gap_ms": 2.510958,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860320.9267344
+      },
+      "/odin_a/odin1/odometry_highfreq": {
+        "count": 15641,
+        "sensor_hz": 400.85718632286233,
+        "span_s": 39.016389212,
+        "first_stamp_ns": 192467046417,
+        "last_stamp_ns": 231483435629,
+        "max_gap_ms": 4.990709,
+        "median_gap_ms": 2.494334,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.351522
+      },
+      "/odin_a/odin1/image/compressed": {
+        "count": 401,
+        "sensor_hz": 10.259159272582014,
+        "span_s": 38.989549667000006,
+        "first_stamp_ns": 192410851006,
+        "last_stamp_ns": 231400400673,
+        "max_gap_ms": 97.529468,
+        "median_gap_ms": 97.4738225,
+        "non_increasing": 0,
+        "gaps_over_20ms": 400,
+        "gaps_over_3_median": 0,
+        "frame_id": "",
+        "reception_minus_header_s_median": 1791860318.4136677
+      },
+      "/odin_a/odin1/cloud_raw": {
+        "count": 401,
+        "sensor_hz": 10.259170181266033,
+        "span_s": 38.989508209,
+        "first_stamp_ns": 192314525463,
+        "last_stamp_ns": 231304033672,
+        "max_gap_ms": 97.529468,
+        "median_gap_ms": 97.4738015,
+        "non_increasing": 0,
+        "gaps_over_20ms": 400,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/lidar",
+        "reception_minus_header_s_median": 1791860318.4887457
+      },
+      "/odin_b/odin1/cloud_raw": {
+        "count": 401,
+        "sensor_hz": 10.259182910022975,
+        "span_s": 38.989459834,
+        "first_stamp_ns": 189780659293,
+        "last_stamp_ns": 228770119127,
+        "max_gap_ms": 97.527593,
+        "median_gap_ms": 97.4737385,
+        "non_increasing": 0,
+        "gaps_over_20ms": 400,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/lidar",
+        "reception_minus_header_s_median": 1791860321.060728
+      },
+      "/odin_a/odin1/odometry": {
+        "count": 400,
+        "sensor_hz": 10.25918214778937,
+        "span_s": 38.891989074,
+        "first_stamp_ns": 192313413871,
+        "last_stamp_ns": 231205402945,
+        "max_gap_ms": 97.529468,
+        "median_gap_ms": 97.473801,
+        "non_increasing": 0,
+        "gaps_over_20ms": 399,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.543961,
+        "finite": true,
+        "max_position_from_first_m": 0.0006337901861026251,
+        "max_rotation_from_first_deg": 0.015332099194637856
+      },
+      "/odin_a/odin1/wiwc": {
+        "count": 400,
+        "sensor_hz": 10.25918214778937,
+        "span_s": 38.891989074,
+        "first_stamp_ns": 192313413871,
+        "last_stamp_ns": 231205402945,
+        "max_gap_ms": 97.529468,
+        "median_gap_ms": 97.473801,
+        "non_increasing": 0,
+        "gaps_over_20ms": 399,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.544629
+      },
+      "/odin_b/odin1/image/compressed": {
+        "count": 400,
+        "sensor_hz": 10.259172915269753,
+        "span_s": 38.892024074000005,
+        "first_stamp_ns": 189877036586,
+        "last_stamp_ns": 228769060660,
+        "max_gap_ms": 97.527593,
+        "median_gap_ms": 97.473759,
+        "non_increasing": 0,
+        "gaps_over_20ms": 399,
+        "gaps_over_3_median": 0,
+        "frame_id": "",
+        "reception_minus_header_s_median": 1791860320.989668
+      },
+      "/odin_b/odin1/wiwc": {
+        "count": 400,
+        "sensor_hz": 10.259172937163994,
+        "span_s": 38.892023991,
+        "first_stamp_ns": 189779600826,
+        "last_stamp_ns": 228671624817,
+        "max_gap_ms": 97.527593,
+        "median_gap_ms": 97.473759,
+        "non_increasing": 0,
+        "gaps_over_20ms": 399,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860321.116539
+      }
+    },
+    "image_cloud_offset_ms": {
+      "odin_a": {
+        "min": -96.367001,
+        "median": 1.111592,
+        "max": 1.111592
+      },
+      "odin_b": {
+        "min": 1.058467,
+        "median": 1.058467,
+        "max": 1.058467
+      }
+    }
+  },
+  "first_motion_recording_with_usb_fault": {
+    "bag": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/motion_bag",
+    "topics": {
+      "/odin_a/odin1/odometry_highfreq": {
+        "count": 40632,
+        "sensor_hz": 400.85126387232543,
+        "span_s": 101.36178593400001,
+        "first_stamp_ns": 281853835357,
+        "last_stamp_ns": 383215621291,
+        "max_gap_ms": 2.800583,
+        "median_gap_ms": 2.494625,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.3931918
+      },
+      "/odin_b/odin1/odometry_highfreq": {
+        "count": 40369,
+        "sensor_hz": 398.2121592191704,
+        "span_s": 101.37309739400001,
+        "first_stamp_ns": 279280892350,
+        "last_stamp_ns": 380653989744,
+        "max_gap_ms": 2.788042,
+        "median_gap_ms": 2.51125,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860320.9686108
+      },
+      "/odin_a/odin1/imu": {
+        "count": 40632,
+        "sensor_hz": 400.85128034743406,
+        "span_s": 101.361781768,
+        "first_stamp_ns": 281860533085,
+        "last_stamp_ns": 383222314853,
+        "max_gap_ms": 2.800583,
+        "median_gap_ms": 2.494625,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/imu",
+        "reception_minus_header_s_median": 1791860318.3914452
+      },
+      "/odin_a/odin1/image/compressed": {
+        "count": 1001,
+        "sensor_hz": 9.836268792857506,
+        "span_s": 101.66456621500001,
+        "first_stamp_ns": 281794278570,
+        "last_stamp_ns": 383458844785,
+        "max_gap_ms": 2339.41136,
+        "median_gap_ms": 97.473801,
+        "non_increasing": 0,
+        "gaps_over_20ms": 1000,
+        "gaps_over_3_median": 2,
+        "frame_id": "",
+        "reception_minus_header_s_median": 1791860318.4589224
+      },
+      "/odin_b/odin1/imu": {
+        "count": 40367,
+        "sensor_hz": 398.2121731753445,
+        "span_s": 101.36807139300001,
+        "first_stamp_ns": 279290137495,
+        "last_stamp_ns": 380658208888,
+        "max_gap_ms": 2.788042,
+        "median_gap_ms": 2.51125,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/imu",
+        "reception_minus_header_s_median": 1791860320.9667985
+      },
+      "/odin_a/odin1/wiwc": {
+        "count": 998,
+        "sensor_hz": 9.844523377710667,
+        "span_s": 101.27458300900001,
+        "first_stamp_ns": 281696853435,
+        "last_stamp_ns": 382971436444,
+        "max_gap_ms": 2339.3697349999998,
+        "median_gap_ms": 97.47376,
+        "non_increasing": 0,
+        "gaps_over_20ms": 997,
+        "gaps_over_3_median": 2,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.581294
+      },
+      "/odin_a/odin1/odometry": {
+        "count": 1008,
+        "sensor_hz": 9.943264835862228,
+        "span_s": 101.27458300900001,
+        "first_stamp_ns": 281696853435,
+        "last_stamp_ns": 382971436444,
+        "max_gap_ms": 1949.474945,
+        "median_gap_ms": 97.47376,
+        "non_increasing": 0,
+        "gaps_over_20ms": 1007,
+        "gaps_over_3_median": 2,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.581383,
+        "finite": true,
+        "max_position_from_first_m": 0.9820717314498977,
+        "max_rotation_from_first_deg": 179.1542867990428
+      },
+      "/odin_b/odin1/image/compressed": {
+        "count": 1012,
+        "sensor_hz": 9.953957086568616,
+        "span_s": 101.567647038,
+        "first_stamp_ns": 279260455150,
+        "last_stamp_ns": 380828102188,
+        "max_gap_ms": 2144.458882,
+        "median_gap_ms": 97.47363399999999,
+        "non_increasing": 0,
+        "gaps_over_20ms": 1011,
+        "gaps_over_3_median": 3,
+        "frame_id": "",
+        "reception_minus_header_s_median": 1791860321.0363183
+      },
+      "/odin_b/odin1/cloud_raw": {
+        "count": 1011,
+        "sensor_hz": 9.953671810176868,
+        "span_s": 101.47009257100001,
+        "first_stamp_ns": 279164088357,
+        "last_stamp_ns": 380634180928,
+        "max_gap_ms": 2144.385507,
+        "median_gap_ms": 97.473635,
+        "non_increasing": 0,
+        "gaps_over_20ms": 1010,
+        "gaps_over_3_median": 3,
+        "frame_id": "odin_b/lidar",
+        "reception_minus_header_s_median": 1791860321.121817
+      },
+      "/odin_a/odin1/cloud_raw": {
+        "count": 1000,
+        "sensor_hz": 9.845259657980025,
+        "span_s": 101.470152612,
+        "first_stamp_ns": 281795390162,
+        "last_stamp_ns": 383265542774,
+        "max_gap_ms": 2339.3697349999998,
+        "median_gap_ms": 97.473801,
+        "non_increasing": 0,
+        "gaps_over_20ms": 999,
+        "gaps_over_3_median": 2,
+        "frame_id": "odin_a/lidar",
+        "reception_minus_header_s_median": 1791860318.5405724
+      },
+      "/odin_b/odin1/wiwc": {
+        "count": 1008,
+        "sensor_hz": 9.94317714850942,
+        "span_s": 101.275476134,
+        "first_stamp_ns": 279163029890,
+        "last_stamp_ns": 380438506024,
+        "max_gap_ms": 2241.894976,
+        "median_gap_ms": 97.473635,
+        "non_increasing": 0,
+        "gaps_over_20ms": 1007,
+        "gaps_over_3_median": 3,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860321.1639228
+      },
+      "/odin_b/odin1/odometry": {
+        "count": 1018,
+        "sensor_hz": 10.041917735882901,
+        "span_s": 101.275476134,
+        "first_stamp_ns": 279163029890,
+        "last_stamp_ns": 380438506024,
+        "max_gap_ms": 1267.156628,
+        "median_gap_ms": 97.473635,
+        "non_increasing": 0,
+        "gaps_over_20ms": 1017,
+        "gaps_over_3_median": 3,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860321.163676,
+        "finite": true,
+        "max_position_from_first_m": 0.9142605875843058,
+        "max_rotation_from_first_deg": 150.95586459843506
+      }
+    },
+    "image_cloud_offset_ms": {
+      "odin_a": {
+        "min": -193.302011,
+        "median": 1.111592,
+        "max": 1.685342
+      },
+      "odin_b": {
+        "min": -193.92126,
+        "median": 1.058467,
+        "max": 1.685342
+      }
+    }
+  },
+  "usb128_six_minute_observation": {
+    "duration_wall_s": 360.00002345070243,
+    "adapted": false,
+    "topics": {
+      "/odin_a/odin1/image/compressed": {
+        "count": 3688,
+        "sensor_hz": 10.259175810089666,
+        "arrival_hz": 10.246436515087925,
+        "non_increasing": 0,
+        "max_gap_ms": 97.542677,
+        "gaps_over_20ms": 3687,
+        "details": {
+          "frame_id": "",
+          "format": "jpeg",
+          "first_payload_sha256": "a566ccfbf0198e803d668492432cbad1161429cef26f11492d0ea2ce5a3d80f8"
+        },
+        "first_stamp_ns": 718878179528,
+        "last_stamp_ns": 1078263774263,
+        "reception_minus_header_s_median": 1791860318.8091362
+      },
+      "/odin_a/odin1/cloud_raw": {
+        "count": 3688,
+        "sensor_hz": 10.259175761332363,
+        "arrival_hz": 10.247222412369288,
+        "non_increasing": 0,
+        "max_gap_ms": 97.542677,
+        "gaps_over_20ms": 3687,
+        "details": {
+          "frame_id": "odin_a/lidar",
+          "width": 49152,
+          "height": 1,
+          "fields": [
+            "x",
+            "y",
+            "z",
+            "intensity",
+            "confidence",
+            "offset_time"
+          ],
+          "point_step": 19
+        },
+        "first_stamp_ns": 718782390486,
+        "last_stamp_ns": 1078167986929,
+        "reception_minus_header_s_median": 1791860318.888189
+      },
+      "/odin_a/odin1/imu": {
+        "count": 144044,
+        "sensor_hz": 400.80845321280543,
+        "arrival_hz": 400.2698716041652,
+        "non_increasing": 0,
+        "max_gap_ms": 5.023084,
+        "gaps_over_20ms": 0,
+        "details": {
+          "frame_id": "odin_a/imu"
+        },
+        "first_stamp_ns": 718977980714,
+        "last_stamp_ns": 1078359123615,
+        "reception_minus_header_s_median": 1791860318.7501109,
+        "finite": true,
+        "acceleration_norm_median": 9.765108675531389,
+        "gyro_norm_p95": 0.007059270136621114
+      },
+      "/odin_a/odin1/odometry_highfreq": {
+        "count": 144043,
+        "sensor_hz": 400.8084551184213,
+        "arrival_hz": 400.2670639140772,
+        "non_increasing": 0,
+        "max_gap_ms": 5.023084,
+        "gaps_over_20ms": 0,
+        "details": {
+          "frame_id": "odin_a/odom",
+          "child_frame_id": "odin_a/imu"
+        },
+        "first_stamp_ns": 718978769194,
+        "last_stamp_ns": 1078357415429,
+        "reception_minus_header_s_median": 1791860318.748409,
+        "finite": true,
+        "max_position_from_first_m": 0.0019846276728898043
+      },
+      "/odin_b/odin1/imu": {
+        "count": 143095,
+        "sensor_hz": 398.16886423270614,
+        "arrival_hz": 397.63140859236165,
+        "non_increasing": 0,
+        "max_gap_ms": 2.956625,
+        "gaps_over_20ms": 0,
+        "details": {
+          "frame_id": "odin_b/imu"
+        },
+        "first_stamp_ns": 716404701498,
+        "last_stamp_ns": 1075784886274,
+        "reception_minus_header_s_median": 1791860321.3262074,
+        "finite": true,
+        "acceleration_norm_median": 9.783640941788988,
+        "gyro_norm_p95": 0.007059270136621114
+      },
+      "/odin_a/odin1/odometry": {
+        "count": 3688,
+        "sensor_hz": 10.259175761332363,
+        "arrival_hz": 10.245597750471578,
+        "non_increasing": 0,
+        "max_gap_ms": 97.542677,
+        "gaps_over_20ms": 3687,
+        "details": {
+          "frame_id": "odin_a/odom",
+          "child_frame_id": "odin_a/imu"
+        },
+        "first_stamp_ns": 718780705144,
+        "last_stamp_ns": 1078166301587,
+        "reception_minus_header_s_median": 1791860318.9339492,
+        "finite": true,
+        "max_position_from_first_m": 0.001531594267422022
+      },
+      "/odin_b/odin1/odometry_highfreq": {
+        "count": 143093,
+        "sensor_hz": 398.16890052523854,
+        "arrival_hz": 397.63075236890495,
+        "non_increasing": 0,
+        "max_gap_ms": 2.956625,
+        "gaps_over_20ms": 0,
+        "details": {
+          "frame_id": "odin_b/odom",
+          "child_frame_id": "odin_b/imu"
+        },
+        "first_stamp_ns": 716405541021,
+        "last_stamp_ns": 1075780670046,
+        "reception_minus_header_s_median": 1791860321.3260133,
+        "finite": true,
+        "max_position_from_first_m": 0.002249592185263809
+      },
+      "/odin_b/odin1/odometry": {
+        "count": 3687,
+        "sensor_hz": 10.259176893976493,
+        "arrival_hz": 10.245378410127554,
+        "non_increasing": 0,
+        "max_gap_ms": 97.539135,
+        "gaps_over_20ms": 3686,
+        "details": {
+          "frame_id": "odin_b/odom",
+          "child_frame_id": "odin_b/imu"
+        },
+        "first_stamp_ns": 716225047388,
+        "last_stamp_ns": 1075513130447,
+        "reception_minus_header_s_median": 1791860321.5165005,
+        "finite": true,
+        "max_position_from_first_m": 0.002061269026595025
+      },
+      "/odin_b/odin1/cloud_raw": {
+        "count": 3687,
+        "sensor_hz": 10.25917688329723,
+        "arrival_hz": 10.245369846739532,
+        "non_increasing": 0,
+        "max_gap_ms": 97.539135,
+        "gaps_over_20ms": 3686,
+        "details": {
+          "frame_id": "odin_b/lidar",
+          "width": 49152,
+          "height": 1,
+          "fields": [
+            "x",
+            "y",
+            "z",
+            "intensity",
+            "confidence",
+            "offset_time"
+          ],
+          "point_step": 19
+        },
+        "first_stamp_ns": 716324205907,
+        "last_stamp_ns": 1075612289340,
+        "reception_minus_header_s_median": 1791860321.4739015
+      },
+      "/odin_b/odin1/image/compressed": {
+        "count": 3687,
+        "sensor_hz": 10.259176898745041,
+        "arrival_hz": 10.245177382148917,
+        "non_increasing": 0,
+        "max_gap_ms": 97.539135,
+        "gaps_over_20ms": 3686,
+        "details": {
+          "frame_id": "",
+          "format": "jpeg",
+          "first_payload_sha256": "84b8d502d83d675609deebf30353dc725191f11e25245945513799b519d3166b"
+        },
+        "first_stamp_ns": 716419994074,
+        "last_stamp_ns": 1075708076966,
+        "reception_minus_header_s_median": 1791860321.3889515
+      }
+    },
+    "diagnostics": {},
+    "expected_topics": [
+      "/odin_a/odin1/image/compressed",
+      "/odin_a/odin1/cloud_raw",
+      "/odin_a/odin1/imu",
+      "/odin_a/odin1/odometry",
+      "/odin_a/odin1/odometry_highfreq",
+      "/odin_b/odin1/image/compressed",
+      "/odin_b/odin1/cloud_raw",
+      "/odin_b/odin1/imu",
+      "/odin_b/odin1/odometry",
+      "/odin_b/odin1/odometry_highfreq"
+    ],
+    "missing_topics": []
+  },
+  "dual_live_rgbd_observation": {
+    "duration_wall_s": 35.00036649592221,
+    "adapted": true,
+    "topics": {
+      "/odin_b/kimera/rgb/image_raw": {
+        "count": 332,
+        "sensor_hz": 9.814422740497644,
+        "arrival_hz": 9.656576118005114,
+        "non_increasing": 0,
+        "max_gap_ms": 292.422196,
+        "gaps_over_20ms": 331,
+        "details": {
+          "frame_id": "odin_b/camera_optical",
+          "width": 640,
+          "height": 518,
+          "encoding": "bgr8"
+        },
+        "first_stamp_ns": 240465946085,
+        "last_stamp_ns": 274191821641,
+        "reception_minus_header_s_median": 1791860322.0798378
+      },
+      "/odin_b/kimera/depth/image_raw": {
+        "count": 332,
+        "sensor_hz": 9.814422740497644,
+        "arrival_hz": 9.662804805608829,
+        "non_increasing": 0,
+        "max_gap_ms": 292.422196,
+        "gaps_over_20ms": 331,
+        "details": {
+          "frame_id": "odin_b/camera_optical",
+          "width": 640,
+          "height": 518,
+          "encoding": "32FC1"
+        },
+        "first_stamp_ns": 240465946085,
+        "last_stamp_ns": 274191821641,
+        "reception_minus_header_s_median": 1791860322.0797238
+      },
+      "/odin_b/kimera/rgb/camera_info": {
+        "count": 332,
+        "sensor_hz": 9.814422740497644,
+        "arrival_hz": 9.670377090374242,
+        "non_increasing": 0,
+        "max_gap_ms": 292.422196,
+        "gaps_over_20ms": 331,
+        "details": {
+          "frame_id": "odin_b/camera_optical",
+          "width": 640,
+          "height": 518
+        },
+        "first_stamp_ns": 240465946085,
+        "last_stamp_ns": 274191821641,
+        "reception_minus_header_s_median": 1791860322.0754583
+      },
+      "/odin_b/kimera/reference/odometry": {
+        "count": 352,
+        "sensor_hz": 10.259185029233961,
+        "arrival_hz": 10.258311674881341,
+        "non_increasing": 0,
+        "max_gap_ms": 97.53151,
+        "gaps_over_20ms": 351,
+        "details": {
+          "frame_id": "odin_b/odin_odom",
+          "child_frame_id": "odin_b/imu"
+        },
+        "first_stamp_ns": 241050790061,
+        "last_stamp_ns": 275264033998,
+        "reception_minus_header_s_median": 1791860321.1371446,
+        "finite": true,
+        "max_position_from_first_m": 0.0008296607740516601
+      },
+      "/odin_a/kimera/reference/odometry": {
+        "count": 352,
+        "sensor_hz": 10.259173297222931,
+        "arrival_hz": 10.281583323011471,
+        "non_increasing": 0,
+        "max_gap_ms": 97.532468,
+        "gaps_over_20ms": 351,
+        "details": {
+          "frame_id": "odin_a/odin_odom",
+          "child_frame_id": "odin_a/imu"
+        },
+        "first_stamp_ns": 243584569356,
+        "last_stamp_ns": 277797852418,
+        "reception_minus_header_s_median": 1791860318.5571404,
+        "finite": true,
+        "max_position_from_first_m": 0.0022185659782841707
+      },
+      "/odin_b/kimera/imu": {
+        "count": 13684,
+        "sensor_hz": 398.23127606997616,
+        "arrival_hz": 399.90294907613884,
+        "non_increasing": 0,
+        "max_gap_ms": 2.779001,
+        "gaps_over_20ms": 0,
+        "details": {
+          "frame_id": "odin_b/imu"
+        },
+        "first_stamp_ns": 241128799035,
+        "last_stamp_ns": 275488229904,
+        "reception_minus_header_s_median": 1791860320.947438,
+        "finite": true,
+        "acceleration_norm_median": 9.779539749136173,
+        "gyro_norm_p95": 0.007674235687477337
+      },
+      "/odin_a/kimera/rgb/camera_info": {
+        "count": 320,
+        "sensor_hz": 9.404235308358784,
+        "arrival_hz": 9.358787792693736,
+        "non_increasing": 0,
+        "max_gap_ms": 389.89262299999996,
+        "gaps_over_20ms": 319,
+        "details": {
+          "frame_id": "odin_a/camera_optical",
+          "width": 640,
+          "height": 518
+        },
+        "first_stamp_ns": 242707317601,
+        "last_stamp_ns": 276628204259,
+        "reception_minus_header_s_median": 1791860319.6125627
+      },
+      "/odin_a/kimera/imu": {
+        "count": 13768,
+        "sensor_hz": 400.81144844002586,
+        "arrival_hz": 402.3373907168676,
+        "non_increasing": 0,
+        "max_gap_ms": 5.040876,
+        "gaps_over_20ms": 0,
+        "details": {
+          "frame_id": "odin_a/imu"
+        },
+        "first_stamp_ns": 243725893003,
+        "last_stamp_ns": 278073714288,
+        "reception_minus_header_s_median": 1791860318.3724723,
+        "finite": true,
+        "acceleration_norm_median": 9.755597768063204,
+        "gyro_norm_p95": 0.007059270136621114
+      },
+      "/odin_a/kimera/depth/image_raw": {
+        "count": 320,
+        "sensor_hz": 9.404235308358784,
+        "arrival_hz": 9.360661941450843,
+        "non_increasing": 0,
+        "max_gap_ms": 389.89262299999996,
+        "gaps_over_20ms": 319,
+        "details": {
+          "frame_id": "odin_a/camera_optical",
+          "width": 640,
+          "height": 518,
+          "encoding": "32FC1"
+        },
+        "first_stamp_ns": 242707317601,
+        "last_stamp_ns": 276628204259,
+        "reception_minus_header_s_median": 1791860319.6145723
+      },
+      "/odin_a/kimera/rgb/image_raw": {
+        "count": 320,
+        "sensor_hz": 9.404235308358784,
+        "arrival_hz": 9.37104111193795,
+        "non_increasing": 0,
+        "max_gap_ms": 389.89262299999996,
+        "gaps_over_20ms": 319,
+        "details": {
+          "frame_id": "odin_a/camera_optical",
+          "width": 640,
+          "height": 518,
+          "encoding": "bgr8"
+        },
+        "first_stamp_ns": 242707317601,
+        "last_stamp_ns": 276628204259,
+        "reception_minus_header_s_median": 1791860319.6096709
+      }
+    },
+    "diagnostics": {
+      "/odin_a/kimera/diagnostics": {
+        "status": "running",
+        "deskew": "odometry",
+        "counters": {
+          "reference_forwarded": 387,
+          "imu_forwarded": 15123,
+          "poses_received": 15123,
+          "rgbd_pose_unavailable": 1,
+          "rgbd_published": 345,
+          "rgbd_processing_ms_last": 154.5971967279911,
+          "rgbd_worker_queue_full": 30
+        },
+        "synchronization": {
+          "cloud_unmatched": 1,
+          "paired": 387
+        },
+        "worker_queue": 10,
+        "last_input_sensor_stamps_ns": {
+          "reference": 277213047151,
+          "imu": 277445073016,
+          "pose": 277443364830
+        }
+      },
+      "/odin_b/kimera/diagnostics": {
+        "status": "running",
+        "deskew": "odometry",
+        "counters": {
+          "imu_forwarded": 15919,
+          "poses_received": 15920,
+          "reference_forwarded": 410,
+          "rgbd_pose_unavailable": 1,
+          "rgbd_published": 382,
+          "rgbd_processing_ms_last": 108.12954884022474,
+          "rgbd_worker_queue_full": 16
+        },
+        "synchronization": {
+          "cloud_unmatched": 1,
+          "paired": 410
+        },
+        "worker_queue": 10,
+        "last_input_sensor_stamps_ns": {
+          "imu": 274925736265,
+          "pose": 274926539037,
+          "reference": 274679241481
+        }
+      }
+    },
+    "expected_topics": [
+      "/odin_a/kimera/rgb/image_raw",
+      "/odin_a/kimera/depth/image_raw",
+      "/odin_a/kimera/rgb/camera_info",
+      "/odin_a/kimera/imu",
+      "/odin_a/kimera/reference/odometry",
+      "/odin_b/kimera/rgb/image_raw",
+      "/odin_b/kimera/depth/image_raw",
+      "/odin_b/kimera/rgb/camera_info",
+      "/odin_b/kimera/imu",
+      "/odin_b/kimera/reference/odometry"
+    ],
+    "missing_topics": []
+  },
+  "concurrent_static_replays": {
+    "a": {
+      "bag": "/workspace/artifacts/dual_odin1_20261013/odin_a/static_rgbd.bag",
+      "bag_sha256": "f5871e62e08c08a6aa975a7031bb80e446c62308406fcfcfa9bdd99019ab6c93",
+      "docker_image_id": "sha256:ab6518ed76a57761e70e7b5fa91f191d1bee169e1a63ffc434b592613e5878e4",
+      "params": "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+      "rate": 1.0,
+      "robot_name": "odin_a",
+      "robot_id": 0,
+      "published_robot_ids": {
+        "pose_graph": [
+          0
+        ],
+        "bow": [
+          0
+        ],
+        "vlc": [
+          0
+        ]
+      },
+      "replay_script_sha256": "9ffa710775172ddd419c9d70223204d512f45fb9ee3739896dabbcb166b971b5",
+      "odometry_count": 102,
+      "pose_graph_messages": 102,
+      "last_pose_graph": {
+        "nodes": 102,
+        "edges": 101
+      },
+      "bow_messages": 1,
+      "bow_queries": 102,
+      "vlc_messages": 1,
+      "vlc_frames": 102,
+      "reference_odometry_count": 308,
+      "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+      "process_exit_codes": {
+        "roscore": 0,
+        "kimera": 0,
+        "record": 0,
+        "play": 0
+      },
+      "error": null,
+      "success": true
+    },
+    "b": {
+      "bag": "/workspace/artifacts/dual_odin1_20261013/odin_b/static_rgbd.bag",
+      "bag_sha256": "c3314e76c52851f92c23a2386c80cd7bd6e6a6f930cbbf8cbae835222e5ceed2",
+      "docker_image_id": "sha256:ab6518ed76a57761e70e7b5fa91f191d1bee169e1a63ffc434b592613e5878e4",
+      "params": "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+      "rate": 1.0,
+      "robot_name": "odin_b",
+      "robot_id": 1,
+      "published_robot_ids": {
+        "pose_graph": [
+          1
+        ],
+        "bow": [
+          1
+        ],
+        "vlc": [
+          1
+        ]
+      },
+      "replay_script_sha256": "9ffa710775172ddd419c9d70223204d512f45fb9ee3739896dabbcb166b971b5",
+      "odometry_count": 101,
+      "pose_graph_messages": 101,
+      "last_pose_graph": {
+        "nodes": 101,
+        "edges": 100
+      },
+      "bow_messages": 2,
+      "bow_queries": 202,
+      "vlc_messages": 1,
+      "vlc_frames": 101,
+      "reference_odometry_count": 308,
+      "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+      "process_exit_codes": {
+        "roscore": 0,
+        "kimera": 0,
+        "record": 0,
+        "play": 0
+      },
+      "error": null,
+      "success": true
+    }
+  },
+  "early_static_segment_pair": {
+    "success": true,
+    "error": null,
+    "rate": 1.0,
+    "runs": {
+      "a": {
+        "started_unix_s": 1791861486.846712,
+        "command": [
+          "/home/uros/kimeramulti/docker/odin1.bash",
+          "replay",
+          "--bag",
+          "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_rgbd.bag",
+          "--params",
+          "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+          "--robot-name",
+          "odin_a",
+          "--robot-id",
+          "0",
+          "--rate",
+          "1.0",
+          "--output",
+          "/workspace/artifacts/dual_odin1_20261013/docker_motion_pair/odin_a"
+        ],
+        "ended_unix_s": 1791861633.0298786,
+        "exit_code": 0
+      },
+      "b": {
+        "started_unix_s": 1791861486.85911,
+        "command": [
+          "/home/uros/kimeramulti/docker/odin1.bash",
+          "replay",
+          "--bag",
+          "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_rgbd.bag",
+          "--params",
+          "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+          "--robot-name",
+          "odin_b",
+          "--robot-id",
+          "1",
+          "--rate",
+          "1.0",
+          "--output",
+          "/workspace/artifacts/dual_odin1_20261013/docker_motion_pair/odin_b"
+        ],
+        "ended_unix_s": 1791861639.2369144,
+        "exit_code": 0
+      }
+    },
+    "summaries": {
+      "a": {
+        "bag": "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_rgbd.bag",
+        "bag_sha256": "76553e00c78565b71a8ccd252cd69e7c7f71f7dbf8c40bbbb69260fab5f3c334",
+        "docker_image_id": "sha256:707ecd83fab0fc289b97fc425e53804162eac2e6f820b052567ce5417de78da0",
+        "params": "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+        "rate": 1.0,
+        "robot_name": "odin_a",
+        "robot_id": 0,
+        "bag_duration_s": 60.398417569,
+        "playback_wall_s": 64.69927777163684,
+        "effective_clock_rate_middle_80_percent": 0.9999982241160161,
+        "published_robot_ids": {
+          "pose_graph": [
+            0
+          ],
+          "bow": [
+            0
+          ],
+          "vlc": [
+            0
+          ]
+        },
+        "replay_script_sha256": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+        "odometry_count": 205,
+        "pose_graph_messages": 205,
+        "last_pose_graph": {
+          "nodes": 205,
+          "edges": 409
+        },
+        "bow_messages": 42,
+        "bow_queries": 205,
+        "vlc_messages": 4,
+        "vlc_frames": 205,
+        "reference_odometry_count": 615,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": null,
+        "success": true
+      },
+      "b": {
+        "bag": "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_rgbd.bag",
+        "bag_sha256": "d2eccc1e8eb072aed741d406497ae04ef8f7872df2106e8621bd6c3beb0e20b0",
+        "docker_image_id": "sha256:707ecd83fab0fc289b97fc425e53804162eac2e6f820b052567ce5417de78da0",
+        "params": "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+        "rate": 1.0,
+        "robot_name": "odin_b",
+        "robot_id": 1,
+        "bag_duration_s": 60.396860068999956,
+        "playback_wall_s": 63.290987689979374,
+        "effective_clock_rate_middle_80_percent": 0.9999987957309008,
+        "published_robot_ids": {
+          "pose_graph": [
+            1
+          ],
+          "bow": [
+            1
+          ],
+          "vlc": [
+            1
+          ]
+        },
+        "replay_script_sha256": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+        "odometry_count": 205,
+        "pose_graph_messages": 205,
+        "last_pose_graph": {
+          "nodes": 205,
+          "edges": 409
+        },
+        "bow_messages": 112,
+        "bow_queries": 410,
+        "vlc_messages": 4,
+        "vlc_frames": 204,
+        "reference_odometry_count": 615,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": null,
+        "success": true
+      }
+    },
+    "scope": "Two concurrent independent VIO/LCD frontends with robot IDs 0 and 1. No inter-robot loop closure or distributed optimization is launched.",
+    "orchestrator_sha256": "c03b5253b027e34f77a159bc123641483de14ebdab2034d8e69a6d6e167a2a41"
+  },
+  "early_segment_note": "The first 60 seconds of the original motion recording are predominantly stationary; actual motion starts about 90 seconds after recording begins. These replay results validate concurrent static execution, not moving trajectories.",
+  "motion_coverage": {
+    "/odin_a/odin1/odometry": {
+      "motion_onset_after_first_odometry_s": 90.26005219400002
+    },
+    "/odin_b/odin1/odometry": {
+      "motion_onset_after_first_odometry_s": 89.87054073799999
+    }
+  },
+  "limits": [
+    "No inter-robot loop closure, distributed optimization, ROS 2 to ROS 1 live bridge, or multi-host transport is launched.",
+    "Both cameras share a USB 3 Hub and host controller; six minutes is not a long-duration stability qualification.",
+    "Dual 640x518 live RGB-D conversion had full queues and frame drops; use raw recording followed by offline conversion for now.",
+    "Factory/initial extrinsics and IMU noise still require independent calibration. Odin reference poses are not ground truth.",
+    "Device clocks are independent. Current Docker frontends use independent ROS masters and clocks."
+  ],
+  "driver_first_exit_codes": {
+    "odin_a": 0,
+    "odin_b": -6
+  },
+  "driver_usb128_static_exit_codes": {
+    "odin_a": 0,
+    "odin_b": 0
+  },
+  "docker_image_id": "sha256:b069417657ae50bc94130242077d2e9c5c4f2afaefedd9fddb158e0e450d703d",
+  "source_sha256": {
+    "docker/replay_odin1.py": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+    "docker/replay_dual_odin1.py": "c03b5253b027e34f77a159bc123641483de14ebdab2034d8e69a6d6e167a2a41",
+    "docker/odin1.bash": "43466760fa21c939c626b6ffa97ebd631fc8353ee291664eec9e5e5cedf5bbfe",
+    "launch/kimera_vio_odin1.launch": "4314e7499f6051e40ebaad13d44b036def63705979e680b975d8c92b68cceabd",
+    "docker/Dockerfile.odin1": "bd2170933f3368a51f64afe9e9603b294fc8880513d53dfdc278f2eca9aacb53",
+    "docker/patch_noetic.py": "77549833c5170cc9f1efe3d829e34f70a877798a8b0f421e6b4544d2c4b29fc7",
+    "docker/fix_sparse_keypoints.py": "55531233cee8587a075b9c8a3d150bbcfbda7005527fbcf5d5aecec5096df237",
+    "docker/tests/sparse_keypoints.cpp": "b0705006c7bb26534fac4a28f226ef4a969aa4b9550f589f5f48595db743e354",
+    "docker/tests/run_sparse_keypoints.bash": "8e704461c876119ecac3967c56453a72ba60cf42e6bd0aa16fc9e3044cd3f858",
+    "docker/README.odin1.md": "4e9a7da6a11740d87fc510d1804584200a4a350dee54fc089a7efb0f10bd38b3"
+  },
+  "corrected_motion_raw_recording": {
+    "bag": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/motion_usb128_bag",
+    "topics": {
+      "/odin_a/odin1/imu": {
+        "count": 128209,
+        "sensor_hz": 400.7679399806932,
+        "span_s": 319.90582881,
+        "first_stamp_ns": 1549235192760,
+        "last_stamp_ns": 1869141021570,
+        "max_gap_ms": 4.944042,
+        "median_gap_ms": 2.495208,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/imu",
+        "reception_minus_header_s_median": 1791860318.4268951
+      },
+      "/odin_b/odin1/imu": {
+        "count": 127457,
+        "sensor_hz": 398.11326580124916,
+        "span_s": 320.150095334,
+        "first_stamp_ns": 1546415890645,
+        "last_stamp_ns": 1866565985979,
+        "max_gap_ms": 15.106418999999999,
+        "median_gap_ms": 2.511542,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 1,
+        "frame_id": "odin_b/imu",
+        "reception_minus_header_s_median": 1791860321.0040646
+      },
+      "/odin_a/odin1/image/compressed": {
+        "count": 3282,
+        "sensor_hz": 10.259159783486272,
+        "span_s": 319.811765217,
+        "first_stamp_ns": 1549196963998,
+        "last_stamp_ns": 1869008729215,
+        "max_gap_ms": 97.637427,
+        "median_gap_ms": 97.473759,
+        "non_increasing": 0,
+        "gaps_over_20ms": 3281,
+        "gaps_over_3_median": 0,
+        "frame_id": "",
+        "reception_minus_header_s_median": 1791860318.4890583
+      },
+      "/odin_a/odin1/cloud_raw": {
+        "count": 3283,
+        "sensor_hz": 10.25917753453571,
+        "span_s": 319.90868556000004,
+        "first_stamp_ns": 1549101165872,
+        "last_stamp_ns": 1869009851432,
+        "max_gap_ms": 97.608093,
+        "median_gap_ms": 97.473759,
+        "non_increasing": 0,
+        "gaps_over_20ms": 3282,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/lidar",
+        "reception_minus_header_s_median": 1791860318.5642076
+      },
+      "/odin_b/odin1/image/compressed": {
+        "count": 3283,
+        "sensor_hz": 10.25917936914402,
+        "span_s": 319.908628352,
+        "first_stamp_ns": 1546547996691,
+        "last_stamp_ns": 1866456625043,
+        "max_gap_ms": 97.664343,
+        "median_gap_ms": 97.473635,
+        "non_increasing": 0,
+        "gaps_over_20ms": 3282,
+        "gaps_over_3_median": 0,
+        "frame_id": "",
+        "reception_minus_header_s_median": 1791860321.067601
+      },
+      "/odin_a/odin1/odometry_highfreq": {
+        "count": 128175,
+        "sensor_hz": 400.75855129974565,
+        "span_s": 319.828484219,
+        "first_stamp_ns": 1549310829165,
+        "last_stamp_ns": 1869139313384,
+        "max_gap_ms": 9.930209,
+        "median_gap_ms": 2.495208,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 1,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.428591
+      },
+      "/odin_b/odin1/cloud_raw": {
+        "count": 3283,
+        "sensor_hz": 10.259178058320034,
+        "span_s": 319.908669227,
+        "first_stamp_ns": 1546452209482,
+        "last_stamp_ns": 1866360878709,
+        "max_gap_ms": 97.553427,
+        "median_gap_ms": 97.473635,
+        "non_increasing": 0,
+        "gaps_over_20ms": 3282,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/lidar",
+        "reception_minus_header_s_median": 1791860321.148718
+      },
+      "/odin_a/odin1/odometry": {
+        "count": 3280,
+        "sensor_hz": 10.259156347311093,
+        "span_s": 319.61692453,
+        "first_stamp_ns": 1549294382258,
+        "last_stamp_ns": 1868911306788,
+        "max_gap_ms": 97.637427,
+        "median_gap_ms": 97.47376,
+        "non_increasing": 0,
+        "gaps_over_20ms": 3279,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.6190872,
+        "finite": true,
+        "max_position_from_first_m": 0.8230377197838505,
+        "max_rotation_from_first_deg": 179.81213041353573
+      },
+      "/odin_a/odin1/wiwc": {
+        "count": 3280,
+        "sensor_hz": 10.259156347311093,
+        "span_s": 319.61692453,
+        "first_stamp_ns": 1549294382258,
+        "last_stamp_ns": 1868911306788,
+        "max_gap_ms": 97.637427,
+        "median_gap_ms": 97.47376,
+        "non_increasing": 0,
+        "gaps_over_20ms": 3279,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_a/odom",
+        "reception_minus_header_s_median": 1791860318.6192226
+      },
+      "/odin_b/odin1/odometry_highfreq": {
+        "count": 127123,
+        "sensor_hz": 398.1131753914285,
+        "span_s": 319.311210625,
+        "first_stamp_ns": 1547253067168,
+        "last_stamp_ns": 1866564277793,
+        "max_gap_ms": 15.106418999999999,
+        "median_gap_ms": 2.511542,
+        "non_increasing": 0,
+        "gaps_over_20ms": 0,
+        "gaps_over_3_median": 1,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860321.0056493
+      },
+      "/odin_b/odin1/odometry": {
+        "count": 3275,
+        "sensor_hz": 10.2591787619488,
+        "span_s": 319.12885777400004,
+        "first_stamp_ns": 1547230335593,
+        "last_stamp_ns": 1866359193367,
+        "max_gap_ms": 97.664343,
+        "median_gap_ms": 97.473635,
+        "non_increasing": 0,
+        "gaps_over_20ms": 3274,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860321.2009296,
+        "finite": true,
+        "max_position_from_first_m": 0.8315967299695207,
+        "max_rotation_from_first_deg": 119.6679653932847
+      },
+      "/odin_b/odin1/wiwc": {
+        "count": 3275,
+        "sensor_hz": 10.2591787619488,
+        "span_s": 319.12885777400004,
+        "first_stamp_ns": 1547230335593,
+        "last_stamp_ns": 1866359193367,
+        "max_gap_ms": 97.664343,
+        "median_gap_ms": 97.473635,
+        "non_increasing": 0,
+        "gaps_over_20ms": 3274,
+        "gaps_over_3_median": 0,
+        "frame_id": "odin_b/odom",
+        "reception_minus_header_s_median": 1791860321.2011375
+      }
+    },
+    "image_cloud_offset_ms": {
+      "odin_a": {
+        "min": 1.005342,
+        "median": 1.685342,
+        "max": 1.685342
+      },
+      "odin_b": {
+        "min": -95.74633399999999,
+        "median": 1.685342,
+        "max": 1.685342
+      }
+    }
+  },
+  "corrected_motion_window": {
+    "odin_a": {
+      "start": 215.8149497783977,
+      "duration": 102.78850364685059,
+      "max_position_from_timeline_first_m": 0.8229236681898267,
+      "max_rotation_from_timeline_first_deg": 179.83648023277922,
+      "first_image_stamp_s": 1549.196963998
+    },
+    "odin_b": {
+      "start": 215.8802045075779,
+      "duration": 102.78850364685059,
+      "max_position_from_timeline_first_m": 0.8338274521710112,
+      "max_rotation_from_timeline_first_deg": 119.67674332143656,
+      "first_image_stamp_s": 1546.547996691
+    }
+  },
+  "operator_motion": {
+    "operator_reply": "\u53ef\u4ee5\u4e86 \u5206\u522b\u79fb\u52a8",
+    "devices_moved": "separately"
+  },
+  "corrected_motion_driver_exit_codes": {
+    "odin_a": 0,
+    "odin_b": -6
+  },
+  "sdk_shutdown_issue": "Odin B aborted with malloc_consolidate(): invalid chunk size after SDK deinit. Raw rosbag recording had already stopped and flushed normally. The proprietary SDK shutdown issue is not fixed.",
+  "bow_routing_note": "Upstream RosLoopClosureVisualizer sends robot 1 BoW queries to both destination 1 and destination 0; total query entries for robot 1 can therefore be twice the keyframe count.",
+  "corrected_motion_exports": {
+    "odin_a": {
+      "source": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/motion_usb128_bag",
+      "destination": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+      "compression": "none",
+      "clock": "Device header timestamps preserved; bag event timestamps use the same clock",
+      "deskew": "odometry",
+      "T_imu_lidar": [
+        1.0,
+        0.0,
+        0.0,
+        -0.02663,
+        0.0,
+        1.0,
+        0.0,
+        0.03447,
+        0.0,
+        0.0,
+        1.0,
+        0.02174,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "input_image_count_in_interval": 1054,
+      "output_counts": {
+        "imu": 41352,
+        "rgb": 1054,
+        "depth": 1054,
+        "mask": 1054,
+        "camera_info": 1054,
+        "reference": 1054
+      },
+      "sync": {
+        "paired": 1054
+      },
+      "frames_skipped_for_pose_coverage": {},
+      "unpaired_at_end": {
+        "image": 0,
+        "cloud": 0
+      },
+      "max_input_imu_gap_ms": 4.944042,
+      "imu_gap_override": false,
+      "cloud_minus_rgb_ms": {
+        "min": 1.005342,
+        "max": 1.685342
+      },
+      "positive_depth_fraction_mean": 0.5359434183437979,
+      "direct_measured_pixel_fraction_mean": 0.06650434340039416,
+      "note": "Splatted depth pixels are not independent measurements. Reference odometry is not ground truth and is not enabled as an external VIO factor."
+    },
+    "odin_b": {
+      "source": "/home/uros/kimeramulti/experiments/dual_odin1_20261013/motion_usb128_bag",
+      "destination": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+      "compression": "none",
+      "clock": "Device header timestamps preserved; bag event timestamps use the same clock",
+      "deskew": "odometry",
+      "T_imu_lidar": [
+        1.0,
+        0.0,
+        0.0,
+        -0.02663,
+        0.0,
+        1.0,
+        0.0,
+        0.03447,
+        0.0,
+        0.0,
+        1.0,
+        0.02174,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "input_image_count_in_interval": 1055,
+      "output_counts": {
+        "imu": 41076,
+        "rgb": 1054,
+        "depth": 1054,
+        "mask": 1054,
+        "camera_info": 1054,
+        "reference": 1055
+      },
+      "sync": {
+        "paired": 1055
+      },
+      "frames_skipped_for_pose_coverage": {
+        "Odometry interpolation crosses a recording gap": 1
+      },
+      "unpaired_at_end": {
+        "image": 0,
+        "cloud": 0
+      },
+      "max_input_imu_gap_ms": 15.106418999999999,
+      "imu_gap_override": false,
+      "cloud_minus_rgb_ms": {
+        "min": 0.22971699999999998,
+        "max": 1.685342
+      },
+      "positive_depth_fraction_mean": 0.5347323014046508,
+      "direct_measured_pixel_fraction_mean": 0.0667675322635593,
+      "note": "Splatted depth pixels are not independent measurements. Reference odometry is not ground truth and is not enabled as an external VIO factor."
+    }
+  },
+  "corrected_motion_initial_replay_failure": {
+    "success": false,
+    "error": null,
+    "rate": 1.0,
+    "runs": {
+      "a": {
+        "started_unix_s": 1791862451.3103957,
+        "command": [
+          "/home/uros/kimeramulti/docker/odin1.bash",
+          "replay",
+          "--bag",
+          "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+          "--params",
+          "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+          "--robot-name",
+          "odin_a",
+          "--robot-id",
+          "0",
+          "--rate",
+          "1.0",
+          "--output",
+          "/workspace/artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_a"
+        ],
+        "ended_unix_s": 1791862585.3113747,
+        "exit_code": 1
+      },
+      "b": {
+        "started_unix_s": 1791862451.3506978,
+        "command": [
+          "/home/uros/kimeramulti/docker/odin1.bash",
+          "replay",
+          "--bag",
+          "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+          "--params",
+          "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+          "--robot-name",
+          "odin_b",
+          "--robot-id",
+          "1",
+          "--rate",
+          "1.0",
+          "--output",
+          "/workspace/artifacts/dual_odin1_20261013/docker_motion_usb128_pair/odin_b"
+        ],
+        "ended_unix_s": 1791862661.5990782,
+        "exit_code": 0
+      }
+    },
+    "summaries": {
+      "a": {
+        "bag": "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+        "bag_sha256": "522e02f2aa0c79bd75d125606366488968eb9976b901c1dc7b3889218e2daeda",
+        "docker_image_id": "sha256:07ba8da2edee3ea8b8e5a804bac4e46c89a0ff6acf043a61963a193f4895e65e",
+        "params": "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+        "rate": 1.0,
+        "robot_name": "odin_a",
+        "robot_id": 0,
+        "bag_duration_s": 103.18496861699987,
+        "playback_wall_s": null,
+        "effective_clock_rate_middle_80_percent": null,
+        "published_robot_ids": {
+          "pose_graph": [
+            0
+          ],
+          "bow": [
+            0
+          ],
+          "vlc": []
+        },
+        "replay_script_sha256": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+        "odometry_count": 27,
+        "pose_graph_messages": 27,
+        "last_pose_graph": {
+          "nodes": 27,
+          "edges": 26
+        },
+        "bow_messages": 8,
+        "bow_queries": 26,
+        "vlc_messages": 0,
+        "vlc_frames": 0,
+        "reference_odometry_count": 102,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": "Kimera exited during playback; inspect kimera.log",
+        "success": false
+      },
+      "b": {
+        "bag": "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+        "bag_sha256": "df3bb306586b2246d882ea9533aac9ad7972cc72cf1c77bba6558d96aaea55d0",
+        "docker_image_id": "sha256:07ba8da2edee3ea8b8e5a804bac4e46c89a0ff6acf043a61963a193f4895e65e",
+        "params": "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+        "rate": 1.0,
+        "robot_name": "odin_b",
+        "robot_id": 1,
+        "bag_duration_s": 103.18674336800018,
+        "playback_wall_s": 113.60508570540696,
+        "effective_clock_rate_middle_80_percent": 1.0000008567276584,
+        "published_robot_ids": {
+          "pose_graph": [
+            1
+          ],
+          "bow": [
+            1
+          ],
+          "vlc": [
+            1
+          ]
+        },
+        "replay_script_sha256": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+        "odometry_count": 351,
+        "pose_graph_messages": 351,
+        "last_pose_graph": {
+          "nodes": 351,
+          "edges": 360
+        },
+        "bow_messages": 196,
+        "bow_queries": 702,
+        "vlc_messages": 6,
+        "vlc_frames": 314,
+        "reference_odometry_count": 1055,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": null,
+        "success": true
+      }
+    },
+    "scope": "Two concurrent independent VIO/LCD frontends with robot IDs 0 and 1. No inter-robot loop closure or distributed optimization is launched.",
+    "orchestrator_sha256": "c03b5253b027e34f77a159bc123641483de14ebdab2034d8e69a6d6e167a2a41"
+  },
+  "sparse_feature_fix": {
+    "root_cause": "OpenCV 4.2 undistortPoints called with an empty RGB-D feature vector",
+    "trace_log": "artifacts/dual_odin1_20261013/diagnostic_cv_a_trace/kimera.log",
+    "patch": "docker/fix_sparse_keypoints.py",
+    "regression_log": "artifacts/docker/sparse-keypoints-test.log",
+    "regression_passed": true,
+    "tested_cases": [
+      "empty undistortion clears previous output",
+      "nonempty zero-distortion geometry",
+      "empty reference tracking",
+      "all reference landmarks invalid"
+    ],
+    "build_log": "artifacts/docker/sparse-fix-build.log",
+    "entrypoint_regression_log": "artifacts/docker/sparse-keypoints-entrypoint-test.log",
+    "entrypoint_regression_passed": true,
+    "runtime_sha256": {
+      "/opt/kimera_ws/src/kimera_vio/src/frontend/UndistorterRectifier.cpp": "3a97037f1cd78d5f3dab5236d18c2b2d01130c66757821364b5f986d20c7443b",
+      "/opt/kimera_ws/src/kimera_vio/src/frontend/Tracker.cpp": "8ade99a40b8d345bc4dc555e059da66484a67941f97e4670d3e5007b1eead5e3",
+      "/opt/kimera_ws/devel/lib/libkimera_vio.so": "121fbb68b05e118c017f8afc8a434e5f055c0c9e2c77a07f628b503c41f0b1c8"
+    },
+    "runtime_image": "sha256:b069417657ae50bc94130242077d2e9c5c4f2afaefedd9fddb158e0e450d703d"
+  },
+  "corrected_motion_fixed_pair": {
+    "success": true,
+    "error": null,
+    "rate": 1.0,
+    "runs": {
+      "a": {
+        "started_unix_s": 1791863458.6416929,
+        "command": [
+          "/home/uros/kimeramulti/docker/odin1.bash",
+          "replay",
+          "--bag",
+          "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+          "--params",
+          "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+          "--robot-name",
+          "odin_a",
+          "--robot-id",
+          "0",
+          "--rate",
+          "1.0",
+          "--output",
+          "/workspace/artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_a"
+        ],
+        "ended_unix_s": 1791863706.363715,
+        "exit_code": 0
+      },
+      "b": {
+        "started_unix_s": 1791863458.6663978,
+        "command": [
+          "/home/uros/kimeramulti/docker/odin1.bash",
+          "replay",
+          "--bag",
+          "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+          "--params",
+          "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+          "--robot-name",
+          "odin_b",
+          "--robot-id",
+          "1",
+          "--rate",
+          "1.0",
+          "--output",
+          "/workspace/artifacts/dual_odin1_20261013/docker_motion_usb128_fixed_pair/odin_b"
+        ],
+        "ended_unix_s": 1791863706.1634805,
+        "exit_code": 0
+      }
+    },
+    "summaries": {
+      "a": {
+        "bag": "/workspace/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.bag",
+        "bag_sha256": "522e02f2aa0c79bd75d125606366488968eb9976b901c1dc7b3889218e2daeda",
+        "docker_image_id": "sha256:b069417657ae50bc94130242077d2e9c5c4f2afaefedd9fddb158e0e450d703d",
+        "params": "/workspace/artifacts/dual_odin1_20261013/odin_a/params",
+        "rate": 1.0,
+        "robot_name": "odin_a",
+        "robot_id": 0,
+        "bag_duration_s": 103.18496861699987,
+        "playback_wall_s": 128.383804009296,
+        "effective_clock_rate_middle_80_percent": 0.999976712604861,
+        "published_robot_ids": {
+          "pose_graph": [
+            0
+          ],
+          "bow": [
+            0
+          ],
+          "vlc": [
+            0
+          ]
+        },
+        "replay_script_sha256": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+        "odometry_count": 349,
+        "pose_graph_messages": 349,
+        "last_pose_graph": {
+          "nodes": 349,
+          "edges": 611
+        },
+        "bow_messages": 19,
+        "bow_queries": 349,
+        "vlc_messages": 2,
+        "vlc_frames": 349,
+        "reference_odometry_count": 1054,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": null,
+        "success": true
+      },
+      "b": {
+        "bag": "/workspace/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.bag",
+        "bag_sha256": "df3bb306586b2246d882ea9533aac9ad7972cc72cf1c77bba6558d96aaea55d0",
+        "docker_image_id": "sha256:b069417657ae50bc94130242077d2e9c5c4f2afaefedd9fddb158e0e450d703d",
+        "params": "/workspace/artifacts/dual_odin1_20261013/odin_b/params",
+        "rate": 1.0,
+        "robot_name": "odin_b",
+        "robot_id": 1,
+        "bag_duration_s": 103.18674336800018,
+        "playback_wall_s": 127.87381112575531,
+        "effective_clock_rate_middle_80_percent": 0.9999960566314556,
+        "published_robot_ids": {
+          "pose_graph": [
+            1
+          ],
+          "bow": [
+            1
+          ],
+          "vlc": [
+            1
+          ]
+        },
+        "replay_script_sha256": "cbed804142ad4d219bea43ffcf8ab62d3a51f894b8a45cb19d011ca146a60fb3",
+        "odometry_count": 350,
+        "pose_graph_messages": 350,
+        "last_pose_graph": {
+          "nodes": 350,
+          "edges": 363
+        },
+        "bow_messages": 60,
+        "bow_queries": 700,
+        "vlc_messages": 5,
+        "vlc_frames": 350,
+        "reference_odometry_count": 1055,
+        "reference_note": "Odin odometry is a reference, not ground truth; it is not an external VIO factor.",
+        "process_exit_codes": {
+          "roscore": 0,
+          "kimera": 0,
+          "record": 0,
+          "play": 0
+        },
+        "error": null,
+        "success": true
+      }
+    },
+    "scope": "Two concurrent independent VIO/LCD frontends with robot IDs 0 and 1. No inter-robot loop closure or distributed optimization is launched.",
+    "orchestrator_sha256": "c03b5253b027e34f77a159bc123641483de14ebdab2034d8e69a6d6e167a2a41"
+  },
+  "corrected_motion_trajectory_coverage": {
+    "odin_a": {
+      "count": 349,
+      "first_stamp": 1765.198677159,
+      "last_stamp": 1867.741571712,
+      "span_s": 102.542894553,
+      "reference_first": 1765.10123265,
+      "reference_last": 1867.741571712,
+      "reference_span_s": 102.64033906200007,
+      "strict_timestamps": true,
+      "max_odometry_gap_s": 0.48736725699995986,
+      "max_radius_m": 0.8055245188656329,
+      "max_rotation_deg": 175.621016976164
+    },
+    "odin_b": {
+      "count": 350,
+      "first_stamp": 1762.549675436,
+      "last_stamp": 1864.994566063,
+      "span_s": 102.44489062700018,
+      "reference_first": 1762.45220101,
+      "reference_last": 1865.189471582,
+      "reference_span_s": 102.73727057199994,
+      "strict_timestamps": true,
+      "max_odometry_gap_s": 0.38989595599991844,
+      "max_radius_m": 1.2685306458682988,
+      "max_rotation_deg": 118.11940631819458
+    }
+  },
+  "corrected_motion_fixed_pair_resources": {
+    "raw": "artifacts/dual_odin1_20261013/motion_usb128_fixed_pair_resources.json",
+    "samples": 293,
+    "median_host_busy_percent": 33.26719576719577,
+    "max_host_busy_percent": 80.25641025641026,
+    "minimum_available_memory_gib": 6.695819854736328,
+    "note": "Includes initialization, concurrent C++ regression compilation, replay, shutdown and idle periods; not an isolated benchmark."
+  },
+  "playback_latency_note": "Requested rate 1 and middle-80%-interval clock slope approximately 1; total player wall time ~128 s for ~103 s bags. This is not a real-time latency qualification.",
+  "usb_pool_current_mb": 128,
+  "completed_local_date": "2026-10-13",
+  "offline_cloud_geometry_preview": {
+    "scope": "Offline geometry-only ICP candidate previews, independently fitted per map source. No Kimera-Multi cross-robot loop closure or distributed PGO.",
+    "directory": "artifacts/dual_odin1_20261013/cloud_fusion_preview",
+    "report": "artifacts/dual_odin1_20261013/cloud_fusion_preview/registration.json",
+    "accumulation": {
+      "scope": "Raw DTOF points accumulated independently; VIO uses SDK scan deskew and one rigid anchor into each local SDK world. No inter-robot factor or PGO.",
+      "sampling_interval_s": 0.45,
+      "voxel_m": 0.05,
+      "minimum_voxel_observations": 2,
+      "range_m": [
+        0.3,
+        8
+      ],
+      "confidence_threshold": 35,
+      "sdk_max_pose_gap_ms": 10,
+      "vio_interpolation_max_gap_ms": 500,
+      "notes": [
+        "The 500 ms VIO gap limit only interpolates sparse (~3.4 Hz) output poses for this preview; SDK deskew retains the 10 ms gap guard.",
+        "Odin SDK poses are a reference and not ground truth.",
+        "Initial IMU-to-LiDAR extrinsics are not independently calibrated."
+      ],
+      "devices": {
+        "odin_a": {
+          "clouds_in_window": 1054,
+          "skipped:Odometry does not bracket requested 1765.102918..1765.102918 s": 1,
+          "scans_used": 210,
+          "filtered_points_accumulated": 6924255,
+          "sdk_map_points": 158738,
+          "vio_map_points": 221749
+        },
+        "odin_b": {
+          "clouds_in_window": 1055,
+          "skipped:Odometry does not bracket requested 1762.453886..1762.453886 s": 1,
+          "scans_used": 210,
+          "filtered_points_accumulated": 7415873,
+          "sdk_map_points": 124302,
+          "vio_map_points": 198967
+        }
+      }
+    },
+    "quality": {
+      "sdk": {
+        "distance_threshold_m": 0.1,
+        "b_to_a_overlap_fraction": 0.8941931746874547,
+        "a_to_b_overlap_fraction": 0.6070947095213497,
+        "symmetric_overlap_harmonic": 0.7231923355312325,
+        "b_to_a_inlier_rmse_m": 0.03963557302627028,
+        "a_to_b_inlier_rmse_m": 0.037020636501419964,
+        "all_b_to_a_median_m": 0.03272674423223619,
+        "all_a_to_b_median_m": 0.04478712990273111
+      },
+      "vio": {
+        "distance_threshold_m": 0.1,
+        "b_to_a_overlap_fraction": 0.6862846602702961,
+        "a_to_b_overlap_fraction": 0.5041961857776134,
+        "symmetric_overlap_harmonic": 0.5813148682142565,
+        "b_to_a_inlier_rmse_m": 0.05023197823560303,
+        "a_to_b_inlier_rmse_m": 0.044518584252016664,
+        "all_b_to_a_median_m": 0.05847039192757557,
+        "all_a_to_b_median_m": 0.09720554781992659
+      }
+    },
+    "does_not_validate": "Inter-robot LCD, PGO, calibration accuracy, or map accuracy versus ground truth."
+  },
+  "sdk_frontend_adaptation": {
+    "success": true,
+    "report": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/sdk_frontend_validation.json",
+    "image_id": "sha256:9ad22d1546ca024047a2869de733e33dd656eac1adc3cd56285a315edd6e8853",
+    "pair_report": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/docker_sdk_rigid_pair/summary.json",
+    "vio_regression_report": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/docker_vio_sdk_adaptation_regression/summary.json",
+    "scope": "PASS: SDK-owned local trajectory frontend adaptation; concurrent motion replay and independent VIO comparison regression passed. Inter-robot LCD/PGO and live bridge are not yet validated."
+  }
+}

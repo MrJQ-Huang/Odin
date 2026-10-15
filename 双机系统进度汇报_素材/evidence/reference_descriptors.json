@@ -1,0 +1,59 @@
+{
+  "scope": "Offline snapshot descriptor diagnostic only. Tentative feature matches do not establish real loop closures or fused coordinates. Actual pipeline retrieval threshold and geometry settings remain unchanged.",
+  "regions": {
+    "full_image": {
+      "descriptor_counts": [
+        1200,
+        1200
+      ],
+      "hamming_diagnostic": {
+        "a_to_b_ratio_matches": 47,
+        "b_to_a_ratio_matches": 29,
+        "mutual_ratio_matches": 4,
+        "mutual_both_have_measured_depth": 0
+      },
+      "upstream_geometry_l1": {
+        "a_to_b_ratio_matches": 61,
+        "b_to_a_ratio_matches": 73,
+        "mutual_ratio_matches": 23,
+        "mutual_both_have_measured_depth": 0
+      }
+    },
+    "chair_and_backpack": {
+      "descriptor_counts": [
+        452,
+        662
+      ],
+      "hamming_diagnostic": {
+        "a_to_b_ratio_matches": 5,
+        "b_to_a_ratio_matches": 6,
+        "mutual_ratio_matches": 1,
+        "mutual_both_have_measured_depth": 0
+      },
+      "upstream_geometry_l1": {
+        "a_to_b_ratio_matches": 18,
+        "b_to_a_ratio_matches": 40,
+        "mutual_ratio_matches": 8,
+        "mutual_both_have_measured_depth": 0
+      }
+    },
+    "backpack": {
+      "descriptor_counts": [
+        221,
+        186
+      ],
+      "hamming_diagnostic": {
+        "a_to_b_ratio_matches": 3,
+        "b_to_a_ratio_matches": 3,
+        "mutual_ratio_matches": 1,
+        "mutual_both_have_measured_depth": 0
+      },
+      "upstream_geometry_l1": {
+        "a_to_b_ratio_matches": 8,
+        "b_to_a_ratio_matches": 7,
+        "mutual_ratio_matches": 3,
+        "mutual_both_have_measured_depth": 0
+      }
+    }
+  }
+}

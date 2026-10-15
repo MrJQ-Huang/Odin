@@ -1,0 +1,37 @@
+{
+  "source": "Real BoW databases saved by A distributed node during this fresh static session with red chair and backpack, including warmup; robot B vectors received over WiFi",
+  "vector_counts": [
+    137,
+    148
+  ],
+  "median_unique_words": [
+    1165,
+    1167.0
+  ],
+  "max_cross_score": 0.021894049481488764,
+  "max_cross_score_keyframe_ids": [
+    84,
+    70
+  ],
+  "configured_alpha": 0.5,
+  "configured_min_nss_factor": 0.05,
+  "max_cross_to_previous_nss_ratio": 0.061815528165774014,
+  "best_ratio_query_robot": 1,
+  "best_ratio_pair_ids": [
+    41,
+    33
+  ],
+  "eligible_pairs_directions_above_alpha": 0,
+  "vocabulary_score": "L1-normalized positive BoW, score=sum(min(shared word weights))",
+  "bow_weight_sum_ranges": [
+    [
+      0.9999999905121513,
+      1.0000000075087883
+    ],
+    [
+      0.9999999944702722,
+      1.0000000089057721
+    ]
+  ],
+  "scope": "All-pairs retrieval upper bound, no fabricated geometric constraints."
+}

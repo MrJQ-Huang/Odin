@@ -1,0 +1,57 @@
+{
+  "scope": "Manual approximate image regions around visible user reference objects; feature detections re-extracted with the SDK frontend ORB defaults on actual synchronized input frames. Counts are not verified cross-robot matches.",
+  "robots": {
+    "odin_a": {
+      "full_image_orb_features": 1200,
+      "full_image_measured_depth_supported": 141,
+      "reference_regions": {
+        "chair_and_backpack": {
+          "bbox_xyxy": [
+            288,
+            189,
+            405,
+            382
+          ],
+          "orb_features": 452,
+          "measured_depth_supported": 63
+        },
+        "backpack": {
+          "bbox_xyxy": [
+            312,
+            238,
+            385,
+            310
+          ],
+          "orb_features": 221,
+          "measured_depth_supported": 30
+        }
+      }
+    },
+    "odin_b": {
+      "full_image_orb_features": 1200,
+      "full_image_measured_depth_supported": 116,
+      "reference_regions": {
+        "chair_and_backpack": {
+          "bbox_xyxy": [
+            96,
+            173,
+            285,
+            480
+          ],
+          "orb_features": 662,
+          "measured_depth_supported": 62
+        },
+        "backpack": {
+          "bbox_xyxy": [
+            137,
+            233,
+            258,
+            353
+          ],
+          "orb_features": 186,
+          "measured_depth_supported": 12
+        }
+      }
+    }
+  }
+}

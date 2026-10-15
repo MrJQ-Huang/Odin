@@ -1,0 +1,132 @@
+[
+  {
+    "file": "04A_RGBD输入预览.png",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/odin_a/motion_usb128_rgbd.preview.png",
+    "sha256": "8a2b4dea7f6c4b3f975b714bc1e6eb01f37ed7f9f29f9f813151fb42c016c784"
+  },
+  {
+    "file": "04B_RGBD输入预览.png",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/odin_b/motion_usb128_rgbd.preview.png",
+    "sha256": "b6e4e95d0e60561807b28dcef5e5676454116bb1d175c57f7bbd0f46142a6a14"
+  },
+  {
+    "file": "05_双设备运动回放结果.png",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/visualization/dual_odin1_results.png",
+    "sha256": "b334a183ce7376520cf656aade140cd897dddec81611d7d7a9a9fa4959a6c051"
+  },
+  {
+    "file": "06_三维局部轨迹.png",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/visualization/dual_odin1_3d.png",
+    "sha256": "d814511f53dc26e2bd7d6ac1e7faf510912d5e615972c020621fba136afb378b"
+  },
+  {
+    "file": "07_离线点云配准预览.png",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/cloud_fusion_preview/fusion_comparison.png",
+    "sha256": "9b9f9d4144834b233b4b235b9292bde5890666dc46107d6ce69a70f74068415d"
+  },
+  {
+    "file": "08_双机ORB与实测深度.png",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/reference_static_20261014_175133/reference_orb_features.png",
+    "sha256": "3a70c3d43e98fe4f8eecea3e6e725e5283e9829349d932e031acc33899b66e1e"
+  },
+  {
+    "file": "evidence/network_probe.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/network_probe.json",
+    "sha256": "7c323f30afdfb3720a1d788ab114cf69878c867ba65208cff28db1a27ccf2270"
+  },
+  {
+    "file": "evidence/reference_a_frontend.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/reference_static_20261014_175133/odin_a/static_validation.json",
+    "sha256": "799674171bf34f9405ab52d17712ca7ca729419290090a8bef33e9e08cea6475"
+  },
+  {
+    "file": "evidence/reference_b_frontend.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/reference_static_20261014_175133/odin_b/static_validation.json",
+    "sha256": "234a9a21e2b2e3b138d2ab407cde27c0c8db30bc52be03a7a0ea84050da47c3e"
+  },
+  {
+    "file": "evidence/reference_backend.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/reference_static_20261014_175133/backend_validation.json",
+    "sha256": "7279a9b4b30b4d4932a0c844e844218affc74a061555618130d2e89d227e38b5"
+  },
+  {
+    "file": "evidence/reference_retrieval.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/reference_static_20261014_175133/retrieval_diagnostic.json",
+    "sha256": "0beec8927cf42207d1c24db9cf997816cba8eba91e201ef5d3fdacbfd8e73385"
+  },
+  {
+    "file": "evidence/motion_retrieval.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/motion_20261013_02_174442/retrieval_diagnostic.json",
+    "sha256": "5de9764801b5601e9fc9061644c2fc1219defa92544ab86aa9ae08aeec00b75c"
+  },
+  {
+    "file": "evidence/static_retrieval.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/static_overlap_20261013_180854/retrieval_diagnostic.json",
+    "sha256": "876e0582e3e15b7f7d9bbacac58b190c1e6eac65d00efe6997cac336c37c81af"
+  },
+  {
+    "file": "evidence/reference_features.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/reference_static_20261014_175133/reference_feature_counts.json",
+    "sha256": "32be253477e200aee3e3881e810ac2dc5896288f161d7e440ed9ef483756c081"
+  },
+  {
+    "file": "evidence/reference_descriptors.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/reference_static_20261014_175133/descriptor_diagnostic.json",
+    "sha256": "d82710788e17dbd7b4a33e90e0d4559edc147f75516e907a38cb382a8bee10a2"
+  },
+  {
+    "file": "evidence/dual_device_validation.json",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/validation.json",
+    "sha256": "0ea4b5370b62da8f9cdd1f7276bddf2e067c2ffd243976974da826e4ad7d9730"
+  },
+  {
+    "file": "evidence/sdk_frontend_validation.json",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/sdk_frontend_validation.json",
+    "sha256": "a682365efdc6f7db121f4c1045485fab275bc190b768e49cb213d575434a977b"
+  },
+  {
+    "file": "evidence/wireless_validation.json",
+    "source": "/home/uros/kimeramulti/artifacts/wireless/validation.json",
+    "sha256": "1ae88f49476f69778dc7879e54480b236f13c2f9b038b5566da441767de0f9f5"
+  },
+  {
+    "file": "evidence/plotted_metrics.json",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/visualization/plotted_metrics.json",
+    "sha256": "bfac04c00a9d1277427dfb97b712b0e0ed29adfd748e7c6d6d38360f8f3f404b"
+  },
+  {
+    "file": "evidence/cloud_registration.json",
+    "source": "/home/uros/kimeramulti/artifacts/dual_odin1_20261013/cloud_fusion_preview/registration.json",
+    "sha256": "d170ef0e0522c49cfd5940cd9b54979453b845bac8f34d511a57590610f5d7fc"
+  },
+  {
+    "file": "02_论文系统架构_Fig2.png",
+    "source": "https://arxiv.org/pdf/2106.14386v2",
+    "paper": "Kimera-Multi: Robust, Distributed, Dense Metric-Semantic SLAM for Multi-Robot Systems",
+    "page": 4,
+    "figure": "Fig. 2",
+    "method": "Original figure region rendered at 200 dpi; no content alteration",
+    "sha256": "92ea6f7d4c0f1a0522a70e05c7431bc11dc5aa6efbe0b419436820bb234f749d"
+  },
+  {
+    "file": "03_论文双机通信_Fig3.png",
+    "source": "https://arxiv.org/pdf/2106.14386v2",
+    "paper": "Kimera-Multi: Robust, Distributed, Dense Metric-Semantic SLAM for Multi-Robot Systems",
+    "page": 4,
+    "figure": "Fig. 3",
+    "method": "Original figure region rendered at 200 dpi; no content alteration",
+    "sha256": "c32853b1d620148f3f13d058f6050dafb9ed5488721ed1ff382aa4d6262ffd89"
+  },
+  {
+    "file": "01_当前双机系统流程.png",
+    "source": "Current source implementation; docker/README.wireless.md and adapters/odin1/README.md",
+    "method": "regenerate_figures.py; no new hardware experiment",
+    "sha256": "4e34e2f449f56d603bc94870c4a37859d09203ed2205b688631300ffc3f292b4"
+  },
+  {
+    "file": "09_跨机检索诊断.png",
+    "source": "evidence/motion_retrieval.json, evidence/static_retrieval.json, evidence/reference_retrieval.json",
+    "method": "regenerate_figures.py; no new hardware experiment",
+    "sha256": "2ddeea0c8f3c8e722a4ade6304d2abeda3b887e4276beb958a0f5c7dfeb86511"
+  }
+]

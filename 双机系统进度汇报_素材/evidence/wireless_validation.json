@@ -1,0 +1,597 @@
+{
+  "environment_status": "ready",
+  "algorithm_validation_status": "cross_robot_retrieval_did_not_initialize_fusion",
+  "generated_at_utc": "2026-10-13T09:27:02.466931+00:00",
+  "topology": {
+    "master_pc": "192.168.5.21",
+    "robot_0": "odin_a, USB serial 276fe96f99321c78, x86_64",
+    "robot_1": "odin_b, USB serial 952033c87532e832, ARM64 Jetson AGX Thor at 192.168.5.9",
+    "network": "Both PCs use WiFi on the same LAN; ROS1 containers use host networking",
+    "existing_thor_agps_container": "preserved"
+  },
+  "images": {
+    "local": {
+      "id": "sha256:706075e01ed991075525dfc40a375a186f3bd100b32342e0c8a86ffb9da3f819",
+      "architecture": "amd64"
+    },
+    "thor": {
+      "id": "sha256:5321753a10f9c0a3c68c9ebb7c66a47fbbbbdafc4ae05a2fe120ffbea7cccee5",
+      "architecture": "arm64"
+    }
+  },
+  "source_sha256": {
+    "src/odin_sdk_frontend.cpp": "f52d6e417a0f44f4ec7ff01afef43edcb4d2e66cb1943899b66f10bda10386f7",
+    "adapters/odin1/odin1_adapter/ros1_node.py": "25cb36a533118ce8ec7eae804e8033d89677e239a5a878b979168e194fff4257",
+    "launch/odin1_wireless_robot.launch": "5436b085594a147fab3f614d75830cf41ec2b35b8d8ab2380823481e1dac75ba",
+    "docker/wireless.repos": "5116dbd28b1c512bb6a48811bb0fe1204028062d3760a4ea515e543fa813a253"
+  },
+  "network_probe": {
+    "kind": "ROS1 TCP bidirectional WiFi echo",
+    "payload_bytes": 65536,
+    "sent": 100,
+    "received": 100,
+    "rtt_median_ms": 8.034902159124613,
+    "rtt_p95_ms": 12.789804488420486,
+    "status": "pass"
+  },
+  "live_static_sdk_frontends": {
+    "odin_a": {
+      "robot": "odin_a",
+      "wall_duration_s": 40.03912731446326,
+      "note": "BoW headers describe communication envelopes and may repeat across destination robot IDs; sensor monotonicity is checked on sensor streams.",
+      "counts": {
+        "raw_imu": 16055,
+        "raw_sdk": 16054,
+        "graph": 21,
+        "rgbd": 411,
+        "sdk": 16061,
+        "sdk_diagnostics": 41,
+        "raw_rgb": 411,
+        "raw_cloud": 411,
+        "adapter_diagnostics": 40,
+        "vlc": 20,
+        "bow": 20
+      },
+      "sensor_rates_hz": {
+        "raw_imu": 400.8534538175748,
+        "raw_sdk": 400.853456217163,
+        "graph": 0.4885319950099642,
+        "rgbd": 10.259171781132748,
+        "sdk": 400.8535474024475,
+        "raw_rgb": 10.259171877141839,
+        "raw_cloud": 10.259171877398547,
+        "vlc": 0.4885320011775318
+      },
+      "strictly_increasing": {
+        "raw_imu": true,
+        "raw_sdk": true,
+        "graph": true,
+        "rgbd": true,
+        "sdk": true,
+        "raw_rgb": true,
+        "raw_cloud": true,
+        "vlc": true
+      },
+      "last": {
+        "graph_nodes": 28,
+        "graph_edges": 27,
+        "sdk_diagnostics": {
+          "trajectory_source": "odin_sdk",
+          "graph_pose_frame": "camera",
+          "odom_covariance": "configured_initial_model",
+          "robot_id": 0,
+          "last_keyframe_processing_ms": 12.4578,
+          "pending_rgbd": 1,
+          "cached_visual_frames": 28,
+          "counters": {
+            "bow_queries": 28,
+            "depth_supported_features": 2616,
+            "interpolated_sdk_poses": 570,
+            "keyframes": 28,
+            "rgbd_not_selected": 542,
+            "rgbd_pairs": 570,
+            "rgbd_without_sdk_pose": 2,
+            "sdk_odometry_forwarded": 22350,
+            "visual_keyframes": 28
+          }
+        },
+        "adapter_diagnostics": {
+          "status": "running",
+          "middleware": "ROS1",
+          "deskew": "odometry",
+          "counters": {
+            "imu_forwarded": 32061,
+            "poses_received": 32061,
+            "sdk_odometry_forwarded": 32061,
+            "rgbd_pose_unavailable": 1,
+            "rgbd_published": 819,
+            "rgbd_processing_ms_last": 71.0735572502017
+          },
+          "synchronization": {
+            "paired": 820
+          },
+          "worker_queue": 0,
+          "last_input_sensor_stamps_ns": {
+            "imu": 21177944887395,
+            "pose": 21177943179209
+          }
+        },
+        "latest_vlc_id": 27,
+        "latest_vlc_features": 100
+      },
+      "sdk_pose_comparisons": 16050,
+      "sdk_max_pose_component_change": 0.0,
+      "diagnostic_counter_changes": {
+        "sdk_diagnostics": {
+          "bow_queries": 20,
+          "depth_supported_features": 1896,
+          "interpolated_sdk_poses": 410,
+          "keyframes": 20,
+          "rgbd_not_selected": 390,
+          "rgbd_pairs": 410,
+          "rgbd_without_sdk_pose": 0,
+          "sdk_odometry_forwarded": 16023,
+          "visual_keyframes": 20
+        },
+        "adapter_diagnostics": {
+          "imu_forwarded": 15631,
+          "poses_received": 15631,
+          "sdk_odometry_forwarded": 15631,
+          "rgbd_pose_unavailable": 0,
+          "rgbd_published": 401
+        }
+      },
+      "errors": [],
+      "status": "pass"
+    },
+    "odin_b": {
+      "robot": "odin_b",
+      "wall_duration_s": 40.03999852299967,
+      "note": "BoW headers describe communication envelopes and may repeat across destination robot IDs; sensor monotonicity is checked on sensor streams.",
+      "counts": {
+        "raw_cloud": 413,
+        "raw_imu": 15989,
+        "raw_sdk": 15984,
+        "raw_rgb": 412,
+        "graph": 20,
+        "sdk": 15970,
+        "rgbd": 411,
+        "bow": 40,
+        "sdk_diagnostics": 41,
+        "adapter_diagnostics": 40,
+        "vlc": 19
+      },
+      "sensor_rates_hz": {
+        "raw_cloud": 10.259186244590177,
+        "raw_imu": 398.18121621236656,
+        "raw_sdk": 398.18121196064465,
+        "raw_rgb": 10.25917629342076,
+        "graph": 0.48853156520248303,
+        "sdk": 398.18158228542904,
+        "rgbd": 10.259186349377508,
+        "vlc": 0.4885321804118047
+      },
+      "strictly_increasing": {
+        "raw_cloud": true,
+        "raw_imu": true,
+        "raw_sdk": true,
+        "raw_rgb": true,
+        "graph": true,
+        "sdk": true,
+        "rgbd": true,
+        "vlc": true
+      },
+      "last": {
+        "graph_nodes": 123,
+        "graph_edges": 122,
+        "sdk_diagnostics": {
+          "trajectory_source": "odin_sdk",
+          "graph_pose_frame": "camera",
+          "odom_covariance": "configured_initial_model",
+          "robot_id": 1,
+          "last_keyframe_processing_ms": 37.3151,
+          "pending_rgbd": 0,
+          "cached_visual_frames": 123,
+          "counters": {
+            "bow_queries": 246,
+            "depth_supported_features": 15577,
+            "interpolated_sdk_poses": 2542,
+            "keyframes": 123,
+            "rgbd_not_selected": 2419,
+            "rgbd_pairs": 2542,
+            "rgbd_without_sdk_pose": 6,
+            "sdk_odometry_forwarded": 101090,
+            "visual_keyframes": 123
+          }
+        },
+        "adapter_diagnostics": {
+          "status": "running",
+          "middleware": "ROS1",
+          "deskew": "odometry",
+          "counters": {
+            "imu_forwarded": 101711,
+            "poses_received": 101251,
+            "sdk_odometry_forwarded": 101251,
+            "rgbd_worker_queue_full": 58,
+            "rgbd_pose_unavailable": 7,
+            "rgbd_published": 2548,
+            "rgbd_processing_ms_last": 57.582666999223875
+          },
+          "synchronization": {
+            "cloud_unmatched": 3,
+            "paired": 2614
+          },
+          "worker_queue": 0,
+          "last_input_sensor_stamps_ns": {
+            "imu": 4591894764850,
+            "pose": 4591893056664
+          }
+        },
+        "latest_vlc_id": 122,
+        "latest_vlc_features": 116
+      },
+      "sdk_pose_comparisons": 15970,
+      "sdk_max_pose_component_change": 0.0,
+      "errors": [],
+      "status": "pass"
+    }
+  },
+  "motion_capture": {
+    "local_bag": "/home/uros/kimeramulti/artifacts/wireless/motion_20261013_01/odin_a/data.bag",
+    "thor_bag": "/home/agpc/mrjq/kimera/kimera_multi/artifacts/wireless/motion_20261013_01/odin_b/data.bag",
+    "duration_s": 180,
+    "user_report": "Two devices moved separately and viewed the same region",
+    "sdk_motion_audit": {
+      "odin_a": {
+        "robot": "odin_a",
+        "sdk_samples": 72033,
+        "sensor_span_s": 179.7331566419998,
+        "sdk_path_length_m": 6.111789698838785,
+        "sdk_position_range_m": [
+          0.43133,
+          0.650794,
+          0.600385
+        ]
+      },
+      "odin_b": {
+        "robot": "odin_b",
+        "sdk_samples": 71589,
+        "sensor_span_s": 179.82235202599986,
+        "sdk_path_length_m": 1.8261808875271088,
+        "sdk_position_range_m": [
+          0.067872,
+          0.062403,
+          0.312713
+        ]
+      }
+    }
+  },
+  "rgb_bow_raw_input_replay": {
+    "odin_a": {
+      "robot": "odin_a",
+      "wall_duration_s": 40.03944974113256,
+      "note": "BoW headers describe communication envelopes and may repeat across destination robot IDs; sensor monotonicity is checked on sensor streams.",
+      "counts": {
+        "raw_imu": 16052,
+        "graph": 28,
+        "sdk": 16053,
+        "raw_rgb": 411,
+        "sdk_diagnostics": 41,
+        "raw_sdk": 16051,
+        "rgbd": 411,
+        "raw_cloud": 410,
+        "adapter_diagnostics": 40,
+        "vlc": 55,
+        "bow": 55
+      },
+      "sensor_rates_hz": {
+        "raw_imu": 400.7841556467575,
+        "graph": 0.6822602515556527,
+        "sdk": 400.78420634699586,
+        "raw_rgb": 10.259164176140358,
+        "raw_sdk": 400.78419668328485,
+        "rgbd": 10.259175129129936,
+        "raw_cloud": 10.25917530990577,
+        "vlc": 1.4389488422684154
+      },
+      "strictly_increasing": {
+        "raw_imu": true,
+        "graph": true,
+        "sdk": true,
+        "raw_rgb": true,
+        "raw_sdk": true,
+        "rgbd": true,
+        "raw_cloud": true,
+        "vlc": true
+      },
+      "last": {
+        "graph_nodes": 83,
+        "graph_edges": 82,
+        "sdk_diagnostics": {
+          "trajectory_source": "odin_sdk",
+          "graph_pose_frame": "camera",
+          "odom_covariance": "configured_initial_model",
+          "robot_id": 0,
+          "bow_feature_source": "rgb",
+          "last_keyframe_processing_ms": 24.802,
+          "pending_rgbd": 0,
+          "cached_visual_frames": 83,
+          "counters": {
+            "bow_queries": 83,
+            "bow_rgb_features": 99600,
+            "depth_supported_features": 8728,
+            "interpolated_sdk_poses": 980,
+            "keyframes": 83,
+            "rgbd_not_selected": 897,
+            "rgbd_pairs": 980,
+            "sdk_odometry_forwarded": 38380,
+            "visual_keyframes": 83
+          }
+        },
+        "adapter_diagnostics": {
+          "status": "running",
+          "middleware": "ROS1",
+          "deskew": "odometry",
+          "counters": {
+            "imu_forwarded": 38259,
+            "poses_received": 38259,
+            "sdk_odometry_forwarded": 38259,
+            "rgbd_pose_unavailable": 1,
+            "rgbd_published": 977,
+            "rgbd_processing_ms_last": 81.77161496132612
+          },
+          "synchronization": {
+            "cloud_unmatched": 1,
+            "paired": 979
+          },
+          "worker_queue": 0,
+          "last_input_sensor_stamps_ns": {
+            "imu": 21669058592907,
+            "pose": 21669056884721
+          }
+        },
+        "latest_vlc_id": 82,
+        "latest_vlc_features": 114
+      },
+      "sdk_pose_comparisons": 16036,
+      "sdk_max_pose_component_change": 0.0,
+      "diagnostic_counter_changes": {
+        "sdk_diagnostics": {
+          "bow_queries": 55,
+          "bow_rgb_features": 66000,
+          "depth_supported_features": 5805,
+          "interpolated_sdk_poses": 410,
+          "keyframes": 55,
+          "rgbd_not_selected": 355,
+          "rgbd_pairs": 410,
+          "sdk_odometry_forwarded": 16031,
+          "visual_keyframes": 55
+        },
+        "adapter_diagnostics": {
+          "imu_forwarded": 15715,
+          "poses_received": 15732,
+          "sdk_odometry_forwarded": 15732,
+          "rgbd_pose_unavailable": 0,
+          "rgbd_published": 406
+        }
+      },
+      "errors": [],
+      "status": "pass"
+    },
+    "odin_b": {
+      "robot": "odin_b",
+      "wall_duration_s": 40.03944224100087,
+      "note": "BoW headers describe communication envelopes and may repeat across destination robot IDs; sensor monotonicity is checked on sensor streams.",
+      "counts": {
+        "raw_imu": 15985,
+        "raw_sdk": 15978,
+        "raw_rgb": 412,
+        "raw_cloud": 413,
+        "graph": 26,
+        "sdk": 15973,
+        "bow": 100,
+        "rgbd": 411,
+        "sdk_diagnostics": 41,
+        "vlc": 49,
+        "adapter_diagnostics": 40
+      },
+      "sensor_rates_hz": {
+        "raw_imu": 398.10944925951,
+        "raw_sdk": 398.1098690191368,
+        "raw_rgb": 10.25916559115168,
+        "raw_cloud": 10.259165594506877,
+        "graph": 0.5992510197561031,
+        "sdk": 398.1094099577698,
+        "rgbd": 10.25917766413156,
+        "vlc": 1.2099287450036438
+      },
+      "strictly_increasing": {
+        "raw_imu": true,
+        "raw_sdk": true,
+        "raw_rgb": true,
+        "raw_cloud": true,
+        "graph": true,
+        "sdk": true,
+        "rgbd": true,
+        "vlc": true
+      },
+      "last": {
+        "graph_nodes": 81,
+        "graph_edges": 80,
+        "sdk_diagnostics": {
+          "trajectory_source": "odin_sdk",
+          "graph_pose_frame": "camera",
+          "odom_covariance": "configured_initial_model",
+          "robot_id": 1,
+          "bow_feature_source": "rgb",
+          "last_keyframe_processing_ms": 46.6958,
+          "pending_rgbd": 0,
+          "cached_visual_frames": 81,
+          "counters": {
+            "bow_queries": 162,
+            "bow_rgb_features": 97200,
+            "depth_supported_features": 10665,
+            "interpolated_sdk_poses": 1079,
+            "keyframes": 81,
+            "rgbd_not_selected": 998,
+            "rgbd_pairs": 1079,
+            "sdk_odometry_forwarded": 42010,
+            "visual_keyframes": 81
+          }
+        },
+        "latest_vlc_id": 80,
+        "latest_vlc_features": 126,
+        "adapter_diagnostics": {
+          "status": "running",
+          "middleware": "ROS1",
+          "deskew": "odometry",
+          "counters": {
+            "imu_forwarded": 41998,
+            "poses_received": 41994,
+            "sdk_odometry_forwarded": 41994,
+            "rgbd_pose_unavailable": 1,
+            "rgbd_worker_queue_full": 1,
+            "rgbd_published": 1079,
+            "rgbd_processing_ms_last": 78.85298099972715
+          },
+          "synchronization": {
+            "cloud_unmatched": 1,
+            "paired": 1081
+          },
+          "worker_queue": 0,
+          "last_input_sensor_stamps_ns": {
+            "imu": 5449920396062,
+            "pose": 5449911156167
+          }
+        }
+      },
+      "sdk_pose_comparisons": 15973,
+      "sdk_max_pose_component_change": 0.0,
+      "diagnostic_counter_changes": {
+        "sdk_diagnostics": {
+          "bow_queries": 98,
+          "bow_rgb_features": 58800,
+          "depth_supported_features": 5614,
+          "interpolated_sdk_poses": 410,
+          "keyframes": 49,
+          "rgbd_not_selected": 361,
+          "rgbd_pairs": 410,
+          "sdk_odometry_forwarded": 15901,
+          "visual_keyframes": 49
+        },
+        "adapter_diagnostics": {
+          "imu_forwarded": 15525,
+          "poses_received": 15522,
+          "sdk_odometry_forwarded": 15522,
+          "rgbd_pose_unavailable": 0,
+          "rgbd_worker_queue_full": 0,
+          "rgbd_published": 400
+        }
+      },
+      "errors": [],
+      "status": "pass"
+    },
+    "frontend_queries": {
+      "kind": "actual SDK graph / visual geometry service queries from local PC",
+      "robots": [
+        {
+          "robot": "odin_a",
+          "robot_id": 0,
+          "graph_nodes": 124,
+          "graph_edges": 123,
+          "queried_pose_ids": [
+            123
+          ],
+          "queried_ids_in_graph": true,
+          "vlc_frames": 1,
+          "feature_rows": 128,
+          "query_wall_ms": 9.823770262300968,
+          "robot_ids_correct": true
+        },
+        {
+          "robot": "odin_b",
+          "robot_id": 1,
+          "graph_nodes": 117,
+          "graph_edges": 116,
+          "queried_pose_ids": [
+            116
+          ],
+          "queried_ids_in_graph": true,
+          "vlc_frames": 1,
+          "feature_rows": 121,
+          "query_wall_ms": 28.043104335665703,
+          "robot_ids_correct": true
+        }
+      ],
+      "status": "pass"
+    },
+    "backend": {
+      "wall_duration_s": 180.0,
+      "counts": {
+        "odin_a/loop_closures": 1,
+        "odin_b/loop_closures": 1,
+        "odin_a/status": 109,
+        "odin_b/status": 109,
+        "odin_b/bow": 240,
+        "odin_a/bow": 119
+      },
+      "last": {
+        "odin_a/status": {
+          "robot_id": 0,
+          "cluster_id": 0,
+          "state": 2,
+          "iteration_number": 0,
+          "instance_number": 10
+        },
+        "odin_b/status": {
+          "robot_id": 1,
+          "cluster_id": 0,
+          "state": 1,
+          "iteration_number": 0,
+          "instance_number": 11
+        }
+      },
+      "distributed_graphs": {
+        "odin_a": {
+          "nodes": 24,
+          "edges": 23,
+          "cross_robot_edges": 0
+        },
+        "odin_b": {
+          "nodes": 24,
+          "edges": 23,
+          "cross_robot_edges": 0
+        }
+      },
+      "observed_unique_cross_robot_loops": 0,
+      "errors": [],
+      "status": "fail",
+      "scope": "Live SDK frontends, real wireless ROS traffic and backend operation. Static capture does not establish fusion accuracy or motion performance."
+    },
+    "retrieval_diagnostic": {
+      "source": "Both real BoW databases saved by A distributed loop closure node after full-RGB replay; robot B vectors arrived over WiFi",
+      "a_vectors": 124,
+      "b_vectors": 117,
+      "a_median_unique_words": 1175.0,
+      "b_median_unique_words": 1166,
+      "max_cross_score": 0.01430193753913045,
+      "max_cross_to_neighbor_nss_ratio": 0.1897440090534413,
+      "configured_alpha": 0.5,
+      "scope": "Retrieval diagnostic only, no fabricated constraints or estimated fused map."
+    }
+  },
+  "checks": {
+    "python_geometry_calibration_timestamps": "12 tests passed",
+    "arm64_sdk_geometry": "passed",
+    "both_architecture_driver_frontend_distributed_backend_builds": "passed"
+  },
+  "runtime_state": "Test capture/replay containers and temporary ROS master stopped; images, code and recordings retained",
+  "limits": [
+    "No verified cross-robot visual loop was found; no joint fused map was generated.",
+    "Robot B remains in WAIT_FOR_INITIALIZATION until valid inter-robot constraints are available.",
+    "Full-RGB retrieval normalized score upper bound was 0.1897, below configured alpha 0.5; thresholds were not loosened to force a result.",
+    "SDK odometry covariance is the configured initial model, not independently calibrated sensor uncertainty.",
+    "Startup queue drops occurred during device/pose warmup; steady 40-second checks had no new pose-unavailable failures.",
+    "Transport and frontend frequency measurements do not prove complete fusion real-time performance."
+  ]
+}
